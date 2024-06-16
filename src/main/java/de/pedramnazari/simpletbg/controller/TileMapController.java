@@ -18,7 +18,6 @@ public class TileMapController {
     }
 
     public TileMap startGameUsingMap(int[][] mapConfig) {
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
-        return tileMap;
+        return tileMapService.createAndInitMap(mapConfig);
     }
 }

@@ -17,7 +17,7 @@ public class TileMapConfig {
     private static final Map<String, int[][]> allMaps;
 
     static {
-        allMaps = new HashMap<String, int[][]>();
+        allMaps = new HashMap<>();
         allMaps.put("1", map1);
     }
 
