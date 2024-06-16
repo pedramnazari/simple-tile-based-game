@@ -24,11 +24,12 @@ public class TileMap {
         return height;
     }
 
+    // TODO: Move to TileMapService?
     public void load(int[][] mapConfig) {
         if ( (mapConfig.length != height) || (mapConfig[0].length != width)) {
             throw new IllegalArgumentException("No valid map configuration");
         }
-        System.out.println("Height: " + height + " Width: " + width);
+
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 int tileType = mapConfig[row][col];

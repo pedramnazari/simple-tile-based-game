@@ -18,7 +18,7 @@ public class TileMapTest {
         assertEquals(width, tileMap.getWidth());
         assertEquals(height, tileMap.getHeight());
 
-        int[][] mapConfig = {
+        final int[][] mapConfig = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -44,6 +44,8 @@ public class TileMapTest {
         assertEquals(0, tile.getType());
 
         tile = tileMap.getTile(5, 1);
+        assertEquals(5, tile.getX());
+        assertEquals(1, tile.getY());
         assertEquals(1, tile.getType());
 
 
