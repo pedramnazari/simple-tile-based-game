@@ -8,10 +8,10 @@ public class TileMap {
 
     private Tile[][] tiles;
 
-    public TileMap(final String mapId) {
+    public TileMap(final String mapId, final int[][] mapConfig) {
         this.mapId = mapId;
 
-        tiles = new Tile[0][0];
+        this.load(mapConfig);
     }
 
     public int getWidth() {
@@ -23,7 +23,7 @@ public class TileMap {
     }
 
     // TODO: Move to TileMapService?
-    public void load(int[][] mapConfig) {
+    private void load(int[][] mapConfig) {
         tiles = new Tile[mapConfig.length][mapConfig[0].length];
 
         for (int row = 0; row < mapConfig.length; row++) {

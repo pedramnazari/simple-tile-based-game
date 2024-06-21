@@ -18,9 +18,7 @@ public class TileMapService {
     public TileMap createAndInitMap(TileMapConfig mapConfig) {
         Objects.requireNonNull(mapConfig);
 
-        this.tileMap = new TileMap(mapConfig.getMapId());
-
-        tileMap.load(mapConfig.getMap());
+        this.tileMap = new TileMap(mapConfig.getMapId(), mapConfig.getMap());
 
         return tileMap;
     }

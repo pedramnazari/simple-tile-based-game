@@ -115,18 +115,10 @@ public class TileMapServiceTest {
         final String idMap3 = "map3";
         final String idMap4 = "map4";
 
-        final TileMap map1 = new TileMap(idMap1);
-        map1.load(new int[][]{{1, 1, 1}, {1, 1, 1}});
-
-        final TileMap map2 = new TileMap(idMap2);
-        map2.load(new int[][]{{2, 2, 2}, {2, 2, 2}});
-
-        final TileMap map3 = new TileMap(idMap3);
-        map3.load(new int[][]{{3, 3, 3}, {3, 3, 3}});
-
-        final TileMap map4 = new TileMap(idMap4);
-        map4.load(new int[][]{{4, 4, 4}, {4, 4, 4}});
-
+        final TileMap map1 = new TileMap(idMap1, new int[][]{{1, 1, 1}, {1, 1, 1}});
+        final TileMap map2 = new TileMap(idMap2, new int[][]{{2, 2, 2}, {2, 2, 2}});
+        final TileMap map3 = new TileMap(idMap3, new int[][]{{3, 3, 3}, {3, 3, 3}});
+        final TileMap map4 = new TileMap(idMap4, new int[][]{{4, 4, 4}, {4, 4, 4}});
 
         /*      map1    map2
                 map3    map4
