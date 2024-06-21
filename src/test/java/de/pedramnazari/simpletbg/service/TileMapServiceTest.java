@@ -121,24 +121,29 @@ public class TileMapServiceTest {
 
         final MapNavigator mapNavigator = new MapNavigator();
 
-        mapNavigator.addMap(map1);
-        mapNavigator.addMap(map2);
-        mapNavigator.addMap(map3);
-        mapNavigator.addMap(map4);
+        final String idMap1 = "map1";
+        final String idMap2 = "map2";
+        final String idMap3 = "map3";
+        final String idMap4 = "map4";
 
-        mapNavigator.addConnection(0, MoveDirections.RIGHT, 1);
-        mapNavigator.addConnection(0, MoveDirections.DOWN, 2);
-        mapNavigator.addConnection(1, MoveDirections.LEFT, 0);
-        mapNavigator.addConnection(1, MoveDirections.DOWN, 3);
-        mapNavigator.addConnection(2, MoveDirections.UP, 0);
-        mapNavigator.addConnection(2, MoveDirections.RIGHT, 3);
-        mapNavigator.addConnection(3, MoveDirections.LEFT, 2);
-        mapNavigator.addConnection(3, MoveDirections.UP, 1);
+        mapNavigator.addMap(map1, idMap1);
+        mapNavigator.addMap(map2, idMap2);
+        mapNavigator.addMap(map3, idMap3);
+        mapNavigator.addMap(map4, idMap4);
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapNavigator, 0);
+        mapNavigator.addConnection(idMap1, MoveDirections.RIGHT, idMap2);
+        mapNavigator.addConnection(idMap1, MoveDirections.DOWN, idMap3);
+        mapNavigator.addConnection(idMap2, MoveDirections.LEFT, idMap1);
+        mapNavigator.addConnection(idMap2, MoveDirections.DOWN, idMap4);
+        mapNavigator.addConnection(idMap3, MoveDirections.UP, idMap1);
+        mapNavigator.addConnection(idMap3, MoveDirections.RIGHT, idMap4);
+        mapNavigator.addConnection(idMap4, MoveDirections.LEFT, idMap3);
+        mapNavigator.addConnection(idMap4, MoveDirections.UP, idMap2);
+
+        final TileMap tileMap = tileMapService.createAndInitMap(mapNavigator, idMap1);
         assertNotNull(tileMap);
 
-        assertEquals(0, tileMapService.getCurrentMapIndex());
+        assertEquals(idMap1, tileMapService.getCurrentMapIndex());
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
@@ -147,32 +152,32 @@ public class TileMapServiceTest {
 
         assertEquals(1, hero.getX());
         assertEquals(1, hero.getY());
-        assertEquals(0, tileMapService.getCurrentMapIndex());
+        assertEquals(idMap1, tileMapService.getCurrentMapIndex());
 
         // Move to top of map 3 (id 2)
         tileMapService.moveHero(MoveDirections.DOWN);
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
-        assertEquals(2, tileMapService.getCurrentMapIndex());
+        assertEquals(idMap3, tileMapService.getCurrentMapIndex());
 
         // Move to left side of map 4 (id 3)
         tileMapService.moveHero(MoveDirections.RIGHT);
         tileMapService.moveHero(MoveDirections.RIGHT);
         assertEquals(0, hero.getX());
         assertEquals(0, hero.getY());
-        assertEquals(3, tileMapService.getCurrentMapIndex());
+        assertEquals(idMap4, tileMapService.getCurrentMapIndex());
 
         // Move to bottom of map 2 (id 1)
         tileMapService.moveHero(MoveDirections.UP);
         assertEquals(0, hero.getX());
         assertEquals(1, hero.getY());
-        assertEquals(1, tileMapService.getCurrentMapIndex());
+        assertEquals(idMap2, tileMapService.getCurrentMapIndex());
 
         // Move to right side of map 1 (id 0)
         tileMapService.moveHero(MoveDirections.LEFT);
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
-        assertEquals(0, tileMapService.getCurrentMapIndex());
+        assertEquals(idMap1, tileMapService.getCurrentMapIndex());
 
 
     }

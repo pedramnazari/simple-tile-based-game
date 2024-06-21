@@ -12,7 +12,7 @@ public class TileMapService {
     private final Hero hero;
     private TileMap tileMap;
     private MapNavigator mapNavigator;
-    private int currentMapIndex;
+    private String currentMapIndex;
 
     public TileMapService(final Hero hero) {
         this.hero = hero;
@@ -28,7 +28,7 @@ public class TileMapService {
         return tileMap;
     }
 
-    public TileMap createAndInitMap(MapNavigator mapNavigator, int indexOfStartingMap) {
+    public TileMap createAndInitMap(MapNavigator mapNavigator, final String indexOfStartingMap) {
         this.mapNavigator = mapNavigator;
         this.currentMapIndex = indexOfStartingMap;
 
@@ -58,9 +58,9 @@ public class TileMapService {
         }
         else {
             if (mapNavigator != null) {
-                int nextMapIndex = mapNavigator.getNextMapId(currentMapIndex, moveDirections);
+                final String nextMapIndex = mapNavigator.getNextMapId(currentMapIndex, moveDirections);
 
-                if (nextMapIndex != currentMapIndex) {
+                if (!nextMapIndex.equals(currentMapIndex)) {
                     mapNavigator.getMap(nextMapIndex);
                     currentMapIndex = nextMapIndex;
 
@@ -81,7 +81,7 @@ public class TileMapService {
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
     }
 
-    public int getCurrentMapIndex() {
+    public String getCurrentMapIndex() {
         return currentMapIndex;
     }
 
