@@ -10,14 +10,18 @@ import java.util.Map;
 public class AllTileMapConfigData {
 
     private final static int[][] map1 = {
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 6},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     };
 
     private static final Map<String, TileMapConfig> allMaps;
+
+
+    private AllTileMapConfigData() {
+    }
 
     static {
         allMaps = new HashMap<>();

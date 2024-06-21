@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.controller;
 
+import de.pedramnazari.simpletbg.model.MoveDirections;
 import de.pedramnazari.simpletbg.model.TileMap;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
@@ -20,5 +21,10 @@ public class TileMapController {
 
     public TileMap startGameUsingMap(TileMapConfig mapConfig) {
         return tileMapService.createAndInitMap(mapConfig);
+    }
+
+    public TileMap moveHeroToRight() {
+        tileMapService.moveHero(MoveDirections.RIGHT);
+        return null;
     }
 }
