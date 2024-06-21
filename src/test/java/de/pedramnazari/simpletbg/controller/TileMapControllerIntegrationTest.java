@@ -3,7 +3,8 @@ package de.pedramnazari.simpletbg.controller;
 import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.Tile;
 import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.service.TileMapConfig;
+import de.pedramnazari.simpletbg.model.TileMapConfig;
+import de.pedramnazari.simpletbg.service.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.TileMapService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,10 +28,10 @@ public class TileMapControllerIntegrationTest {
         final TileMap tileMap = controller.startNewGame();
         assertNotNull(tileMap);
 
-        final int[][] map1Config = TileMapConfig.getMapConfig("1");
+        final TileMapConfig map1Config = AllTileMapConfigData.getMapConfig("1");
 
-        assertEquals(map1Config[0].length, tileMap.getWidth());
-        assertEquals(map1Config.length, tileMap.getHeight());
+        assertEquals(map1Config.getMap()[0].length, tileMap.getWidth());
+        assertEquals(map1Config.getMap().length, tileMap.getHeight());
 
         final Tile aTile = tileMap.getTile(0, 0);
         assertNotNull(aTile);
@@ -53,13 +54,15 @@ public class TileMapControllerIntegrationTest {
 
     @Test
     public void testStartGameUsingMap() {
-        final int[][] mapConfig = {
+        final int[][] mapArray = {
                 {6, 3, 1},
                 {5, 4, 2}
         };
 
+        final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
 
-        final TileMap tileMap = controller.startGameUsingMap(mapConfig);
+
+        final TileMap tileMap = controller.startGameUsingMap(mapConfig, "1");
         assertNotNull(tileMap);
         assertEquals(3, tileMap.getWidth());
         assertEquals(2, tileMap.getHeight());

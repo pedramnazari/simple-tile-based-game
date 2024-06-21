@@ -10,13 +10,9 @@ public class TileMapTest {
 
     @Test
     public void testTileMap() {
-        final int width = 10;
-        final int height = 5;
+        final TileMap tileMap = new TileMap("idMap1");
 
-        final TileMap tileMap = new TileMap(width, height);
-
-        assertEquals(width, tileMap.getWidth());
-        assertEquals(height, tileMap.getHeight());
+        assertEquals("idMap1", tileMap.getMapId());
 
         final int[][] mapConfig = {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -27,6 +23,9 @@ public class TileMapTest {
         };
 
         tileMap.load(mapConfig);
+
+        assertEquals(mapConfig[0].length, tileMap.getWidth());
+        assertEquals(mapConfig.length, tileMap.getHeight());
 
         Tile[][] tiles = tileMap.getTiles();
 

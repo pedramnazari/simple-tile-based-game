@@ -4,34 +4,30 @@ import java.util.Arrays;
 
 public class TileMap {
 
-    private final int width;
-    private final int height;
+    private final String mapId;
 
-    private final Tile[][] tiles;
+    private Tile[][] tiles;
 
-    public TileMap(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public TileMap(final String mapId) {
+        this.mapId = mapId;
 
-        tiles = new Tile[height][width];
+        tiles = new Tile[0][0];
     }
 
     public int getWidth() {
-        return width;
+        return tiles[0].length;
     }
 
     public int getHeight() {
-        return height;
+        return tiles.length;
     }
 
     // TODO: Move to TileMapService?
     public void load(int[][] mapConfig) {
-        if ( (mapConfig.length != height) || (mapConfig[0].length != width)) {
-            throw new IllegalArgumentException("No valid map configuration");
-        }
+        tiles = new Tile[mapConfig.length][mapConfig[0].length];
 
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
+        for (int row = 0; row < mapConfig.length; row++) {
+            for (int col = 0; col < mapConfig[0].length; col++) {
                 int tileType = mapConfig[row][col];
                 tiles[row][col] = new Tile(tileType, col, row);
             }
@@ -44,5 +40,9 @@ public class TileMap {
 
     public Tile[][] getTiles() {
         return Arrays.copyOf(tiles, tiles.length);
+    }
+
+    public String getMapId() {
+        return mapId;
     }
 }

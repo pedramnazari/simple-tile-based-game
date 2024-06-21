@@ -1,9 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.MapNavigator;
-import de.pedramnazari.simpletbg.model.MoveDirections;
-import de.pedramnazari.simpletbg.model.TileMap;
+import de.pedramnazari.simpletbg.model.*;
 
 import java.util.Objects;
 
@@ -18,21 +15,21 @@ public class TileMapService {
         this.hero = hero;
     }
 
-    public TileMap createAndInitMap(int[][] mapConfig) {
+    public TileMap createAndInitMap(TileMapConfig mapConfig) {
         Objects.requireNonNull(mapConfig);
 
-        this.tileMap = new TileMap(mapConfig[0].length, mapConfig.length);
+        this.tileMap = new TileMap(mapConfig.getMapId());
 
-        tileMap.load(mapConfig);
+        tileMap.load(mapConfig.getMap());
 
         return tileMap;
     }
 
-    public TileMap createAndInitMap(MapNavigator mapNavigator, final String indexOfStartingMap) {
+    public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap) {
         this.mapNavigator = mapNavigator;
-        this.currentMapIndex = indexOfStartingMap;
+        this.currentMapIndex = idOfStartingMap;
 
-        this.tileMap = this.createAndInitMap(mapNavigator.getMap(indexOfStartingMap));
+        this.tileMap = mapNavigator.getMap(idOfStartingMap);
 
         return tileMap;
     }

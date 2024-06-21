@@ -20,7 +20,7 @@ public class TileMapServiceTest {
 
     @Test
     public void testCreateAndInitMap() {
-        final int[][] mapConfig = {
+        final int[][] mapArray = {
                 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -28,8 +28,11 @@ public class TileMapServiceTest {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 6},
         };
 
-        final int width = mapConfig[0].length;
-        int height = mapConfig.length;
+        final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
+
+        final int width = mapArray[0].length;
+        final int height = mapArray.length;
+
 
         final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
         assertNotNull(tileMap);
@@ -57,10 +60,7 @@ public class TileMapServiceTest {
 
     @Test
     public void testMoveHeroWithinSingleMap() {
-        final int[][] mapConfig = {
-                {6, 3, 1},
-                {5, 4, 2}
-        };
+        TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{{6, 3, 1}, {5, 4, 2}});
 
         final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
         assertNotNull(tileMap);
@@ -110,21 +110,28 @@ public class TileMapServiceTest {
 
     @Test
     public void testMoveHeroBetweenSeveralMaps() {
-        /*      map1    map2
-                map3    map4
-         */
-        int[][] map1 = {{1, 1, 1}, {1, 1, 1}};
-        int[][] map2 = {{2, 2, 2}, {2, 2, 2}};
-        int[][] map3 = {{3, 3, 3}, {3, 3, 3}};
-        int[][] map4 = {{4, 4, 4}, {4, 4, 4}};
-
-
-        final MapNavigator mapNavigator = new MapNavigator();
-
         final String idMap1 = "map1";
         final String idMap2 = "map2";
         final String idMap3 = "map3";
         final String idMap4 = "map4";
+
+        final TileMap map1 = new TileMap(idMap1);
+        map1.load(new int[][]{{1, 1, 1}, {1, 1, 1}});
+
+        final TileMap map2 = new TileMap(idMap2);
+        map2.load(new int[][]{{2, 2, 2}, {2, 2, 2}});
+
+        final TileMap map3 = new TileMap(idMap3);
+        map3.load(new int[][]{{3, 3, 3}, {3, 3, 3}});
+
+        final TileMap map4 = new TileMap(idMap4);
+        map4.load(new int[][]{{4, 4, 4}, {4, 4, 4}});
+
+
+        /*      map1    map2
+                map3    map4
+         */
+        final MapNavigator mapNavigator = new MapNavigator();
 
         mapNavigator.addMap(map1, idMap1);
         mapNavigator.addMap(map2, idMap2);

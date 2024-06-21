@@ -1,10 +1,13 @@
 package de.pedramnazari.simpletbg.service;
 
+import de.pedramnazari.simpletbg.model.TileMapConfig;
+
 import java.util.HashMap;
 import java.util.Map;
 
 // TODO: Contains the hard-coded configuration of all maps. Use file/db instead and move to outside layer
-public class TileMapConfig {
+// TODO: Is start position of hero per map needed?
+public class AllTileMapConfigData {
 
     private final static int[][] map1 = {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -14,14 +17,16 @@ public class TileMapConfig {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 6},
     };
 
-    private static final Map<String, int[][]> allMaps;
+    private static final Map<String, TileMapConfig> allMaps;
 
     static {
         allMaps = new HashMap<>();
-        allMaps.put("1", map1);
+
+        TileMapConfig mapConfig1 = new TileMapConfig("1", map1);
+        allMaps.put("1", mapConfig1);
     }
 
-    public static int[][] getMapConfig(String mapID) {
+    public static TileMapConfig getMapConfig(String mapID) {
         if (!allMaps.containsKey(mapID)) {
             throw new IllegalArgumentException("Invalid map ID: " + mapID);
         }

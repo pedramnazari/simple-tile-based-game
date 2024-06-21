@@ -1,20 +1,18 @@
 package de.pedramnazari.simpletbg.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MapNavigator {
     private final Map<String, Map<MoveDirections, String>> mapConnections = new HashMap<>();
 
-    private final Map<String, int[][]> maps;
+    private final Map<String, TileMap> maps;
 
     public MapNavigator() {
         this.maps = new HashMap<>();
     }
 
-    public void addMap(final int[][] map, String mapId) {
+    public void addMap(final TileMap map, String mapId) {
         if (this.maps.containsKey(mapId)) {
             throw new IllegalArgumentException("Map with id " + mapId + " already exists");
         }
@@ -31,7 +29,7 @@ public class MapNavigator {
         return mapConnections.getOrDefault(currentMapId, new HashMap<>()).getOrDefault(direction, currentMapId);
     }
 
-    public int[][] getMap(String mapIndex) {
+    public TileMap getMap(String mapIndex) {
         return maps.get(mapIndex);
     }
 }
