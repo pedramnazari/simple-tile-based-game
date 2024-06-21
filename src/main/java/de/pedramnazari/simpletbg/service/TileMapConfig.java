@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.model;
+package de.pedramnazari.simpletbg.service;
 
 import java.util.Arrays;
 

@@ -1,6 +1,6 @@
-package de.pedramnazari.simpletbg.service;
+package de.pedramnazari.simpletbg.repository;
 
-import de.pedramnazari.simpletbg.model.TileMapConfig;
+import de.pedramnazari.simpletbg.service.TileMapConfig;
 
 import java.util.HashMap;
 import java.util.Map;

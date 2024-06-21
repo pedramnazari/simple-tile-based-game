@@ -3,8 +3,8 @@ package de.pedramnazari.simpletbg.controller;
 import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.Tile;
 import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.model.TileMapConfig;
-import de.pedramnazari.simpletbg.service.AllTileMapConfigData;
+import de.pedramnazari.simpletbg.service.TileMapConfig;
+import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.TileMapService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ public class TileMapControllerIntegrationTest {
         final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
 
 
-        final TileMap tileMap = controller.startGameUsingMap(mapConfig, "1");
+        final TileMap tileMap = controller.startGameUsingMap(mapConfig);
         assertNotNull(tileMap);
         assertEquals(3, tileMap.getWidth());
         assertEquals(2, tileMap.getHeight());
