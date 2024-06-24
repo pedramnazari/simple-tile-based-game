@@ -4,8 +4,7 @@ import de.pedramnazari.simpletbg.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TileMapServiceTest {
 
@@ -16,7 +15,8 @@ public class TileMapServiceTest {
     public void setUp() {
         ITileFactory tileFactory = new DefaultTileFactory();
 
-        hero = new Hero(1, 0);
+
+        hero = new Hero(new Inventory(), 1, 0);
         tileMapService = new TileMapService(tileFactory, hero);
     }
 
@@ -111,7 +111,7 @@ public class TileMapServiceTest {
     }
 
     @Test
-    public void testMoveHeroWithingSingleMapWithObstacles() {
+    public void testMoveHeroWithinSingleMapWithObstacles() {
         final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
                 {6, 3, 1},
                 {6, 11, 1},
@@ -152,6 +152,39 @@ public class TileMapServiceTest {
 
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
+    }
+
+    @Test
+    public void testMoveHeroWithinSingleMapWithItems() {
+        final TileMapConfig mapConfig = new TileMapConfig("map1", new int[][]{
+                {6, 3, 1},
+                {6, 11, 5},
+                {5, 4, 2}});
+
+        final TileMapConfig itemsConfig = new TileMapConfig("item1", new int[][]{
+                {0, 0, 0},
+                {0, 0, 100},
+                {0, 0, 0}});
+
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig);
+        assertNotNull(tileMap);
+
+        assertEquals(1, hero.getX());
+        assertEquals(0, hero.getY());
+
+        final Inventory inventory = hero.getInventory();
+        assertEquals(0, inventory.getItems().size());
+
+        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirections.DOWN);
+
+        assertEquals(2, hero.getX());
+        assertEquals(1, hero.getY());
+
+        // Item collected
+        assertEquals(1, inventory.getItems().size());
+
+
     }
 
     @Test

@@ -11,10 +11,16 @@ public class TileMapService {
     private TileMap tileMap;
     private MapNavigator mapNavigator;
     private String currentMapIndex;
+    private TileMap itemMap;
 
     public TileMapService(ITileFactory tileFactory, final Hero hero) {
         this.tileFactory = tileFactory;
         this.hero = hero;
+    }
+
+    public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
+        this.itemMap = new TileMap(tileFactory, itemConfig.getMapId(), itemConfig.getMap());
+        return this.createAndInitMap(mapConfig);
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig) {
@@ -50,14 +56,29 @@ public class TileMapService {
 
 
         if (isPositionWithinBoundsOfCurrentMap(newX, newY)) {
-            if (tileMap.getTile(newX, newY).isObstacle()) {
+            final Tile newTile = tileMap.getTile(newX, newY);
+            if (newTile.isObstacle()) {
                 return;
+            }
+
+            if (itemMap != null) {
+                final Tile itemTile = itemMap.getTile(newX, newY);
+                if ((itemTile != null) && itemTile.isItem()) {
+                    System.out.println("Found item: " + itemTile.getItem().getName());
+                    hero.getInventory().addItem(itemTile.getItem());
+                    itemTile.setItem(null);
+                }
             }
 
             hero.setX(newX);
             hero.setY(newY);
         }
         else {
+            // Current assumptions:
+            // - all maps have the same side
+            // - no obstacles at the border of the map
+            // => no need to check whether the new position is an obstacle
+
             if (mapNavigator != null) {
                 final String nextMapIndex = mapNavigator.getNextMapId(currentMapIndex, moveDirections);
 
@@ -86,5 +107,7 @@ public class TileMapService {
         return currentMapIndex;
     }
 
-
+    public TileMap getItemMap() {
+        return itemMap;
+    }
 }

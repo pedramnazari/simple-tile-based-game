@@ -1,9 +1,8 @@
 package de.pedramnazari.simpletbg.view;
 
 import de.pedramnazari.simpletbg.controller.TileMapController;
-import de.pedramnazari.simpletbg.model.Hero;
+import de.pedramnazari.simpletbg.model.*;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
-import de.pedramnazari.simpletbg.model.DefaultTileFactory;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
 import de.pedramnazari.simpletbg.service.TileMapService;
 import javafx.application.Application;
@@ -12,8 +11,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.model.Tile;
 
 public class TileMapVisualizer extends Application {
 
@@ -21,7 +18,8 @@ public class TileMapVisualizer extends Application {
     public void start(Stage primaryStage) {
         TileMapConfig mapConfig = AllTileMapConfigData.getMapConfig("2");
 
-        final Hero hero = new Hero(1, 0);
+        final Inventory inventory = new Inventory();
+        final Hero hero = new Hero(inventory, 1, 0);
         TileMapService tileMapService = new TileMapService(new DefaultTileFactory(), hero);
         TileMapController controller = new TileMapController(tileMapService);
 

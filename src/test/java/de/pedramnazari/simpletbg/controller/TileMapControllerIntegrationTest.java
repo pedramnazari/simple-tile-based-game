@@ -1,9 +1,6 @@
 package de.pedramnazari.simpletbg.controller;
 
-import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.Tile;
-import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.model.DefaultTileFactory;
+import de.pedramnazari.simpletbg.model.*;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.TileMapService;
@@ -20,7 +17,7 @@ public class TileMapControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        tileMapService = new TileMapService(new DefaultTileFactory(), new Hero(0, 0));
+        tileMapService = new TileMapService(new DefaultTileFactory(), new Hero(new Inventory(),0, 0));
         controller = new TileMapController(tileMapService);
     }
 
