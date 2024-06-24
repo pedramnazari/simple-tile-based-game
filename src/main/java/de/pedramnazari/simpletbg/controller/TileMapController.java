@@ -2,6 +2,7 @@ package de.pedramnazari.simpletbg.controller;
 
 import de.pedramnazari.simpletbg.model.MoveDirections;
 import de.pedramnazari.simpletbg.model.TileMap;
+import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.TileMapService;
@@ -23,20 +24,28 @@ public class TileMapController {
         return tileMapService.createAndInitMap(mapConfig);
     }
 
-    public void moveHeroToRight() {
-        tileMapService.moveHero(MoveDirections.RIGHT);
+    public TileMap startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
+        return tileMapService.createAndInitMap(mapConfig, itemConfig);
     }
 
-    public void moveHeroToLeft() {
-        tileMapService.moveHero(MoveDirections.LEFT);
+    public MovementResult moveHeroToRight() {
+        return tileMapService.moveHero(MoveDirections.RIGHT);
     }
 
-    public void moveHeroUp() {
-        tileMapService.moveHero(MoveDirections.UP);
+    public MovementResult moveHeroToLeft() {
+        return tileMapService.moveHero(MoveDirections.LEFT);
     }
 
-    public void moveHeroDown() {
-        tileMapService.moveHero(MoveDirections.DOWN);
+    public MovementResult moveHeroUp() {
+        return tileMapService.moveHero(MoveDirections.UP);
+    }
+
+    public MovementResult moveHeroDown() {
+        return tileMapService.moveHero(MoveDirections.DOWN);
+    }
+
+    public TileMap getItemMap() {
+        return tileMapService.getItemMap();
     }
 
 

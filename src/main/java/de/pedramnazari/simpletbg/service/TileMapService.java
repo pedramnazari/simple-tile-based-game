@@ -40,8 +40,10 @@ public class TileMapService {
         return tileMap;
     }
 
-    public void moveHero(MoveDirections moveDirections) {
+    public MovementResult moveHero(MoveDirections moveDirections) {
         Objects.requireNonNull(moveDirections);
+
+        final MovementResult result = new MovementResult();
 
         // Calculate new position
         int newX = hero.getX();
@@ -58,15 +60,21 @@ public class TileMapService {
         if (isPositionWithinBoundsOfCurrentMap(newX, newY)) {
             final Tile newTile = tileMap.getTile(newX, newY);
             if (newTile.isObstacle()) {
-                return;
+                result.setHasMoved(false);
+                return result;
             }
+
+            result.setHasMoved(true);
 
             if (itemMap != null) {
                 final Tile itemTile = itemMap.getTile(newX, newY);
                 if ((itemTile != null) && itemTile.isItem()) {
-                    System.out.println("Found item: " + itemTile.getItem().getName());
-                    hero.getInventory().addItem(itemTile.getItem());
+                    final Item item = itemTile.getItem();
+                    System.out.println("Found item: " + item.getName());
+                    hero.getInventory().addItem(item);
                     itemTile.setItem(null);
+
+                    result.setItem(item);
                 }
             }
 
@@ -92,9 +100,13 @@ public class TileMapService {
                         case LEFT -> hero.setX(tileMap.getWidth() - 1);
                         case RIGHT -> hero.setX(0);
                     }
+
+                    result.hasMoved();
                 }
             }
         }
+
+        return result;
     }
 
     private boolean isPositionWithinBoundsOfCurrentMap(int newX, int newY) {

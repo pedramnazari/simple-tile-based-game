@@ -10,9 +10,7 @@ public class DefaultTileFactory implements ITileFactory {
                 tile = createFloorAndObstacleTiles(type, x, y);
             }
             else if (type <= 200) {
-                System.out.println("Creating item tile");
                 tile = createItemTile(type, x, y);
-                System.out.println("Item tile created: " + tile.getItem().getName());
             }
             else {
                 throw new IllegalArgumentException("Unknown tile type: " + type);
