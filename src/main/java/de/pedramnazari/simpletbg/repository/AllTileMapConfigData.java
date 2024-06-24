@@ -17,6 +17,14 @@ public class AllTileMapConfigData {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     };
 
+    private final static int[][] map2 = {
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
+            {0, 0, 11, 0, 0, 0, 11, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 0, 0, 0, 0, 0, 0, 11, 0, 1},
+    };
+
     private static final Map<String, TileMapConfig> allMaps;
 
 
@@ -26,8 +34,8 @@ public class AllTileMapConfigData {
     static {
         allMaps = new HashMap<>();
 
-        TileMapConfig mapConfig1 = new TileMapConfig("1", map1);
-        allMaps.put("1", mapConfig1);
+        allMaps.put("1", new TileMapConfig("1", map1));
+        allMaps.put("2", new TileMapConfig("2", map2));
     }
 
     public static TileMapConfig getMapConfig(String mapID) {

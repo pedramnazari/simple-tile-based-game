@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 public class TileMap {
 
+    private final ITileFactory tileFactory;
     private final String mapId;
 
     private Tile[][] tiles;
 
-    public TileMap(final String mapId, final int[][] mapConfig) {
+    public TileMap(ITileFactory tileFactory, final String mapId, final int[][] mapConfig) {
+        this.tileFactory = tileFactory;
         this.mapId = mapId;
 
         this.load(mapConfig);
@@ -29,7 +31,7 @@ public class TileMap {
         for (int row = 0; row < mapConfig.length; row++) {
             for (int col = 0; col < mapConfig[0].length; col++) {
                 int tileType = mapConfig[row][col];
-                tiles[row][col] = new Tile(tileType, col, row);
+                tiles[row][col] = tileFactory.createTile(tileType, col, row);
             }
         }
     }

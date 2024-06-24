@@ -6,6 +6,7 @@ public class Tile {
     private final int type;
     private final int x;
     private final int y;
+    private boolean isObstacle;
 
     public Tile(int type, int x, int y) {
         this.type = type;
@@ -23,5 +24,13 @@ public class Tile {
 
     public int getType() {
         return type;
+    }
+
+    public boolean isObstacle() {
+        return isObstacle;
+    }
+
+    public void setObstacle(boolean isObstacle) {
+        this.isObstacle = isObstacle;
     }
 }

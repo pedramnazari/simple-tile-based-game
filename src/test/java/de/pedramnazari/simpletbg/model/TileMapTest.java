@@ -19,7 +19,7 @@ public class TileMapTest {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
-        final TileMap tileMap = new TileMap("idMap1", mapConfig);
+        final TileMap tileMap = new TileMap(new DefaultTileFactory(), "idMap1", mapConfig);
 
         assertEquals("idMap1", tileMap.getMapId());
 

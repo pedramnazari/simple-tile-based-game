@@ -1,7 +1,11 @@
 package de.pedramnazari.simpletbg.view;
 
+import de.pedramnazari.simpletbg.controller.TileMapController;
+import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
+import de.pedramnazari.simpletbg.model.DefaultTileFactory;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
+import de.pedramnazari.simpletbg.service.TileMapService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -15,9 +19,13 @@ public class TileMapVisualizer extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        TileMapConfig mapConfig = AllTileMapConfigData.getMapConfig("1");
-        final TileMap tileMap = new TileMap(mapConfig.getMapId(), mapConfig.getMap());
+        TileMapConfig mapConfig = AllTileMapConfigData.getMapConfig("2");
 
+        final Hero hero = new Hero(1, 0);
+        TileMapService tileMapService = new TileMapService(new DefaultTileFactory(), hero);
+        TileMapController controller = new TileMapController(tileMapService);
+
+        final TileMap tileMap = controller.startGameUsingMap(mapConfig);
 
         GridPane grid = new GridPane();
 
@@ -35,6 +43,9 @@ public class TileMapVisualizer extends Application {
                         rectangle.setFill(Color.GRAY);
                         break;
                     // Add more cases as needed
+                    case 11:
+                        rectangle.setFill(Color.RED);
+                        break;
                     default:
                         rectangle.setFill(Color.BLACK);
                         break;
@@ -44,7 +55,48 @@ public class TileMapVisualizer extends Application {
             }
         }
 
+        // add hero to grid
+        final Rectangle heroRectangle = new Rectangle(20, 20, Color.YELLOW);
+        grid.add(heroRectangle, hero.getX(), hero.getY());
+
         Scene scene = new Scene(grid, 800, 600);
+        scene.setOnKeyPressed(event -> {
+            boolean hasNewPosition = false;
+            switch (event.getCode()) {
+                case RIGHT:
+                    controller.moveHeroToRight();
+                    heroRectangle.setX(hero.getX());
+                    hasNewPosition = true;
+
+                    break;
+                case LEFT:
+                    controller.moveHeroToLeft();
+                    heroRectangle.setX(hero.getX());
+                    hasNewPosition = true;
+
+                    break;
+                case DOWN:
+                   controller.moveHeroDown();
+                    heroRectangle.setY(hero.getY());
+                    hasNewPosition = true;
+
+                    break;
+                case UP:
+                    controller.moveHeroUp();
+                    heroRectangle.setY(hero.getY());
+                    hasNewPosition = true;
+
+                    break;
+            }
+
+            if(hasNewPosition) {
+                grid.getChildren().remove(heroRectangle);
+                grid.add(heroRectangle, (int) heroRectangle.getX(), (int) heroRectangle.getY());
+            }
+
+        });
+
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }

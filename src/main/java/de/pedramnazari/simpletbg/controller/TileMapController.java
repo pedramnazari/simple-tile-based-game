@@ -23,8 +23,21 @@ public class TileMapController {
         return tileMapService.createAndInitMap(mapConfig);
     }
 
-    public TileMap moveHeroToRight() {
+    public void moveHeroToRight() {
         tileMapService.moveHero(MoveDirections.RIGHT);
-        return null;
     }
+
+    public void moveHeroToLeft() {
+        tileMapService.moveHero(MoveDirections.LEFT);
+    }
+
+    public void moveHeroUp() {
+        tileMapService.moveHero(MoveDirections.UP);
+    }
+
+    public void moveHeroDown() {
+        tileMapService.moveHero(MoveDirections.DOWN);
+    }
+
+
 }

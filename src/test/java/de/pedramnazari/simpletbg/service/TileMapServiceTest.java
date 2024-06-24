@@ -14,8 +14,10 @@ public class TileMapServiceTest {
 
     @BeforeEach
     public void setUp() {
+        ITileFactory tileFactory = new DefaultTileFactory();
+
         hero = new Hero(1, 0);
-        tileMapService = new TileMapService(hero);
+        tileMapService = new TileMapService(tileFactory, hero);
     }
 
     @Test
@@ -109,16 +111,60 @@ public class TileMapServiceTest {
     }
 
     @Test
+    public void testMoveHeroWithingSingleMapWithObstacles() {
+        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+                {6, 3, 1},
+                {6, 11, 1},
+                {5, 4, 2}});
+
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
+        assertNotNull(tileMap);
+
+        assertEquals(1, hero.getX());
+        assertEquals(0, hero.getY());
+
+        // Approach:
+        // ensure that the hero does not move to
+        // the obstacle tiles no matter the direction
+
+        tileMapService.moveHero(MoveDirections.DOWN);
+
+        assertEquals(1, hero.getX());
+        assertEquals(0, hero.getY());
+
+        tileMapService.moveHero(MoveDirections.LEFT);
+        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirections.RIGHT);
+
+        assertEquals(0, hero.getX());
+        assertEquals(1, hero.getY());
+
+        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirections.UP);
+
+        assertEquals(1, hero.getX());
+        assertEquals(2, hero.getY());
+
+        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirections.UP);
+        tileMapService.moveHero(MoveDirections.LEFT);
+
+        assertEquals(2, hero.getX());
+        assertEquals(1, hero.getY());
+    }
+
+    @Test
     public void testMoveHeroBetweenSeveralMaps() {
         final String idMap1 = "map1";
         final String idMap2 = "map2";
         final String idMap3 = "map3";
         final String idMap4 = "map4";
 
-        final TileMap map1 = new TileMap(idMap1, new int[][]{{1, 1, 1}, {1, 1, 1}});
-        final TileMap map2 = new TileMap(idMap2, new int[][]{{2, 2, 2}, {2, 2, 2}});
-        final TileMap map3 = new TileMap(idMap3, new int[][]{{3, 3, 3}, {3, 3, 3}});
-        final TileMap map4 = new TileMap(idMap4, new int[][]{{4, 4, 4}, {4, 4, 4}});
+        final TileMap map1 = new TileMap(new DefaultTileFactory(), idMap1, new int[][]{{1, 1, 1}, {1, 1, 1}});
+        final TileMap map2 = new TileMap(new DefaultTileFactory(), idMap2, new int[][]{{2, 2, 2}, {2, 2, 2}});
+        final TileMap map3 = new TileMap(new DefaultTileFactory(), idMap3, new int[][]{{3, 3, 3}, {3, 3, 3}});
+        final TileMap map4 = new TileMap(new DefaultTileFactory(), idMap4, new int[][]{{4, 4, 4}, {4, 4, 4}});
 
         /*      map1    map2
                 map3    map4
@@ -177,8 +223,6 @@ public class TileMapServiceTest {
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
         assertEquals(idMap1, tileMapService.getCurrentMapIndex());
-
-
     }
 
 

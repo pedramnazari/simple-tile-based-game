@@ -6,19 +6,21 @@ import java.util.Objects;
 
 public class TileMapService {
 
+    private final ITileFactory tileFactory;
     private final Hero hero;
     private TileMap tileMap;
     private MapNavigator mapNavigator;
     private String currentMapIndex;
 
-    public TileMapService(final Hero hero) {
+    public TileMapService(ITileFactory tileFactory, final Hero hero) {
+        this.tileFactory = tileFactory;
         this.hero = hero;
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig) {
         Objects.requireNonNull(mapConfig);
 
-        this.tileMap = new TileMap(mapConfig.getMapId(), mapConfig.getMap());
+        this.tileMap = new TileMap(tileFactory, mapConfig.getMapId(), mapConfig.getMap());
 
         return tileMap;
     }
@@ -48,6 +50,10 @@ public class TileMapService {
 
 
         if (isPositionWithinBoundsOfCurrentMap(newX, newY)) {
+            if (tileMap.getTile(newX, newY).isObstacle()) {
+                return;
+            }
+
             hero.setX(newX);
             hero.setY(newY);
         }
