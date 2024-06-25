@@ -7,7 +7,10 @@ import de.pedramnazari.simpletbg.model.Tile;
 // TODO: separate TileFactory for obstacles, items etc
 public class DefaultTileFactory implements ITileFactory {
 
-        @Override
+    public static final String ITEM_MAGIC_BLACK_KEY_NAME = "Magic Black Key";
+    public static final String ITEM_MAGIC_BLACK_KEY_DESC = "A black key that opens the door to the next level.";
+
+    @Override
         public Tile createTile(int type, int x, int y) {
             Tile tile;
             if (type < 100) {
@@ -30,8 +33,8 @@ public class DefaultTileFactory implements ITileFactory {
         String itemDescription;
 
         if (type == 100) {
-            itemName = "Magic Black Key";
-            itemDescription = "A black key that opens the door to the next level.";
+            itemName = ITEM_MAGIC_BLACK_KEY_NAME;
+            itemDescription = ITEM_MAGIC_BLACK_KEY_DESC;
         }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);

@@ -155,7 +155,7 @@ public class TileMapServiceTest {
     }
 
     @Test
-    public void testMoveHeroWithinSingleMapWithItems() {
+    public void testMoveHeroWithinSingleMapCollectingItems() {
         final TileMapConfig mapConfig = new TileMapConfig("map1", new int[][]{
                 {6, 3, 1},
                 {6, 11, 5},
@@ -168,6 +168,17 @@ public class TileMapServiceTest {
 
         final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig);
         assertNotNull(tileMap);
+
+        final TileMap itemMap = tileMapService.getItemMap();
+        assertNotNull(itemMap);
+
+        final Tile itemTile = itemMap.getTile(2, 1);
+        assertEquals(100, itemTile.getType());
+
+        final Item item = itemTile.getItem();
+        assertNotNull(item);
+        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_NAME, item.getName());
+        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_DESC, item.getDescription());
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
@@ -182,9 +193,12 @@ public class TileMapServiceTest {
         assertEquals(1, hero.getY());
 
         // Item collected
+        // ...in inventory
         assertEquals(1, inventory.getItems().size());
 
-
+        // ...removed from map/tile
+        assertEquals(100, itemTile.getType());
+        assertNull(itemTile.getItem());
     }
 
     @Test
