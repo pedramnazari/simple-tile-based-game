@@ -18,8 +18,7 @@ import java.util.Map;
 
 public class TileMapVisualizer extends Application {
 
-    public static final int TILE_WIDTH = 80;
-    public static final int TILE_HEIGHT = 80;
+    public static final int TILE_SIZE = 80;
 
     private final Map<Point, Rectangle> itemRectangles = new HashMap<>();
 
@@ -36,7 +35,7 @@ public class TileMapVisualizer extends Application {
         initItemTiles(items, grid);
 
         // add hero to grid
-        final Rectangle heroRectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT, Color.GREEN);
+        final Rectangle heroRectangle = new Rectangle(TILE_SIZE, TILE_SIZE, Color.GREEN);
         grid.add(heroRectangle, hero.getX(), hero.getY());
 
         Scene scene = new Scene(grid, 800, 600);
@@ -92,7 +91,7 @@ public class TileMapVisualizer extends Application {
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(x, y);
-                Rectangle rectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT);
+                Rectangle rectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
 
                 switch (tile.getType()) {
                     case 0:
@@ -116,7 +115,7 @@ public class TileMapVisualizer extends Application {
 
     private void initItemTiles(Collection<Item> itemMap, GridPane tileMapGrid) {
         for (Item item : itemMap) {
-            final Rectangle itemRectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT);
+            final Rectangle itemRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
             itemRectangle.setFill(Color.YELLOW);
             Point point = new Point(item.getX(), item.getY());
             itemRectangles.put(point, itemRectangle);

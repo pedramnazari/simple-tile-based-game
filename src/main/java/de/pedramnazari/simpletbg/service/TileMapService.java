@@ -24,6 +24,7 @@ public class TileMapService {
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
+        // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
         this.items = itemFactory.createItemsUsingTileMapConfig(itemConfig);
         return this.createAndInitMap(mapConfig);
     }
@@ -58,16 +59,18 @@ public class TileMapService {
         result.setOldX(oldX);
         result.setOldY(oldY);
 
-        int newX = oldX;
-        int newY = oldY;
-
+        int dx = 0;
+        int dy = 0;
 
         switch (moveDirections) {
-            case UP -> newY = oldY - 1;
-            case DOWN -> newY = oldY + 1;
-            case LEFT -> newX = oldX - 1;
-            case RIGHT -> newX = oldX + 1;
+            case UP -> dy = -1;
+            case DOWN -> dy = 1;
+            case LEFT -> dx = -1;
+            case RIGHT -> dx = 1;
         }
+
+        int newX = oldX + dx;
+        int newY = oldY + dy;
 
         result.setNewX(newX);
         result.setNewY(newY);

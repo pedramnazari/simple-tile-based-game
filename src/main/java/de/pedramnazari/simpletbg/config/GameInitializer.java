@@ -17,11 +17,11 @@ public class GameInitializer {
 
         // TODO: move to AllTileMapConfigData
         final TileMapConfig itemConfig = new TileMapConfig("item2", new int[][]{
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 100, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 100, 0, 0, 0, 100, 0, 0, 0},
+                {0, 0, 0, 0, 0, 100, 0, 0, 0, 0},
+                {0, 0, 0, 100, 0, 0, 100, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 100},
+                {0, 100, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 100, 0, 0, 100, 0, 0, 0},
         });
 
         final Inventory inventory = new Inventory();
