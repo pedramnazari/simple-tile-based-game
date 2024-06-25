@@ -2,9 +2,7 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class TileMapService {
 
@@ -147,7 +145,7 @@ public class TileMapService {
     }
 
     public Collection<Item> getItems() {
-        return items;
+        return List.copyOf(items);
     }
 
     public TileMap getTileMap() {

@@ -171,37 +171,35 @@ public class TileMapServiceTest {
         final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig);
         assertNotNull(tileMap);
 
-        final Collection<Item> itemMap = tileMapService.getItems();
-        assertNotNull(itemMap);
-        assertEquals(1, itemMap.size());
+        final Collection<Item> items = tileMapService.getItems();
+        assertNotNull(items);
+        assertEquals(1, items.size());
 
-//        final Tile itemTile = itemMap.getTile(2, 1);
-//        assertEquals(100, itemTile.getType());
-//
-//        final Item item = itemTile.getItem();
-//        assertNotNull(item);
-//        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_NAME, item.getName());
-//        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_DESC, item.getDescription());
-//
-//        assertEquals(1, hero.getX());
-//        assertEquals(0, hero.getY());
-//
-//        final Inventory inventory = hero.getInventory();
-//        assertEquals(0, inventory.getItems().size());
-//
-//        tileMapService.moveHero(MoveDirections.RIGHT);
-//        tileMapService.moveHero(MoveDirections.DOWN);
-//
-//        assertEquals(2, hero.getX());
-//        assertEquals(1, hero.getY());
-//
-//        // Item collected
-//        // ...in inventory
-//        assertEquals(1, inventory.getItems().size());
-//
-//        // ...removed from map/tile
-//        assertEquals(100, itemTile.getType());
-//        assertNull(itemTile.getItem());
+        final Item item = items.iterator().next();
+
+        assertNotNull(item);
+        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_NAME, item.getName());
+        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_DESC, item.getDescription());
+
+        assertEquals(1, hero.getX());
+        assertEquals(0, hero.getY());
+
+        final Inventory inventory = hero.getInventory();
+        assertEquals(0, inventory.getItems().size());
+
+        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirections.DOWN);
+
+        assertEquals(2, hero.getX());
+        assertEquals(1, hero.getY());
+
+        // Item collected
+        // ...in inventory
+        assertEquals(1, inventory.getItems().size());
+
+        // ...removed from map/tile
+        final Collection<Item> itemsAfterMove = tileMapService.getItems();
+        assertEquals(0, itemsAfterMove.size());
     }
 
     @Test
