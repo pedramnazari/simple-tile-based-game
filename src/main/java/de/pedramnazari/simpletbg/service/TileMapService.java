@@ -46,14 +46,29 @@ public class TileMapService {
         final MovementResult result = new MovementResult();
 
         // Calculate new position
-        int newX = hero.getX();
-        int newY = hero.getY();
+        final int oldX = hero.getX();
+        final int oldY = hero.getY();
+
+        result.setOldX(oldX);
+        result.setOldY(oldY);
+
+        int newX = oldX;
+        int newY = oldY;
+
 
         switch (moveDirections) {
-            case UP -> newY = newY - 1;
-            case DOWN -> newY = newY + 1;
-            case LEFT -> newX = newX - 1;
-            case RIGHT -> newX = newX + 1;
+            case UP -> newY = oldY - 1;
+            case DOWN -> newY = oldY + 1;
+            case LEFT -> newX = oldX - 1;
+            case RIGHT -> newX = oldX + 1;
+        }
+
+        result.setNewX(newX);
+        result.setNewY(newY);
+
+        if (hasPositionChanged(oldX, newX, oldY, newY)) {
+            result.setHasMoved(false);
+            return result;
         }
 
 
@@ -109,6 +124,10 @@ public class TileMapService {
         return result;
     }
 
+    private boolean hasPositionChanged(int oldX, int newX, int oldY, int newY) {
+        return (newX == oldX) && (newY == oldY);
+    }
+
     private boolean isPositionWithinBoundsOfCurrentMap(int newX, int newY) {
         // Current assumption: all maps have the same side
         // TODO: in future, check whether figure can be placed to this position (e.g., that there is no rock)
@@ -121,5 +140,13 @@ public class TileMapService {
 
     public TileMap getItemMap() {
         return itemMap;
+    }
+
+    public TileMap getTileMap() {
+        return tileMap;
+    }
+
+    public Hero getHero() {
+        return hero;
     }
 }

@@ -1,4 +1,8 @@
-package de.pedramnazari.simpletbg.model;
+package de.pedramnazari.simpletbg.service;
+
+import de.pedramnazari.simpletbg.model.ITileFactory;
+import de.pedramnazari.simpletbg.model.Item;
+import de.pedramnazari.simpletbg.model.Tile;
 
 // TODO: separate TileFactory for obstacles, items etc
 public class DefaultTileFactory implements ITileFactory {

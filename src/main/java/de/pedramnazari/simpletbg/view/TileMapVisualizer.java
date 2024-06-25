@@ -1,11 +1,10 @@
 package de.pedramnazari.simpletbg.view;
 
+import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.MovementResult;
-import de.pedramnazari.simpletbg.service.TileMapConfig;
-import de.pedramnazari.simpletbg.service.TileMapService;
+import de.pedramnazari.simpletbg.service.Point;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -13,33 +12,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TileMapVisualizer extends Application {
 
     public static final int TILE_WIDTH = 80;
     public static final int TILE_HEIGHT = 80;
 
+    private Map<Point, Rectangle> itemRectangles = new HashMap<>();
+
     @Override
     public void start(Stage primaryStage) {
-        TileMapConfig mapConfig = AllTileMapConfigData.getMapConfig("2");
+        final GridPane grid = new GridPane();
 
-        final Inventory inventory = new Inventory();
-        final Hero hero = new Hero(inventory, 1, 0);
-        TileMapService tileMapService = new TileMapService(new DefaultTileFactory(), hero);
-        TileMapController controller = new TileMapController(tileMapService);
+        final TileMapController controller = GameInitializer.initGame();
+        final TileMap tileMap = controller.getTileMap();
+        final TileMap itemMap = controller.getItemMap();
+        final Hero hero = controller.getHero();
 
-        GridPane grid = new GridPane();
-
-        // TODO: move to AllTileMapConfigData
-        final TileMapConfig itemConfig = new TileMapConfig("item2", new int[][]{
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 100, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 100, 0, 0, 0, 100, 0, 0, 0},
-        });
-
-        initFloorAndObstacleTiles(controller.startGameUsingMap(mapConfig, itemConfig), grid);
-        initItemTiles(controller.getItemMap(), grid);
+        initFloorAndObstacleTiles(tileMap, grid);
+        initItemTiles(itemMap, grid);
 
         // add hero to grid
         final Rectangle heroRectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT, Color.GREEN);
@@ -71,12 +64,19 @@ public class TileMapVisualizer extends Application {
                     break;
             }
 
-            if(result != null && result.hasMoved()) {
+            if((result != null) && result.hasMoved()) {
                 grid.getChildren().remove(heroRectangle);
                 grid.add(heroRectangle, (int) heroRectangle.getX(), (int) heroRectangle.getY());
 
                 if (result.isItemCollected()) {
-                    // TODO: item collected. Remove item from grid
+                    Point point = new Point(result.getNewX(), result.getNewY());
+                    Rectangle itemRectangle = itemRectangles.remove(point);
+
+                    if(itemRectangle == null) {
+                        throw new IllegalArgumentException("No item rectangle found for point: " + point);
+                    }
+
+                    grid.getChildren().remove(itemRectangle);
                 }
             }
 
@@ -113,7 +113,7 @@ public class TileMapVisualizer extends Application {
         }
     }
 
-    private void initItemTiles(TileMap itemMap, GridPane grid) {
+    private void initItemTiles(TileMap itemMap, GridPane tileMapGrid) {
         for (int y = 0; y < itemMap.getHeight(); y++) {
             for (int x = 0; x < itemMap.getWidth(); x++) {
                 Tile tile = itemMap.getTile(x, y);
@@ -131,7 +131,10 @@ public class TileMapVisualizer extends Application {
                         break;
                 }
 
-                grid.add(itemRectangle, x, y);
+                Point point = new Point(x, y);
+                itemRectangles.put(point, itemRectangle);
+
+                tileMapGrid.add(itemRectangle, x, y);
             }
         }
     }

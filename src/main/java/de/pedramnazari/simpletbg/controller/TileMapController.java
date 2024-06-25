@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.controller;
 
+import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.MoveDirections;
 import de.pedramnazari.simpletbg.model.TileMap;
 import de.pedramnazari.simpletbg.service.MovementResult;
@@ -49,4 +50,11 @@ public class TileMapController {
     }
 
 
+    public TileMap getTileMap() {
+        return tileMapService.getTileMap();
+    }
+
+    public Hero getHero() {
+        return tileMapService.getHero();
+    }
 }

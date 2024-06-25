@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.model;
 
+import de.pedramnazari.simpletbg.service.DefaultTileFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

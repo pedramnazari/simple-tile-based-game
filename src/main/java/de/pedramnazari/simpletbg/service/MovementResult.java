@@ -23,16 +23,32 @@ public class MovementResult {
         return oldX;
     }
 
+    public void setOldX(int oldX) {
+        this.oldX = oldX;
+    }
+
     public int getOldY() {
         return oldY;
+    }
+
+    public void setOldY(int oldY) {
+        this.oldY = oldY;
     }
 
     public int getNewX() {
         return newX;
     }
 
+    public void setNewX(int newX) {
+        this.newX = newX;
+    }
+
     public int getNewY() {
         return newY;
+    }
+
+    public void setNewY(int newY) {
+        this.newY = newY;
     }
 
     public Item getItem() {
