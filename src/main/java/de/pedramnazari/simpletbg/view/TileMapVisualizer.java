@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,11 +29,11 @@ public class TileMapVisualizer extends Application {
 
         final TileMapController controller = GameInitializer.initGame();
         final TileMap tileMap = controller.getTileMap();
-        final TileMap itemMap = controller.getItemMap();
+        final Collection<Item> items = controller.getItems();
         final Hero hero = controller.getHero();
 
         initFloorAndObstacleTiles(tileMap, grid);
-        initItemTiles(itemMap, grid);
+        initItemTiles(items, grid);
 
         // add hero to grid
         final Rectangle heroRectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT, Color.GREEN);
@@ -64,7 +65,7 @@ public class TileMapVisualizer extends Application {
                     break;
             }
 
-            if((result != null) && result.hasMoved()) {
+            if ((result != null) && result.hasMoved()) {
                 grid.getChildren().remove(heroRectangle);
                 grid.add(heroRectangle, (int) heroRectangle.getX(), (int) heroRectangle.getY());
 
@@ -72,7 +73,7 @@ public class TileMapVisualizer extends Application {
                     Point point = new Point(result.getNewX(), result.getNewY());
                     Rectangle itemRectangle = itemRectangles.remove(point);
 
-                    if(itemRectangle == null) {
+                    if (itemRectangle == null) {
                         throw new IllegalArgumentException("No item rectangle found for point: " + point);
                     }
 
@@ -113,30 +114,16 @@ public class TileMapVisualizer extends Application {
         }
     }
 
-    private void initItemTiles(TileMap itemMap, GridPane tileMapGrid) {
-        for (int y = 0; y < itemMap.getHeight(); y++) {
-            for (int x = 0; x < itemMap.getWidth(); x++) {
-                Tile tile = itemMap.getTile(x, y);
-                if (tile.getType() == 0) {
-                    continue;
-                }
-                Rectangle itemRectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT);
+    private void initItemTiles(Collection<Item> itemMap, GridPane tileMapGrid) {
+        for (Item item : itemMap) {
+            final Rectangle itemRectangle = new Rectangle(TILE_WIDTH, TILE_HEIGHT);
+            itemRectangle.setFill(Color.YELLOW);
+            Point point = new Point(item.getX(), item.getY());
+            itemRectangles.put(point, itemRectangle);
 
-                // Set color based on tile type
-                switch (tile.getType()) {
-                    case 100:
-                        itemRectangle.setFill(Color.YELLOW);
-                        break;
-                    default:
-                        break;
-                }
-
-                Point point = new Point(x, y);
-                itemRectangles.put(point, itemRectangle);
-
-                tileMapGrid.add(itemRectangle, x, y);
-            }
+            tileMapGrid.add(itemRectangle, item.getX(), item.getY());
         }
+
     }
 
     public static void main(String[] args) {

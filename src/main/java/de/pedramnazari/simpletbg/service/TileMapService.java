@@ -2,27 +2,31 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TileMapService {
 
     private final ITileFactory tileFactory;
+    private final IItemFactory itemFactory;
     private final Hero hero;
     private MapNavigator mapNavigator;
     private String currentMapIndex;
 
     // Maps
     private TileMap tileMap;
-    private TileMap itemMap;
+    private Collection<Item> items;
     private TileMap enemyMap;
 
-    public TileMapService(ITileFactory tileFactory, final Hero hero) {
+    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, final Hero hero) {
         this.tileFactory = tileFactory;
+        this.itemFactory = itemFactory;
         this.hero = hero;
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
-        this.itemMap = new TileMap(tileFactory, itemConfig.getMapId(), itemConfig.getMap());
+        this.items = itemFactory.createItemsUsingTileMapConfig(itemConfig);
         return this.createAndInitMap(mapConfig);
     }
 
@@ -85,13 +89,13 @@ public class TileMapService {
 
             result.setHasMoved(true);
 
-            if (itemMap != null) {
-                final Tile itemTile = itemMap.getTile(newX, newY);
-                if ((itemTile != null) && itemTile.isItem()) {
-                    final Item item = itemTile.getItem();
+            if (items != null) {
+                final Optional<Item> optItem = getItem(newX, newY);
+                if (optItem.isPresent()) {
+                    final Item item = optItem.get();
                     System.out.println("Found item: " + item.getName());
                     hero.getInventory().addItem(item);
-                    itemTile.setItem(null);
+                    items.remove(item);
 
                     result.setItem(item);
                 }
@@ -142,8 +146,8 @@ public class TileMapService {
         return currentMapIndex;
     }
 
-    public TileMap getItemMap() {
-        return itemMap;
+    public Collection<Item> getItems() {
+        return items;
     }
 
     public TileMap getTileMap() {
@@ -152,5 +156,14 @@ public class TileMapService {
 
     public Hero getHero() {
         return hero;
+    }
+
+    private Optional<Item> getItem(int x, int y) {
+        for (Item item : items) {
+            if ((item.getX() == x) && (item.getY() == y)) {
+                return Optional.of(item);
+            }
+        }
+        return Optional.empty();
     }
 }

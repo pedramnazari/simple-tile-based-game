@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.controller;
 
 import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
@@ -17,7 +18,8 @@ public class TileMapControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        TileMapService tileMapService = new TileMapService(new DefaultTileFactory(), new Hero(new Inventory(), 0, 0));
+        TileMapService tileMapService = new TileMapService(
+                new DefaultTileFactory(new DefaultItemFactory()), new DefaultItemFactory(), new Hero(new Inventory(), 0, 0));
         controller = new TileMapController(tileMapService);
     }
 
@@ -43,11 +45,11 @@ public class TileMapControllerIntegrationTest {
         assertEquals(5, bTile.getX());
         assertEquals(1, bTile.getY());
 
-        final Tile cTile = tileMap.getTile(tileMap.getWidth()-1, tileMap.getHeight()-1);
+        final Tile cTile = tileMap.getTile(tileMap.getWidth() - 1, tileMap.getHeight() - 1);
         assertNotNull(cTile);
         assertEquals(1, cTile.getType());
-        assertEquals(tileMap.getWidth()-1, cTile.getX());
-        assertEquals(tileMap.getHeight()-1, cTile.getY());
+        assertEquals(tileMap.getWidth() - 1, cTile.getX());
+        assertEquals(tileMap.getHeight() - 1, cTile.getY());
     }
 
     @Test
