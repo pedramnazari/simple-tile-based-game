@@ -20,7 +20,7 @@ public class TileMapVisualizer extends Application {
     public static final int TILE_WIDTH = 80;
     public static final int TILE_HEIGHT = 80;
 
-    private Map<Point, Rectangle> itemRectangles = new HashMap<>();
+    private final Map<Point, Rectangle> itemRectangles = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {

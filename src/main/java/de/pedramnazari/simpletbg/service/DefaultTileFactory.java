@@ -9,7 +9,7 @@ public class DefaultTileFactory implements ITileFactory {
 
         @Override
         public Tile createTile(int type, int x, int y) {
-            Tile tile = null;
+            Tile tile;
             if (type < 100) {
                 tile = createFloorAndObstacleTiles(type, x, y);
             }
@@ -26,8 +26,8 @@ public class DefaultTileFactory implements ITileFactory {
     private Tile createItemTile(int type, int x, int y) {
         final Tile tile = new Tile(type, x, y);
 
-        String itemName = "";
-        String itemDescription = "";
+        String itemName;
+        String itemDescription;
 
         if (type == 100) {
             itemName = "Magic Black Key";

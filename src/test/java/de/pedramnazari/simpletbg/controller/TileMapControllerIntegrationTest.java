@@ -14,11 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TileMapControllerIntegrationTest {
 
     private TileMapController controller;
-    private TileMapService tileMapService;
 
     @BeforeEach
     public void setUp() {
-        tileMapService = new TileMapService(new DefaultTileFactory(), new Hero(new Inventory(),0, 0));
+        TileMapService tileMapService = new TileMapService(new DefaultTileFactory(), new Hero(new Inventory(), 0, 0));
         controller = new TileMapController(tileMapService);
     }
 

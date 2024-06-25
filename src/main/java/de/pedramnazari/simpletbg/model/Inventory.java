@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Inventory {
 
-    private Collection<Item> items;
+    private final Collection<Item> items;
 
     public Inventory() {
         this.items = new ArrayList<>();
