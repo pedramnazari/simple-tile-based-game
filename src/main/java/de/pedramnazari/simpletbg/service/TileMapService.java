@@ -8,10 +8,13 @@ public class TileMapService {
 
     private final ITileFactory tileFactory;
     private final Hero hero;
-    private TileMap tileMap;
     private MapNavigator mapNavigator;
     private String currentMapIndex;
+
+    // Maps
+    private TileMap tileMap;
     private TileMap itemMap;
+    private TileMap enemyMap;
 
     public TileMapService(ITileFactory tileFactory, final Hero hero) {
         this.tileFactory = tileFactory;
@@ -26,6 +29,7 @@ public class TileMapService {
     public TileMap createAndInitMap(TileMapConfig mapConfig) {
         Objects.requireNonNull(mapConfig);
 
+        // TODO: use factory to create map
         this.tileMap = new TileMap(tileFactory, mapConfig.getMapId(), mapConfig.getMap());
 
         return tileMap;

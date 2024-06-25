@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.model;
 
-public abstract class Figure {
+public abstract class Figure implements TileMapElement {
 
     private int x;
     private int y;
@@ -26,4 +26,5 @@ public abstract class Figure {
     public void setY(int y) {
         this.y = y;
     }
+
 }

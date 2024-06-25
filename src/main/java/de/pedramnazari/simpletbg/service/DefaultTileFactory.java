@@ -40,6 +40,7 @@ public class DefaultTileFactory implements ITileFactory {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
 
+        // TODO: create a separate ItemFactory
         final Item item = new Item(itemName, itemDescription);
         tile.setItem(item);
 

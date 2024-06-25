@@ -1,8 +1,6 @@
 package de.pedramnazari.simpletbg.model;
 
-public class Tile {
-
-
+public class Tile implements TileMapElement {
     private final int type;
     private final int x;
     private final int y;
