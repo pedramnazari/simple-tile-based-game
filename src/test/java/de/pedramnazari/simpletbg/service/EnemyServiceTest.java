@@ -2,8 +2,6 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Enemy;
 import de.pedramnazari.simpletbg.model.IEnemyFactory;
-import de.pedramnazari.simpletbg.model.MoveDirection;
-import de.pedramnazari.simpletbg.model.TileMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
