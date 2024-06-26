@@ -1,15 +1,19 @@
 package de.pedramnazari.simpletbg.model;
 
 public class Hero extends Figure {
+    public static final int HERO_TYPE = 1000;
 
-    private final Inventory inventory;
+    private Inventory inventory;
 
-    public Hero(Inventory inventory, int x, int y) {
+    public Hero(int x, int y) {
         super(x, y);
-        this.inventory = inventory;
     }
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }

@@ -20,15 +20,15 @@ public class TileMapController {
     }
 
     public TileMap startNewGame() {
-        return this.startGameUsingMap(AllTileMapConfigData.getMapConfig("1"));
+        return this.startGameUsingMap(AllTileMapConfigData.getMapConfig("1"), 1, 0);
     }
 
-    public TileMap startGameUsingMap(TileMapConfig mapConfig) {
-        return tileMapService.createAndInitMap(mapConfig);
+    public TileMap startGameUsingMap(TileMapConfig mapConfig, int heroX, int heroY) {
+        return tileMapService.createAndInitMap(mapConfig, heroX, heroY);
     }
 
-    public TileMap startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
-        return tileMapService.createAndInitMap(mapConfig, itemConfig);
+    public TileMap startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, int heroX, int heroY) {
+        return tileMapService.createAndInitMap(mapConfig, itemConfig, heroX, heroY);
     }
 
     public MovementResult moveHeroToRight() {

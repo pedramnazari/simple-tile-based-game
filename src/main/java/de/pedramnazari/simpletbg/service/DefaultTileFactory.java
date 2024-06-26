@@ -15,7 +15,7 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
 
 
     @Override
-    protected Tile createElementForNonEmptyTile(int type, int x, int y) {
+    protected Tile createNonEmptyElement(int type, int x, int y) {
         Tile tile;
         if (type < 100) {
             tile = createFloorAndObstacleTiles(type, x, y);

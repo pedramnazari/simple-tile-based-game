@@ -7,7 +7,7 @@ import de.pedramnazari.simpletbg.model.IEnemyFactory;
 public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> implements IEnemyFactory {
 
     @Override
-    protected Enemy createElementForNonEmptyTile(int type, int x, int y) {
+    protected Enemy createNonEmptyElement(int type, int x, int y) {
         final Enemy enemy;
         if (type == 1) {
             enemy = new Enemy(x, y);

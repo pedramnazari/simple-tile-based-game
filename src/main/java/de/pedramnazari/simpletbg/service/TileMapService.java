@@ -8,8 +8,8 @@ public class TileMapService {
 
     private final ITileFactory tileFactory;
     private final IItemFactory itemFactory;
-    private final MovementService movementService;
-    private final Hero hero;
+    private final HeroService heroService;
+    private Hero hero;
     private MapNavigator mapNavigator;
     private String currentMapIndex;
 
@@ -18,21 +18,23 @@ public class TileMapService {
     private Collection<Item> items = new ArrayList<>();
     private final Collection<Enemy> enemies = new ArrayList<>();
 
-    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, HeroMovementService movementService, final Hero hero) {
+    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, HeroService heroService) {
         this.tileFactory = tileFactory;
         this.itemFactory = itemFactory;
-        this.movementService = movementService;
-        this.hero = hero;
+        this.heroService = heroService;
     }
 
-    public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
+    public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig, int heroX, int heroY) {
+        this.hero = heroService.createHero(heroX, heroY);
         // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
         this.items = itemFactory.createElementsUsingTileMapConfig(itemConfig);
-        return this.createAndInitMap(mapConfig);
+        return this.createAndInitMap(mapConfig, heroX, heroY);
     }
 
-    public TileMap createAndInitMap(TileMapConfig mapConfig) {
+    public TileMap createAndInitMap(TileMapConfig mapConfig, int heroX, int heroY) {
         Objects.requireNonNull(mapConfig);
+
+        this.hero = heroService.createHero(heroX, heroY);
 
         // TODO: use factory to create map
         this.tileMap = new TileMap(tileFactory, mapConfig.getMapId(), mapConfig.getMap());
@@ -40,8 +42,10 @@ public class TileMapService {
         return tileMap;
     }
 
-    public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap) {
+    public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap, int heroX, int heroY) {
         this.mapNavigator = mapNavigator;
+        this.hero = heroService.createHero(heroX, heroY);
+
         this.currentMapIndex = idOfStartingMap;
 
         this.tileMap = mapNavigator.getMap(idOfStartingMap);
@@ -66,7 +70,7 @@ public class TileMapService {
     }
 
     protected MovementResult moveHero(MoveDirection moveDirection) {
-        final MovementResult result = movementService.moveTileMapElement(tileMap, items, hero, moveDirection, mapNavigator, currentMapIndex);
+        final MovementResult result = heroService.moveTileMapElement(tileMap, items, hero, moveDirection, mapNavigator, currentMapIndex);
 
         if(result.hasMoved()) {
             currentMapIndex = result.getNewMapIndex();

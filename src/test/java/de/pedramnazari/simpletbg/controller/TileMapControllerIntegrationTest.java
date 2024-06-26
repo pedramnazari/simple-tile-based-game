@@ -18,8 +18,8 @@ public class TileMapControllerIntegrationTest {
         TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
                 new DefaultItemFactory(),
-                new HeroMovementService(),
-                new Hero(new Inventory(), 0, 0));
+                new HeroService(new DefaultHeroFactory(), new HeroMovementService()));
+
         controller = new TileMapController(tileMapService);
     }
 
@@ -35,7 +35,7 @@ public class TileMapControllerIntegrationTest {
 
         final Tile aTile = tileMap.getTile(0, 0);
         assertNotNull(aTile);
-        assertEquals(1, aTile.getType());
+        assertEquals(3, aTile.getType());
         assertEquals(0, aTile.getX());
         assertEquals(0, aTile.getY());
 
@@ -47,7 +47,7 @@ public class TileMapControllerIntegrationTest {
 
         final Tile cTile = tileMap.getTile(tileMap.getWidth() - 1, tileMap.getHeight() - 1);
         assertNotNull(cTile);
-        assertEquals(1, cTile.getType());
+        assertEquals(3, cTile.getType());
         assertEquals(tileMap.getWidth() - 1, cTile.getX());
         assertEquals(tileMap.getHeight() - 1, cTile.getY());
     }
@@ -62,7 +62,7 @@ public class TileMapControllerIntegrationTest {
         final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
 
 
-        final TileMap tileMap = controller.startGameUsingMap(mapConfig);
+        final TileMap tileMap = controller.startGameUsingMap(mapConfig, 1, 0);
         assertNotNull(tileMap);
         assertEquals(3, tileMap.getWidth());
         assertEquals(2, tileMap.getHeight());

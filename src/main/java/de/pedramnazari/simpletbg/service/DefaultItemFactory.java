@@ -7,7 +7,7 @@ import de.pedramnazari.simpletbg.model.Item;
 public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> implements IItemFactory {
 
     @Override
-    protected Item createElementForNonEmptyTile(int type, int x, int y) {
+    protected Item createNonEmptyElement(int type, int x, int y) {
         String itemName;
         String itemDescription;
 

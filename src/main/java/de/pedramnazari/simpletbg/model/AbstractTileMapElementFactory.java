@@ -13,10 +13,10 @@ public abstract class AbstractTileMapElementFactory<T extends ITileMapElement> i
             return null;
         }
 
-        return createElementForNonEmptyTile(type, x, y);
+        return createNonEmptyElement(type, x, y);
     }
 
-    protected abstract T createElementForNonEmptyTile(int type, int x, int y);
+    protected abstract T createNonEmptyElement(int type, int x, int y);
 
     @Override
     public Collection<T> createElementsUsingTileMapConfig(TileMapConfig mapConfig) {

@@ -2,6 +2,8 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Enemy;
 import de.pedramnazari.simpletbg.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.model.MoveDirection;
+import de.pedramnazari.simpletbg.model.TileMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,8 +49,4 @@ public class EnemyServiceTest {
         final Enemy cEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 2).findFirst().orElse(null);
         assertNotNull(cEnemy);
     }
-
-
-
-
 }

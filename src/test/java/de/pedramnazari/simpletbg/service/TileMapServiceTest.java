@@ -18,10 +18,11 @@ public class TileMapServiceTest {
         ITileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
 
 
-        hero = new Hero(new Inventory(), 1, 0);
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
-                new HeroMovementService(), hero);
+                new HeroService(new DefaultHeroFactory(), new HeroMovementService()));
+
+        hero = tileMapService.getHero();
     }
 
     @Test
@@ -41,7 +42,7 @@ public class TileMapServiceTest {
         final int height = mapArray.length;
 
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
         assertNotNull(tileMap);
         assertEquals(width, tileMap.getWidth());
         assertEquals(height, tileMap.getHeight());
@@ -69,9 +70,10 @@ public class TileMapServiceTest {
     public void testMoveHeroWithinSingleMap() {
         TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{{6, 3, 1}, {5, 4, 2}});
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
         assertNotNull(tileMap);
 
+        final Hero hero = tileMapService.getHero();
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
@@ -122,8 +124,10 @@ public class TileMapServiceTest {
                 {6, 11, 1},
                 {5, 4, 2}});
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig);
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
         assertNotNull(tileMap);
+
+        final Hero hero = tileMapService.getHero();
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
@@ -171,7 +175,7 @@ public class TileMapServiceTest {
                 {0, 0, 100},
                 {0, 0, 0}});
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig);
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig, 1, 0);
         assertNotNull(tileMap);
 
         final Collection<Item> items = tileMapService.getItems();
@@ -184,6 +188,8 @@ public class TileMapServiceTest {
         assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_NAME, item.getName());
         assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_DESC, item.getDescription());
 
+        final Hero hero = tileMapService.getHero();
+        assertNotNull(hero);
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
@@ -236,10 +242,13 @@ public class TileMapServiceTest {
         mapNavigator.addConnection(idMap4, MoveDirection.LEFT, idMap3);
         mapNavigator.addConnection(idMap4, MoveDirection.UP, idMap2);
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapNavigator, idMap1);
+        final TileMap tileMap = tileMapService.createAndInitMap(mapNavigator, idMap1, 1, 0);
         assertNotNull(tileMap);
 
         assertEquals(idMap1, tileMapService.getCurrentMapIndex());
+
+        final Hero hero = tileMapService.getHero();
+
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
