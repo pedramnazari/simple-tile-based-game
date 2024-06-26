@@ -50,10 +50,16 @@ public class TileMapService {
     }
 
     public MovementResult moveHero(MoveDirections moveDirections) {
-        return moveTileMapElement(this.tileMap, this.items, this.hero, moveDirections);
+        final MovementResult result = moveTileMapElement(tileMap, items, hero, moveDirections, mapNavigator, currentMapIndex);
+
+        if(result.hasMoved()) {
+            currentMapIndex = result.getNewMapIndex();
+        }
+
+        return result;
     }
 
-    private Point calcNewPosition(MoveDirections moveDirections, int oldX, int oldY) {
+    private Point calcNewPosition(final MoveDirections moveDirections, int oldX, int oldY) {
         int dx = 0;
         int dy = 0;
 
@@ -67,7 +73,9 @@ public class TileMapService {
         return new Point(oldX + dx, oldY + dy);
     }
 
-    private MovementResult moveTileMapElement(final TileMap tileMap, final Collection<Item> items, final ITileMapElement element, final MoveDirections moveDirections) {
+    private MovementResult moveTileMapElement(final TileMap tileMap, final Collection<Item> items,
+                                              final ITileMapElement element, final MoveDirections moveDirections,
+                                              final MapNavigator mapNavigator, final String currentMapIndex) {
         Objects.requireNonNull(moveDirections);
 
         final int oldX = element.getX();
@@ -79,17 +87,21 @@ public class TileMapService {
 
         MovementResult result;
 
-        if (isPositionWithinBoundsOfCurrentMap(newX, newY)) {
-            result = moveElementWithinMap(tileMap, items, element, newX, newY);
+        if (isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
+            result = moveElementWithinMap(tileMap, items, element, newX, newY, currentMapIndex);
         }
         else {
-            result = moveElementBetweenMaps(tileMap, element, moveDirections);
+            result = moveElementBetweenMaps(tileMap, element, moveDirections, mapNavigator, currentMapIndex);
         }
 
         return result;
     }
 
-    private MovementResult moveElementBetweenMaps(TileMap tileMap, ITileMapElement element, MoveDirections moveDirections) {
+    private MovementResult moveElementBetweenMaps(final TileMap tileMap,
+                                                  final ITileMapElement element,
+                                                  final MoveDirections moveDirections,
+                                                  final MapNavigator mapNavigator,
+                                                  final String currentMapIndex) {
         // Current assumptions:
         // - all maps have the same side
         // - no obstacles at the border of the map
@@ -104,7 +116,7 @@ public class TileMapService {
 
             if (!nextMapIndex.equals(currentMapIndex)) {
                 mapNavigator.getMap(nextMapIndex);
-                currentMapIndex = nextMapIndex;
+                result.setNewMapIndex(nextMapIndex);
 
                 switch(moveDirections) {
                     case UP -> element.setY(tileMap.getHeight() - 1);
@@ -123,12 +135,11 @@ public class TileMapService {
         return result;
     }
 
-    private MovementResult moveElementWithinMap(TileMap tileMap, Collection<Item> items, ITileMapElement element, int newX, int newY) {
+    private MovementResult moveElementWithinMap(TileMap tileMap, Collection<Item> items, ITileMapElement element, int newX, int newY, final String currentMapIndex) {
         final MovementResult result = new MovementResult();
         result.setOldX(element.getX());
         result.setOldY(element.getY());
-        result.setNewX(newX);
-        result.setNewY(newY);
+        result.setOldMapIndex(currentMapIndex);
 
         final Tile newTile = tileMap.getTile(newX, newY);
         if (newTile.isObstacle()) {
@@ -137,6 +148,13 @@ public class TileMapService {
         }
 
         result.setHasMoved(true);
+
+        element.setX(newX);
+        element.setY(newY);
+
+        result.setNewX(newX);
+        result.setNewY(newY);
+        result.setNewMapIndex(currentMapIndex);
 
         // TODO: Refactor (do not use instanceof)
         if ((element instanceof Hero) && (items != null)) {
@@ -151,8 +169,6 @@ public class TileMapService {
             }
         }
 
-        element.setX(newX);
-        element.setY(newY);
 
         return result;
     }
@@ -161,7 +177,7 @@ public class TileMapService {
         return (newX == oldX) && (newY == oldY);
     }
 
-    private boolean isPositionWithinBoundsOfCurrentMap(int newX, int newY) {
+    private boolean isPositionWithinBoundsOfCurrentMap(final TileMap tileMap, final int newX, final int newY) {
         // Current assumption: all maps have the same side
         // TODO: in future, check whether figure can be placed to this position (e.g., that there is no rock)
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
