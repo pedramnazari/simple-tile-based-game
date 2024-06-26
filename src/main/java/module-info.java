@@ -3,6 +3,7 @@ module de.pedramnazari.simpletbg {
     requires javafx.fxml;
     requires javafx.graphics;
     requires org.controlsfx.controls;
+    requires java.logging;
 
     exports de.pedramnazari.simpletbg.view;
 }

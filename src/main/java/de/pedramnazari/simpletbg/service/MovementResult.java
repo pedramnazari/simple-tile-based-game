@@ -9,7 +9,7 @@ public class MovementResult {
     private int newX;
     private int newY;
     private boolean hasMoved;
-    private Item item;
+    private Item collectedItem;
 
     // TODO: move outside this class?
     private String oldMapIndex;
@@ -55,16 +55,16 @@ public class MovementResult {
         this.newY = newY;
     }
 
-    public Item getItem() {
-        return item;
+    public Item getCollectedItem() {
+        return collectedItem;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setCollectedItem(Item collectedItem) {
+        this.collectedItem = collectedItem;
     }
 
     public boolean isItemCollected() {
-        return item != null;
+        return collectedItem != null;
     }
 
     public void setOldMapIndex(String oldMapIndex) {

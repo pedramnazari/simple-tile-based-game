@@ -21,7 +21,7 @@ public class TileMapServiceTest {
         hero = new Hero(new Inventory(), 1, 0);
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
-                new MovementService(), hero);
+                new HeroMovementService(), hero);
     }
 
     @Test
@@ -74,41 +74,41 @@ public class TileMapServiceTest {
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.UP);
+        tileMapService.moveHero(MoveDirection.UP);
 
         // Same position as before
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.LEFT);
+        tileMapService.moveHero(MoveDirection.LEFT);
 
         assertEquals(0, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.RIGHT);
-        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirection.RIGHT);
+        tileMapService.moveHero(MoveDirection.RIGHT);
 
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirection.RIGHT);
 
         // Same position as before
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirection.DOWN);
 
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirection.DOWN);
 
         // Same position as before
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.UP);
+        tileMapService.moveHero(MoveDirection.UP);
 
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());
@@ -131,28 +131,28 @@ public class TileMapServiceTest {
         // ensure that the hero does not move to
         // the obstacle tiles no matter the direction
 
-        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirection.DOWN);
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.LEFT);
-        tileMapService.moveHero(MoveDirections.DOWN);
-        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirection.LEFT);
+        tileMapService.moveHero(MoveDirection.DOWN);
+        tileMapService.moveHero(MoveDirection.RIGHT);
 
         assertEquals(0, hero.getX());
         assertEquals(1, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.DOWN);
-        tileMapService.moveHero(MoveDirections.RIGHT);
-        tileMapService.moveHero(MoveDirections.UP);
+        tileMapService.moveHero(MoveDirection.DOWN);
+        tileMapService.moveHero(MoveDirection.RIGHT);
+        tileMapService.moveHero(MoveDirection.UP);
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.RIGHT);
-        tileMapService.moveHero(MoveDirections.UP);
-        tileMapService.moveHero(MoveDirections.LEFT);
+        tileMapService.moveHero(MoveDirection.RIGHT);
+        tileMapService.moveHero(MoveDirection.UP);
+        tileMapService.moveHero(MoveDirection.LEFT);
 
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
@@ -189,8 +189,8 @@ public class TileMapServiceTest {
         final Inventory inventory = hero.getInventory();
         assertEquals(0, inventory.getItems().size());
 
-        tileMapService.moveHero(MoveDirections.RIGHT);
-        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirection.RIGHT);
+        tileMapService.moveHero(MoveDirection.DOWN);
 
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
@@ -226,14 +226,14 @@ public class TileMapServiceTest {
         mapNavigator.addMap(map3, idMap3);
         mapNavigator.addMap(map4, idMap4);
 
-        mapNavigator.addConnection(idMap1, MoveDirections.RIGHT, idMap2);
-        mapNavigator.addConnection(idMap1, MoveDirections.DOWN, idMap3);
-        mapNavigator.addConnection(idMap2, MoveDirections.LEFT, idMap1);
-        mapNavigator.addConnection(idMap2, MoveDirections.DOWN, idMap4);
-        mapNavigator.addConnection(idMap3, MoveDirections.UP, idMap1);
-        mapNavigator.addConnection(idMap3, MoveDirections.RIGHT, idMap4);
-        mapNavigator.addConnection(idMap4, MoveDirections.LEFT, idMap3);
-        mapNavigator.addConnection(idMap4, MoveDirections.UP, idMap2);
+        mapNavigator.addConnection(idMap1, MoveDirection.RIGHT, idMap2);
+        mapNavigator.addConnection(idMap1, MoveDirection.DOWN, idMap3);
+        mapNavigator.addConnection(idMap2, MoveDirection.LEFT, idMap1);
+        mapNavigator.addConnection(idMap2, MoveDirection.DOWN, idMap4);
+        mapNavigator.addConnection(idMap3, MoveDirection.UP, idMap1);
+        mapNavigator.addConnection(idMap3, MoveDirection.RIGHT, idMap4);
+        mapNavigator.addConnection(idMap4, MoveDirection.LEFT, idMap3);
+        mapNavigator.addConnection(idMap4, MoveDirection.UP, idMap2);
 
         final TileMap tileMap = tileMapService.createAndInitMap(mapNavigator, idMap1);
         assertNotNull(tileMap);
@@ -243,33 +243,33 @@ public class TileMapServiceTest {
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirection.DOWN);
 
         assertEquals(1, hero.getX());
         assertEquals(1, hero.getY());
         assertEquals(idMap1, tileMapService.getCurrentMapIndex());
 
         // Move to top of map 3 (id 2)
-        tileMapService.moveHero(MoveDirections.DOWN);
+        tileMapService.moveHero(MoveDirection.DOWN);
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
         assertEquals(idMap3, tileMapService.getCurrentMapIndex());
 
         // Move to left side of map 4 (id 3)
-        tileMapService.moveHero(MoveDirections.RIGHT);
-        tileMapService.moveHero(MoveDirections.RIGHT);
+        tileMapService.moveHero(MoveDirection.RIGHT);
+        tileMapService.moveHero(MoveDirection.RIGHT);
         assertEquals(0, hero.getX());
         assertEquals(0, hero.getY());
         assertEquals(idMap4, tileMapService.getCurrentMapIndex());
 
         // Move to bottom of map 2 (id 1)
-        tileMapService.moveHero(MoveDirections.UP);
+        tileMapService.moveHero(MoveDirection.UP);
         assertEquals(0, hero.getX());
         assertEquals(1, hero.getY());
         assertEquals(idMap2, tileMapService.getCurrentMapIndex());
 
         // Move to right side of map 1 (id 0)
-        tileMapService.moveHero(MoveDirections.LEFT);
+        tileMapService.moveHero(MoveDirection.LEFT);
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
         assertEquals(idMap1, tileMapService.getCurrentMapIndex());

@@ -25,7 +25,7 @@ public class GameInitializer {
         final Hero hero = new Hero(inventory, 1, 0);
         final TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
-                new DefaultItemFactory(), new MovementService(),
+                new DefaultItemFactory(), new HeroMovementService(),
                 hero);
         final TileMapController controller = new TileMapController(tileMapService);
         controller.startGameUsingMap(mapConfig, itemConfig);

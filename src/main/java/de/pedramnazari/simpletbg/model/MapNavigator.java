@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapNavigator {
-    private final Map<String, Map<MoveDirections, String>> mapConnections = new HashMap<>();
+    private final Map<String, Map<MoveDirection, String>> mapConnections = new HashMap<>();
 
     private final Map<String, TileMap> maps;
 
@@ -20,12 +20,12 @@ public class MapNavigator {
         this.maps.put(mapId, map);
     }
 
-    public void addConnection(String fromMapId, MoveDirections direction, String toMapId) {
+    public void addConnection(String fromMapId, MoveDirection direction, String toMapId) {
         mapConnections.putIfAbsent(fromMapId, new HashMap<>());
         mapConnections.get(fromMapId).put(direction, toMapId);
     }
 
-    public String getNextMapId(String currentMapId, MoveDirections direction) {
+    public String getNextMapId(String currentMapId, MoveDirection direction) {
         return mapConnections.getOrDefault(currentMapId, new HashMap<>()).getOrDefault(direction, currentMapId);
     }
 

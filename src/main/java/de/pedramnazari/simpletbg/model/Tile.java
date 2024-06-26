@@ -2,8 +2,8 @@ package de.pedramnazari.simpletbg.model;
 
 public class Tile implements ITileMapElement {
     private final int type;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private boolean isObstacle;
     private Item item;
 
@@ -16,16 +16,6 @@ public class Tile implements ITileMapElement {
 
     public int getX() {
         return x;
-    }
-
-    @Override
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
     }
 
     @Override

@@ -2,7 +2,6 @@ package de.pedramnazari.simpletbg.controller;
 
 import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.Item;
-import de.pedramnazari.simpletbg.model.MoveDirections;
 import de.pedramnazari.simpletbg.model.TileMap;
 import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
@@ -33,19 +32,19 @@ public class TileMapController {
     }
 
     public MovementResult moveHeroToRight() {
-        return tileMapService.moveHero(MoveDirections.RIGHT);
+        return tileMapService.moveHeroToRight();
     }
 
     public MovementResult moveHeroToLeft() {
-        return tileMapService.moveHero(MoveDirections.LEFT);
+        return tileMapService.moveHeroToLeft();
     }
 
     public MovementResult moveHeroUp() {
-        return tileMapService.moveHero(MoveDirections.UP);
+        return tileMapService.moveHeroUp();
     }
 
     public MovementResult moveHeroDown() {
-        return tileMapService.moveHero(MoveDirections.DOWN);
+        return tileMapService.moveHeroDown();
     }
 
     public Collection<Item> getItems() {

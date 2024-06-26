@@ -49,8 +49,24 @@ public class TileMapService {
         return tileMap;
     }
 
-    public MovementResult moveHero(MoveDirections moveDirections) {
-        final MovementResult result = movementService.moveTileMapElement(tileMap, items, hero, moveDirections, mapNavigator, currentMapIndex);
+    public MovementResult moveHeroToLeft() {
+        return moveHero(MoveDirection.LEFT);
+    }
+
+    public MovementResult moveHeroToRight() {
+        return moveHero(MoveDirection.RIGHT);
+    }
+
+    public MovementResult moveHeroUp() {
+        return moveHero(MoveDirection.UP);
+    }
+
+    public MovementResult moveHeroDown() {
+        return moveHero(MoveDirection.DOWN);
+    }
+
+    protected MovementResult moveHero(MoveDirection moveDirection) {
+        final MovementResult result = movementService.moveTileMapElement(tileMap, items, hero, moveDirection, mapNavigator, currentMapIndex);
 
         if(result.hasMoved()) {
             currentMapIndex = result.getNewMapIndex();

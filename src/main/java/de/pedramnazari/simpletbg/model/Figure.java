@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.model;
 
-public abstract class Figure implements ITileMapElement {
+public abstract class Figure implements IMoveableTileElement {
 
     private int x;
     private int y;
@@ -26,5 +26,7 @@ public abstract class Figure implements ITileMapElement {
     public void setY(int y) {
         this.y = y;
     }
+
+
 
 }

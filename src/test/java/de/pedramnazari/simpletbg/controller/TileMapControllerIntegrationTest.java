@@ -18,7 +18,7 @@ public class TileMapControllerIntegrationTest {
         TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
                 new DefaultItemFactory(),
-                new MovementService(),
+                new HeroMovementService(),
                 new Hero(new Inventory(), 0, 0));
         controller = new TileMapController(tileMapService);
     }

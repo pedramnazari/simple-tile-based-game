@@ -1,5 +1,5 @@
 package de.pedramnazari.simpletbg.model;
 
-public enum MoveDirections {
+public enum MoveDirection {
     UP, DOWN, LEFT, RIGHT
 }
