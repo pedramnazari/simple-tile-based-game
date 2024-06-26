@@ -16,7 +16,7 @@ public class TileMapService {
     // Maps
     private TileMap tileMap;
     private Collection<Item> items = new ArrayList<>();
-    private Collection<Enemy> enemies = new ArrayList<>();
+    private final Collection<Enemy> enemies = new ArrayList<>();
 
     public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, HeroMovementService movementService, final Hero hero) {
         this.tileFactory = tileFactory;

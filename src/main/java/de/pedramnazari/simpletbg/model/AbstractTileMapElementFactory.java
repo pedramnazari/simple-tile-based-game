@@ -4,7 +4,6 @@ import de.pedramnazari.simpletbg.service.TileMapConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public abstract class AbstractTileMapElementFactory<T extends ITileMapElement> implements ITileMapElementFactory<T> {
 

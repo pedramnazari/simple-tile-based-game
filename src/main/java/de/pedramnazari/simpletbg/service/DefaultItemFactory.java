@@ -4,9 +4,6 @@ import de.pedramnazari.simpletbg.model.AbstractTileMapElementFactory;
 import de.pedramnazari.simpletbg.model.IItemFactory;
 import de.pedramnazari.simpletbg.model.Item;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> implements IItemFactory {
 
     @Override

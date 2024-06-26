@@ -39,11 +39,7 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         final Tile tile = new Tile(type, x, y);
 
         // "Floor" tiles and obstacles
-        if (type <= 10) {
-            tile.setObstacle(false);
-        } else {
-            tile.setObstacle(true);
-        }
+        tile.setObstacle(type > 10);
 
         return tile;
     }

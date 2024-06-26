@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.service;
 import de.pedramnazari.simpletbg.model.AbstractTileMapElementFactory;
 import de.pedramnazari.simpletbg.model.Enemy;
 import de.pedramnazari.simpletbg.model.IEnemyFactory;
-import de.pedramnazari.simpletbg.model.ITileMapElement;
 
 public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> implements IEnemyFactory {
 
