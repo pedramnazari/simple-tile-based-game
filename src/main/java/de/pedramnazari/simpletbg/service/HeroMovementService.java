@@ -16,7 +16,7 @@ public class HeroMovementService extends MovementService {
     @Override
     protected void handleItems(Collection<Item> items, IMoveableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
-        if ((element instanceof Hero) && (items != null)) {
+        if ((element instanceof Hero)) {
             final Optional<Item> optItem = getItem(items, newX, newY);
             if (optItem.isPresent()) {
                 final Item item = optItem.get();

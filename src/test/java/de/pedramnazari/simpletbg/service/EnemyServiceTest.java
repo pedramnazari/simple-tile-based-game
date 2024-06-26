@@ -29,9 +29,14 @@ public class EnemyServiceTest {
                 {0, 1, 0},
         };
 
-        final Collection<Enemy> enemies = enemyService.createEnemies(map);
+        final Collection<Enemy> enemies = enemyService.createEnemies(new TileMapConfig("map1", map));
         assertNotNull(enemies);
         assertEquals(3, enemies.size());
+
+        for (Enemy enemy : enemies) {
+            assertNotNull(enemy);
+            System.out.println(enemy.getX() + " " + enemy.getY());
+        }
 
         final Enemy aEnemy = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(aEnemy);

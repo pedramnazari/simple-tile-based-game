@@ -14,12 +14,13 @@ public class TileMapTest {
     public void testTileMap() {
 
         final int[][] mapConfig = {
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 2, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         };
+
 
         final TileMap tileMap = new TileMap(new DefaultTileFactory(new DefaultItemFactory()), "idMap1", mapConfig);
 
@@ -41,12 +42,12 @@ public class TileMapTest {
         assertNotNull(tile);
         assertEquals(0, tile.getX());
         assertEquals(0, tile.getY());
-        assertEquals(0, tile.getType());
+        assertEquals(1, tile.getType());
 
         tile = tileMap.getTile(5, 1);
         assertEquals(5, tile.getX());
         assertEquals(1, tile.getY());
-        assertEquals(1, tile.getType());
+        assertEquals(2, tile.getType());
 
 
 

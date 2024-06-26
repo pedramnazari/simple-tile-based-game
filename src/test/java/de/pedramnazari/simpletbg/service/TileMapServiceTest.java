@@ -27,12 +27,13 @@ public class TileMapServiceTest {
     @Test
     public void testCreateAndInitMap() {
         final int[][] mapArray = {
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 6},
+                {3, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 2, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 6},
         };
+
 
         final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
 
@@ -47,7 +48,7 @@ public class TileMapServiceTest {
 
         final Tile aTile = tileMap.getTile(0, 0);
         assertNotNull(aTile);
-        assertEquals(1, aTile.getType());
+        assertEquals(3, aTile.getType());
         assertEquals(0, aTile.getX());
         assertEquals(0, aTile.getY());
 
@@ -189,8 +190,8 @@ public class TileMapServiceTest {
         final Inventory inventory = hero.getInventory();
         assertEquals(0, inventory.getItems().size());
 
-        tileMapService.moveHero(MoveDirection.RIGHT);
-        tileMapService.moveHero(MoveDirection.DOWN);
+        tileMapService.moveHeroToRight();
+        tileMapService.moveHeroDown();
 
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());

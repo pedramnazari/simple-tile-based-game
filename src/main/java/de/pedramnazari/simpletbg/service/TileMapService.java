@@ -15,10 +15,10 @@ public class TileMapService {
 
     // Maps
     private TileMap tileMap;
-    private Collection<Item> items;
-    private TileMap enemyMap;
+    private Collection<Item> items = new ArrayList<>();
+    private Collection<Enemy> enemies = new ArrayList<>();
 
-    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, MovementService movementService, final Hero hero) {
+    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, HeroMovementService movementService, final Hero hero) {
         this.tileFactory = tileFactory;
         this.itemFactory = itemFactory;
         this.movementService = movementService;
@@ -27,7 +27,7 @@ public class TileMapService {
 
     public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig) {
         // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
-        this.items = itemFactory.createItemsUsingTileMapConfig(itemConfig);
+        this.items = itemFactory.createElementsUsingTileMapConfig(itemConfig);
         return this.createAndInitMap(mapConfig);
     }
 

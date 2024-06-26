@@ -12,8 +12,8 @@ public class EnemyService {
         this.enemyFactory = enemyFactory;
     }
 
-    public Collection<Enemy> createEnemies(int[][] enemyMapConfig) {
-        return enemyFactory.createEnemies(enemyMapConfig);
+    public Collection<Enemy> createEnemies(TileMapConfig enemyMapConfig) {
+        return enemyFactory.createElementsUsingTileMapConfig(enemyMapConfig);
     }
 
 

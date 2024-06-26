@@ -4,10 +4,6 @@ import de.pedramnazari.simpletbg.service.TileMapConfig;
 
 import java.util.Collection;
 
-public interface IItemFactory {
+public interface IItemFactory extends ITileMapElementFactory<Item> {
 
-    Item createItem(int type, int x, int y);
-
-
-    Collection<Item> createItemsUsingTileMapConfig(TileMapConfig mapConfig);
 }

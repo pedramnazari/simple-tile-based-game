@@ -31,7 +31,7 @@ public class TileMap {
         for (int row = 0; row < mapConfig.length; row++) {
             for (int col = 0; col < mapConfig[0].length; col++) {
                 int tileType = mapConfig[row][col];
-                tiles[row][col] = tileFactory.createTile(tileType, col, row);
+                tiles[row][col] = tileFactory.createElement(tileType, col, row);
             }
         }
     }
