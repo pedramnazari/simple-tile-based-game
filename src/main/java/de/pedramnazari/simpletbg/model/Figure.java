@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.model;
 
-public abstract class Figure implements TileMapElement {
+public abstract class Figure implements ITileMapElement {
 
     private int x;
     private int y;

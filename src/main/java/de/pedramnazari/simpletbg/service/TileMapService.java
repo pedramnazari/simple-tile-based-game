@@ -8,6 +8,7 @@ public class TileMapService {
 
     private final ITileFactory tileFactory;
     private final IItemFactory itemFactory;
+    private final MovementService movementService;
     private final Hero hero;
     private MapNavigator mapNavigator;
     private String currentMapIndex;
@@ -17,9 +18,10 @@ public class TileMapService {
     private Collection<Item> items;
     private TileMap enemyMap;
 
-    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, final Hero hero) {
+    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, MovementService movementService, final Hero hero) {
         this.tileFactory = tileFactory;
         this.itemFactory = itemFactory;
+        this.movementService = movementService;
         this.hero = hero;
     }
 
@@ -48,17 +50,10 @@ public class TileMapService {
     }
 
     public MovementResult moveHero(MoveDirections moveDirections) {
-        Objects.requireNonNull(moveDirections);
+        return moveTileMapElement(this.tileMap, this.items, this.hero, moveDirections);
+    }
 
-        final MovementResult result = new MovementResult();
-
-        // Calculate new position
-        final int oldX = hero.getX();
-        final int oldY = hero.getY();
-
-        result.setOldX(oldX);
-        result.setOldY(oldY);
-
+    private Point calcNewPosition(MoveDirections moveDirections, int oldX, int oldY) {
         int dx = 0;
         int dy = 0;
 
@@ -69,66 +64,95 @@ public class TileMapService {
             case RIGHT -> dx = 1;
         }
 
-        int newX = oldX + dx;
-        int newY = oldY + dy;
+        return new Point(oldX + dx, oldY + dy);
+    }
 
+    private MovementResult moveTileMapElement(final TileMap tileMap, final Collection<Item> items, final ITileMapElement element, final MoveDirections moveDirections) {
+        Objects.requireNonNull(moveDirections);
+
+        final int oldX = element.getX();
+        final int oldY = element.getY();
+
+        final Point newPosition = calcNewPosition(moveDirections, oldX, oldY);
+        final int newX = newPosition.getX();
+        final int newY = newPosition.getY();
+
+        MovementResult result;
+
+        if (isPositionWithinBoundsOfCurrentMap(newX, newY)) {
+            result = moveElementWithinMap(tileMap, items, element, newX, newY);
+        }
+        else {
+            result = moveElementBetweenMaps(tileMap, element, moveDirections);
+        }
+
+        return result;
+    }
+
+    private MovementResult moveElementBetweenMaps(TileMap tileMap, ITileMapElement element, MoveDirections moveDirections) {
+        // Current assumptions:
+        // - all maps have the same side
+        // - no obstacles at the border of the map
+        // => no need to check whether the new position is an obstacle
+
+        final MovementResult result = new MovementResult();
+        result.setOldX(element.getX());
+        result.setOldY(element.getY());
+
+        if (mapNavigator != null) {
+            final String nextMapIndex = mapNavigator.getNextMapId(currentMapIndex, moveDirections);
+
+            if (!nextMapIndex.equals(currentMapIndex)) {
+                mapNavigator.getMap(nextMapIndex);
+                currentMapIndex = nextMapIndex;
+
+                switch(moveDirections) {
+                    case UP -> element.setY(tileMap.getHeight() - 1);
+                    case DOWN -> element.setY(0);
+                    case LEFT -> element.setX(tileMap.getWidth() - 1);
+                    case RIGHT -> element.setX(0);
+                }
+
+                result.setNewX(element.getX());
+                result.setNewY(element.getY());
+
+                result.setHasMoved(true);
+            }
+        }
+
+        return result;
+    }
+
+    private MovementResult moveElementWithinMap(TileMap tileMap, Collection<Item> items, ITileMapElement element, int newX, int newY) {
+        final MovementResult result = new MovementResult();
+        result.setOldX(element.getX());
+        result.setOldY(element.getY());
         result.setNewX(newX);
         result.setNewY(newY);
 
-        if (hasPositionChanged(oldX, newX, oldY, newY)) {
+        final Tile newTile = tileMap.getTile(newX, newY);
+        if (newTile.isObstacle()) {
             result.setHasMoved(false);
             return result;
         }
 
+        result.setHasMoved(true);
 
-        if (isPositionWithinBoundsOfCurrentMap(newX, newY)) {
-            final Tile newTile = tileMap.getTile(newX, newY);
-            if (newTile.isObstacle()) {
-                result.setHasMoved(false);
-                return result;
-            }
+        // TODO: Refactor (do not use instanceof)
+        if ((element instanceof Hero) && (items != null)) {
+            final Optional<Item> optItem = getItem(newX, newY);
+            if (optItem.isPresent()) {
+                final Item item = optItem.get();
+                System.out.println("Found item: " + item.getName());
+                ((Hero) element).getInventory().addItem(item);
+                items.remove(item);
 
-            result.setHasMoved(true);
-
-            if (items != null) {
-                final Optional<Item> optItem = getItem(newX, newY);
-                if (optItem.isPresent()) {
-                    final Item item = optItem.get();
-                    System.out.println("Found item: " + item.getName());
-                    hero.getInventory().addItem(item);
-                    items.remove(item);
-
-                    result.setItem(item);
-                }
-            }
-
-            hero.setX(newX);
-            hero.setY(newY);
-        }
-        else {
-            // Current assumptions:
-            // - all maps have the same side
-            // - no obstacles at the border of the map
-            // => no need to check whether the new position is an obstacle
-
-            if (mapNavigator != null) {
-                final String nextMapIndex = mapNavigator.getNextMapId(currentMapIndex, moveDirections);
-
-                if (!nextMapIndex.equals(currentMapIndex)) {
-                    mapNavigator.getMap(nextMapIndex);
-                    currentMapIndex = nextMapIndex;
-
-                    switch(moveDirections) {
-                        case UP -> hero.setY(tileMap.getHeight() - 1);
-                        case DOWN -> hero.setY(0);
-                        case LEFT -> hero.setX(tileMap.getWidth() - 1);
-                        case RIGHT -> hero.setX(0);
-                    }
-
-                    result.hasMoved();
-                }
+                result.setItem(item);
             }
         }
+
+        element.setX(newX);
+        element.setY(newY);
 
         return result;
     }

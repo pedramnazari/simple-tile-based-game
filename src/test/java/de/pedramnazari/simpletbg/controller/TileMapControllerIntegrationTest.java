@@ -1,11 +1,8 @@
 package de.pedramnazari.simpletbg.controller;
 
 import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.service.DefaultItemFactory;
-import de.pedramnazari.simpletbg.service.DefaultTileFactory;
-import de.pedramnazari.simpletbg.service.TileMapConfig;
+import de.pedramnazari.simpletbg.service.*;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
-import de.pedramnazari.simpletbg.service.TileMapService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +16,10 @@ public class TileMapControllerIntegrationTest {
     @BeforeEach
     public void setUp() {
         TileMapService tileMapService = new TileMapService(
-                new DefaultTileFactory(new DefaultItemFactory()), new DefaultItemFactory(), new Hero(new Inventory(), 0, 0));
+                new DefaultTileFactory(new DefaultItemFactory()),
+                new DefaultItemFactory(),
+                new MovementService(),
+                new Hero(new Inventory(), 0, 0));
         controller = new TileMapController(tileMapService);
     }
 

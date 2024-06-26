@@ -19,7 +19,9 @@ public class TileMapServiceTest {
 
 
         hero = new Hero(new Inventory(), 1, 0);
-        tileMapService = new TileMapService(tileFactory, new DefaultItemFactory(), hero);
+        tileMapService = new TileMapService(tileFactory,
+                new DefaultItemFactory(),
+                new MovementService(), hero);
     }
 
     @Test
