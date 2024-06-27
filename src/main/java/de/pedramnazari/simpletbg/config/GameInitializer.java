@@ -10,7 +10,7 @@ public class GameInitializer {
     private static final int O = TileType.EMPTY.getType();
     private static final int E = TileType.ENEMY.getType();
 
-    public static TileMapController initGame() {
+    public static TileMapController initAndStartGame() {
         final TileMapConfig mapConfig = AllTileMapConfigData.getMapConfig("2");
 
         // TODO: move to AllTileMapConfigData
@@ -32,12 +32,16 @@ public class GameInitializer {
 
         });
 
+        final EnemyService enemyService = new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService());
+
         final TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService()),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService()));
+                enemyService);
         final TileMapController controller = new TileMapController(tileMapService);
+        enemyService.registerObserver(controller);
+
         controller.startGameUsingMap(mapConfig, itemConfig, enemyConfig, 1, 0);
 
         return controller;

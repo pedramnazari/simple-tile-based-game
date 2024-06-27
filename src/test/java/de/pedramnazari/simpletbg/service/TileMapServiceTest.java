@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -295,6 +297,4 @@ public class TileMapServiceTest {
         assertEquals(1, hero.getY());
         assertEquals(idMap1, tileMapService.getCurrentMapIndex());
     }
-
-
 }

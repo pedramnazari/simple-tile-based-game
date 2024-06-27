@@ -3,8 +3,15 @@ package de.pedramnazari.simpletbg.service;
 import de.pedramnazari.simpletbg.model.*;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TileMapService {
+
+    private static final Logger logger = Logger.getLogger(TileMapService.class.getName());
 
     private final HeroService heroService;
     private final EnemyService enemyService;
@@ -46,6 +53,24 @@ public class TileMapService {
         if (!initialized) {
             throw new IllegalStateException("TileMapService not initialized");
         }
+
+        logger.log(Level.INFO, "Starting the game loop");
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Runnable moveEnemiesRunner = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    enemyService.moveEnemiesRandomlyWithinMap(tileMap, items);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        scheduler.scheduleAtFixedRate(moveEnemiesRunner, 2, 750, TimeUnit.MILLISECONDS);
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig, int heroX, int heroY) {
@@ -93,7 +118,7 @@ public class TileMapService {
     protected MovementResult moveHero(MoveDirection moveDirection) {
         final MovementResult result = heroService.moveHero(tileMap, items, moveDirection, mapNavigator, currentMapIndex);
 
-        if(result.hasMoved()) {
+        if (result.hasMoved()) {
             currentMapIndex = result.getNewMapIndex();
         }
 

@@ -84,7 +84,7 @@ public class EnemyServiceTest {
         assertNotNull(aEnemy);
 
         for (int i = 0; i < 20; i++) {
-            final List<MovementResult> results = enemyService.moveEnemiesRandomlyWithinMap(enemies, tileMap, List.of());
+            final List<MovementResult> results = enemyService.moveEnemiesRandomlyWithinMap(tileMap, List.of());
             assertEquals(enemies.size(), results.size());
 
             // Since the enemies move randomly (so we do not know the target position),

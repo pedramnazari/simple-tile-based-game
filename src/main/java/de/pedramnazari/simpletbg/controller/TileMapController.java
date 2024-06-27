@@ -4,20 +4,28 @@ import de.pedramnazari.simpletbg.model.Enemy;
 import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.Item;
 import de.pedramnazari.simpletbg.model.TileMap;
+import de.pedramnazari.simpletbg.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.service.TileMapConfig;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.TileMapService;
+import de.pedramnazari.simpletbg.view.TileMapVisualizer;
+import javafx.application.Platform;
 
 import java.util.Collection;
 
-public class TileMapController {
+public class TileMapController implements IEnemyObserver {
 
     private final TileMapService tileMapService;
-
+    // TODO: remove this dependency
+    private TileMapVisualizer tileMapVisualizer;
 
     public TileMapController(final TileMapService tileMapService) {
         this.tileMapService = tileMapService;
+    }
+
+    public void setTileMapVisualizer(TileMapVisualizer tileMapVisualizer) {
+        this.tileMapVisualizer = tileMapVisualizer;
     }
 
     @Deprecated
@@ -29,8 +37,9 @@ public class TileMapController {
         return tileMapService.createAndInitMap(mapConfig, heroX, heroY);
     }
 
-    public TileMap startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
-        return tileMapService.createAndInitMap(mapConfig, itemConfig, enemiesConfig, heroX, heroY);
+    public void startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
+        tileMapService.createAndInitMap(mapConfig, itemConfig, enemiesConfig, heroX, heroY);
+        tileMapService.start();
     }
 
     public MovementResult moveHeroToRight() {
@@ -64,5 +73,11 @@ public class TileMapController {
 
     public Collection<Enemy> getEnemies() {
         return tileMapService.getEnemies();
+    }
+
+    @Override
+    public void update(Collection<Enemy> enemies) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> tileMapVisualizer.updateEnemies(enemies));
     }
 }

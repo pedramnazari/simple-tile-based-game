@@ -22,22 +22,25 @@ public class TileMapVisualizer extends Application {
 
     private static final Logger logger = Logger.getLogger(TileMapVisualizer.class.getName());
 
-    public static final int TILE_SIZE = 40;
+    public static final int TILE_SIZE = 80;
 
     private final Map<Point, Rectangle> itemRectangles = new HashMap<>();
+    private final Map<Point, Rectangle> enemyRectangles = new HashMap<>();
+    private GridPane grid;
 
     @Override
     public void start(Stage primaryStage) {
-        final GridPane grid = new GridPane();
+        grid = new GridPane();
 
-        final TileMapController controller = GameInitializer.initGame();
+        final TileMapController controller = GameInitializer.initAndStartGame();
+        controller.setTileMapVisualizer(this);
         final Hero hero = controller.getHero();
 
-        initFloorAndObstacleTiles(controller.getTileMap(), grid);
-        initItems(controller.getItems(), grid);
+        initFloorAndObstacleTiles(controller.getTileMap());
+        initItems(controller.getItems());
         Collection<Enemy> enemies = controller.getEnemies();
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
-        initEnemies(enemies, grid);
+        updateEnemies(enemies);
 
         // add hero to grid
         final Rectangle heroRectangle = new Rectangle(TILE_SIZE, TILE_SIZE, Color.GREEN);
@@ -87,7 +90,7 @@ public class TileMapVisualizer extends Application {
         primaryStage.show();
     }
 
-    private void initFloorAndObstacleTiles(TileMap tileMap, GridPane grid) {
+    private void initFloorAndObstacleTiles(TileMap tileMap) {
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(x, y);
@@ -113,26 +116,32 @@ public class TileMapVisualizer extends Application {
         }
     }
 
-    private void initItems(Collection<Item> itemMap, GridPane tileMapGrid) {
+    private void initItems(Collection<Item> itemMap) {
         for (Item item : itemMap) {
             final Rectangle itemRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
             itemRectangle.setFill(Color.YELLOW);
             Point point = new Point(item.getX(), item.getY());
             itemRectangles.put(point, itemRectangle);
 
-            tileMapGrid.add(itemRectangle, item.getX(), item.getY());
+            grid.add(itemRectangle, item.getX(), item.getY());
         }
 
     }
 
-    private void initEnemies(Collection<Enemy> enemies, GridPane tileMapGrid) {
+    public void updateEnemies(Collection<Enemy> enemies) {
+        for (Point point : enemyRectangles.keySet()) {
+            Rectangle enemyRectangle = enemyRectangles.get(point);
+            grid.getChildren().remove(enemyRectangle);
+        }
+
+
         for (Enemy enemy : enemies) {
             final Rectangle enemyRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
             enemyRectangle.setFill(Color.BLUE);
             Point point = new Point(enemy.getX(), enemy.getY());
-            itemRectangles.put(point, enemyRectangle);
+            enemyRectangles.put(point, enemyRectangle);
 
-            tileMapGrid.add(enemyRectangle, enemy.getX(), enemy.getY());
+            grid.add(enemyRectangle, enemy.getX(), enemy.getY());
         }
 
     }
