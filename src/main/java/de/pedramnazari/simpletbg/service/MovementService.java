@@ -24,11 +24,18 @@ public class MovementService {
 
         MovementResult result;
 
-        if (isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
+        if (isValidMovePositionWithinMap(tileMap, element, newX, newY)) {
             result = moveElementWithinMap(tileMap, items, element, newX, newY, currentMapIndex);
         }
-        else {
+        else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
             result = moveElementBetweenMaps(tileMap, element, moveDirection, mapNavigator, currentMapIndex);
+        }
+        else {
+            result = new MovementResult();
+            result.setOldX(element.getX());
+            result.setOldY(element.getY());
+            result.setOldMapIndex(currentMapIndex);
+            result.hasMoved();
         }
 
         return result;
@@ -55,25 +62,17 @@ public class MovementService {
     }
 
     private MovementResult moveElementWithinMap(TileMap tileMap, Collection<Item> items, IMoveableTileElement element, int newX, int newY, final String currentMapIndex) {
+        element.setX(newX);
+        element.setY(newY);
+
         final MovementResult result = new MovementResult();
         result.setOldX(element.getX());
         result.setOldY(element.getY());
         result.setOldMapIndex(currentMapIndex);
-
-        final Tile newTile = tileMap.getTile(newX, newY);
-        if (newTile.isObstacle()) {
-            result.setHasMoved(false);
-            return result;
-        }
-
-        result.setHasMoved(true);
-
-        element.setX(newX);
-        element.setY(newY);
-
         result.setNewX(newX);
         result.setNewY(newY);
         result.setNewMapIndex(currentMapIndex);
+        result.setHasMoved(true);
 
         handleItems(items, element, newX, newY, result);
 
@@ -151,7 +150,7 @@ public class MovementService {
         return validPositions;
     }
 
-    public boolean isValidMovePositionWithinMap(TileMap tileMap, IMoveableTileElement element, Point newPosition) {
-        return calcValidMovePositionsWithinMap(tileMap, element).contains(newPosition);
+    public boolean isValidMovePositionWithinMap(TileMap tileMap, IMoveableTileElement element, int x, int y) {
+        return calcValidMovePositionsWithinMap(tileMap, element).contains(new Point(x, y));
     }
 }

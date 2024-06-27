@@ -69,6 +69,12 @@ public class MovementServiceTest {
 
         final Set<Point> validPositions = movementService.calcValidMovePositionsWithinMap(tileMap, hero);
         assertEquals(2, validPositions.size());
+
+        final Point point1 = validPositions.stream().filter(p -> p.getX() == 0 && p.getY() == 1).findFirst().orElse(null);
+        assertNotNull(point1);
+
+        final Point point2 = validPositions.stream().filter(p -> p.getX() == 1 && p.getY() == 2).findFirst().orElse(null);
+        assertNotNull(point2);
     }
 
 
