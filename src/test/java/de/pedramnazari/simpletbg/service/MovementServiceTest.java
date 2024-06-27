@@ -109,7 +109,6 @@ public class MovementServiceTest {
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
-
     }
 
 

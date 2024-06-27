@@ -45,22 +45,18 @@ public class TileMapVisualizer extends Application {
                 case RIGHT:
                     result = controller.moveHeroToRight();
                     heroRectangle.setX(hero.getX());
-
                     break;
                 case LEFT:
                     result = controller.moveHeroToLeft();
                     heroRectangle.setX(hero.getX());
-
                     break;
                 case DOWN:
                     result = controller.moveHeroDown();
                     heroRectangle.setY(hero.getY());
-
                     break;
                 case UP:
                     result = controller.moveHeroUp();
                     heroRectangle.setY(hero.getY());
-
                     break;
             }
 
@@ -79,7 +75,6 @@ public class TileMapVisualizer extends Application {
                     grid.getChildren().remove(itemRectangle);
                 }
             }
-
         });
 
 

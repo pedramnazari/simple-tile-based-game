@@ -2,7 +2,8 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
-import java.util.Collection;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EnemyService {
@@ -20,11 +21,28 @@ public class EnemyService {
         return enemyFactory.createElementsUsingTileMapConfig(enemyMapConfig);
     }
 
-    public void moveEnemies(Collection<Enemy> enemies, final TileMap tileMap, final Collection<Item> items,
-                            final MoveDirection moveDirection, final MapNavigator mapNavigator, final String currentMapIndex) {
+    public List<MovementResult> moveEnemiesRandomlyWithinMap(Collection<Enemy> enemies, final TileMap tileMap, final Collection<Item> items) {
+        final List<MovementResult> movementResults = new ArrayList<>();
+
         for (Enemy enemy : enemies) {
-            enemyMovementService.moveTileMapElement(tileMap, items, enemy, moveDirection, mapNavigator, currentMapIndex);
+            final Set<Point> validPositions = enemyMovementService.calcValidMovePositionsWithinMap(tileMap, enemy);
+
+            // add current position (i.e., enemy does not move)
+            validPositions.add(new Point(enemy.getX(), enemy.getY()));
+
+            final List<Point> list = new ArrayList<>(validPositions);
+            final Random random = new Random();
+            int randomIndex = random.nextInt(list.size());
+
+            final Point newPosition = list.get(randomIndex);
+
+            final MovementResult result = enemyMovementService
+                    .moveElementToPositionWithinMap(tileMap, items, enemy, newPosition.getX(), newPosition.getY());
+
+            movementResults.add(result);
         }
+
+        return movementResults;
     }
 
 
