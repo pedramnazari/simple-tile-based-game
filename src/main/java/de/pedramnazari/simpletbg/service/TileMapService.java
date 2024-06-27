@@ -13,6 +13,7 @@ public class TileMapService {
 
     private MapNavigator mapNavigator;
     private String currentMapIndex;
+    private boolean initialized = false;
 
     // TODO: Introduce GameWorld class to hold all maps, items, enemies, hero etc.
     // Maps
@@ -26,28 +27,44 @@ public class TileMapService {
         this.enemyService = enemyService;
     }
 
-    public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig, int heroX, int heroY) {
+    public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
+        if (initialized) {
+            throw new IllegalStateException("TileMapService already initialized");
+        }
+
         // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
         this.items = itemFactory.createElementsUsingTileMapConfig(itemConfig);
-        return this.createAndInitMap(mapConfig, heroX, heroY);
+        final TileMap map = this.createAndInitMap(mapConfig, heroX, heroY);
+        enemyService.init(enemiesConfig);
+
+        initialized = true;
+
+        return map;
+    }
+
+    public void start() {
+        if (!initialized) {
+            throw new IllegalStateException("TileMapService not initialized");
+        }
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig, int heroX, int heroY) {
         Objects.requireNonNull(mapConfig);
 
         // TODO: check whether hero position is valid
-
-        heroService.initHero(heroX, heroY);
+        heroService.init(heroX, heroY);
 
         // TODO: use factory to create map
         this.tileMap = new TileMap(tileFactory, mapConfig.getMapId(), mapConfig.getMap());
+
+        initialized = true;
 
         return tileMap;
     }
 
     public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap, int heroX, int heroY) {
         this.mapNavigator = mapNavigator;
-        heroService.initHero(heroX, heroY);
+        heroService.init(heroX, heroY);
 
         this.currentMapIndex = idOfStartingMap;
 
@@ -56,6 +73,7 @@ public class TileMapService {
         return tileMap;
     }
 
+    // TODO: Move all moveHero* methods to HeroService?
     public MovementResult moveHeroToLeft() {
         return moveHero(MoveDirection.LEFT);
     }
@@ -99,4 +117,11 @@ public class TileMapService {
     }
 
 
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public Collection<Enemy> getEnemies() {
+        return enemyService.getEnemies();
+    }
 }

@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EnemyServiceTest {
 
@@ -29,14 +28,19 @@ public class EnemyServiceTest {
     }
 
     @Test
-    public void testCreateEnemies() {
-        int[][] map = new int[][] {
+    public void testInit() {
+        int[][] map = new int[][]{
                 {O, O, E},
                 {E, O, O},
                 {O, E, O},
         };
 
-        final Collection<Enemy> enemies = enemyService.createEnemies(new TileMapConfig("map1", map));
+        assertFalse(enemyService.isInitialized());
+        enemyService.init(new TileMapConfig("map1", map));
+        assertTrue(enemyService.isInitialized());
+
+        final Collection<Enemy> enemies = enemyService.getEnemies();
+
         assertNotNull(enemies);
         assertEquals(3, enemies.size());
 
@@ -56,13 +60,13 @@ public class EnemyServiceTest {
 
     @Test
     public void testMoveEnemies() {
-        final int[][] enemyMapArray = new int[][] {
+        final int[][] enemyMapArray = new int[][]{
                 {O, E, O},
                 {O, O, O},
                 {O, O, O},
         };
 
-        final int[][] tileMapArray = new int[][] {
+        final int[][] tileMapArray = new int[][]{
                 {F, F, W},
                 {W, F, W},
                 {W, F, F},
@@ -70,7 +74,9 @@ public class EnemyServiceTest {
 
         final TileMap tileMap = new TileMap(new DefaultTileFactory(new DefaultItemFactory()), "map", tileMapArray);
 
-        final Collection<Enemy> enemies = enemyService.createEnemies(new TileMapConfig("enemyMap", enemyMapArray));
+        enemyService.init(new TileMapConfig("enemyMap", enemyMapArray));
+        final Collection<Enemy> enemies = enemyService.getEnemies();
+
         assertNotNull(enemies);
         assertEquals(1, enemies.size());
 

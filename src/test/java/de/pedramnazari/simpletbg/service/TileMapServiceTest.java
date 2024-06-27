@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TileMapServiceTest {
 
+    private static final int O = TileType.EMPTY.getType();
+
     private TileMapService tileMapService;
     private Hero hero;
 
@@ -43,7 +45,10 @@ public class TileMapServiceTest {
         final int height = mapArray.length;
 
 
+        assertFalse(tileMapService.isInitialized());
         final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
+        assertTrue(tileMapService.isInitialized());
+
         assertNotNull(tileMap);
         assertEquals(width, tileMap.getWidth());
         assertEquals(height, tileMap.getHeight());
@@ -172,11 +177,16 @@ public class TileMapServiceTest {
                 {5, 4, 2}});
 
         final TileMapConfig itemsConfig = new TileMapConfig("item1", new int[][]{
-                {0, 0, 0},
-                {0, 0, 100},
-                {0, 0, 0}});
+                {O, O, O},
+                {O, O, 100},
+                {O, O, O}});
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig, 1, 0);
+        final TileMapConfig enemiesConfig = new TileMapConfig("enemies1", new int[][]{
+                {O, O, O},
+                {O, O, O},
+                {O, O, O}});
+
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig, enemiesConfig, 1, 0);
         assertNotNull(tileMap);
 
         final Collection<Item> items = tileMapService.getItems();

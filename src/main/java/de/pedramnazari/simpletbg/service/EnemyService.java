@@ -12,14 +12,20 @@ public class EnemyService {
     private final EnemyMovementService enemyMovementService;
 
     private final Collection<Enemy> enemies = new ArrayList<>();
+    private boolean initialized = false;
 
     public EnemyService(IEnemyFactory enemyFactory, EnemyMovementService enemyMovementService) {
         this.enemyFactory = enemyFactory;
         this.enemyMovementService = enemyMovementService;
     }
 
-    public Collection<Enemy> createEnemies(TileMapConfig enemyMapConfig) {
-        return enemyFactory.createElementsUsingTileMapConfig(enemyMapConfig);
+    public void init(TileMapConfig enemyMapConfig) {
+        if (initialized) {
+            throw new IllegalStateException("Enemies already initialized");
+        }
+
+        enemies.addAll(enemyFactory.createElementsUsingTileMapConfig(enemyMapConfig));
+        initialized = true;
     }
 
     public List<MovementResult> moveEnemiesRandomlyWithinMap(Collection<Enemy> enemies, final TileMap tileMap, final Collection<Item> items) {
@@ -46,5 +52,11 @@ public class EnemyService {
         return movementResults;
     }
 
+    public Collection<Enemy> getEnemies() {
+        return List.copyOf(enemies);
+    }
 
+    public boolean isInitialized() {
+        return initialized;
+    }
 }

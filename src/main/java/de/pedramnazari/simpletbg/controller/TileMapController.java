@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.controller;
 
+import de.pedramnazari.simpletbg.model.Enemy;
 import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.Item;
 import de.pedramnazari.simpletbg.model.TileMap;
@@ -19,6 +20,7 @@ public class TileMapController {
         this.tileMapService = tileMapService;
     }
 
+    @Deprecated
     public TileMap startNewGame() {
         return this.startGameUsingMap(AllTileMapConfigData.getMapConfig("1"), 1, 0);
     }
@@ -27,8 +29,8 @@ public class TileMapController {
         return tileMapService.createAndInitMap(mapConfig, heroX, heroY);
     }
 
-    public TileMap startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, int heroX, int heroY) {
-        return tileMapService.createAndInitMap(mapConfig, itemConfig, heroX, heroY);
+    public TileMap startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
+        return tileMapService.createAndInitMap(mapConfig, itemConfig, enemiesConfig, heroX, heroY);
     }
 
     public MovementResult moveHeroToRight() {
@@ -58,5 +60,9 @@ public class TileMapController {
 
     public Hero getHero() {
         return tileMapService.getHero();
+    }
+
+    public Collection<Enemy> getEnemies() {
+        return tileMapService.getEnemies();
     }
 }

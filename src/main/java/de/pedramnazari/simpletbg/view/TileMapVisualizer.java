@@ -15,8 +15,12 @@ import javafx.stage.Stage;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TileMapVisualizer extends Application {
+
+    private static final Logger logger = Logger.getLogger(TileMapVisualizer.class.getName());
 
     public static final int TILE_SIZE = 40;
 
@@ -27,12 +31,13 @@ public class TileMapVisualizer extends Application {
         final GridPane grid = new GridPane();
 
         final TileMapController controller = GameInitializer.initGame();
-        final TileMap tileMap = controller.getTileMap();
-        final Collection<Item> items = controller.getItems();
         final Hero hero = controller.getHero();
 
-        initFloorAndObstacleTiles(tileMap, grid);
-        initItemTiles(items, grid);
+        initFloorAndObstacleTiles(controller.getTileMap(), grid);
+        initItems(controller.getItems(), grid);
+        Collection<Enemy> enemies = controller.getEnemies();
+        logger.log(Level.INFO, "Enemies: {0}", enemies.size());
+        initEnemies(enemies, grid);
 
         // add hero to grid
         final Rectangle heroRectangle = new Rectangle(TILE_SIZE, TILE_SIZE, Color.GREEN);
@@ -108,7 +113,7 @@ public class TileMapVisualizer extends Application {
         }
     }
 
-    private void initItemTiles(Collection<Item> itemMap, GridPane tileMapGrid) {
+    private void initItems(Collection<Item> itemMap, GridPane tileMapGrid) {
         for (Item item : itemMap) {
             final Rectangle itemRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
             itemRectangle.setFill(Color.YELLOW);
@@ -116,6 +121,18 @@ public class TileMapVisualizer extends Application {
             itemRectangles.put(point, itemRectangle);
 
             tileMapGrid.add(itemRectangle, item.getX(), item.getY());
+        }
+
+    }
+
+    private void initEnemies(Collection<Enemy> enemies, GridPane tileMapGrid) {
+        for (Enemy enemy : enemies) {
+            final Rectangle enemyRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
+            enemyRectangle.setFill(Color.BLUE);
+            Point point = new Point(enemy.getX(), enemy.getY());
+            itemRectangles.put(point, enemyRectangle);
+
+            tileMapGrid.add(enemyRectangle, enemy.getX(), enemy.getY());
         }
 
     }
