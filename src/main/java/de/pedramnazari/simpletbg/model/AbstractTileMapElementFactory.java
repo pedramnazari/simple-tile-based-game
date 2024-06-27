@@ -16,6 +16,7 @@ public abstract class AbstractTileMapElementFactory<T extends ITileMapElement> i
         return createNonEmptyElement(type, x, y);
     }
 
+    // TODO remove at least x and y from the signature
     protected abstract T createNonEmptyElement(int type, int x, int y);
 
     @Override

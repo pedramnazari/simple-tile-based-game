@@ -29,7 +29,8 @@ public class MovementServiceTest {
 
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
-                new HeroService(new DefaultHeroFactory(), movementService));
+                new HeroService(new DefaultHeroFactory(), movementService),
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService()));
     }
 
     @Test

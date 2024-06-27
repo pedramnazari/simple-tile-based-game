@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.service;
 import de.pedramnazari.simpletbg.model.*;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EnemyService {
@@ -11,6 +10,8 @@ public class EnemyService {
 
     private final IEnemyFactory enemyFactory;
     private final EnemyMovementService enemyMovementService;
+
+    private final Collection<Enemy> enemies = new ArrayList<>();
 
     public EnemyService(IEnemyFactory enemyFactory, EnemyMovementService enemyMovementService) {
         this.enemyFactory = enemyFactory;

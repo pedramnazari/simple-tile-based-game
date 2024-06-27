@@ -8,22 +8,39 @@ public class HeroService {
 
     private final IHeroFactory heroFactory;
     private final HeroMovementService heroMovementService;
+    private Hero hero;
 
     public HeroService(IHeroFactory heroFactory, HeroMovementService heroMovementService) {
         this.heroFactory = heroFactory;
         this.heroMovementService = heroMovementService;
     }
 
-
-    public MovementResult moveTileMapElement(TileMap tileMap, Collection<Item> items, Hero hero, MoveDirection moveDirection, MapNavigator mapNavigator, String currentMapIndex) {
-        return heroMovementService.moveElement(tileMap, items, hero, moveDirection, mapNavigator, currentMapIndex);
+    public void iniQtHero(int x, int y) {
+        if (this.hero != null) {
+            throw new IllegalStateException("Hero already initialized");
+        }
+        
+        this.hero = heroFactory.createElement(Hero.HERO_TYPE, x, y);
     }
 
-    public Hero createHero(int x, int y) {
-        final Hero hero = heroFactory.createElement(Hero.HERO_TYPE, x, y);
+
+    public MovementResult moveHero(TileMap tileMap, Collection<Item> items, MoveDirection moveDirection, MapNavigator mapNavigator, String currentMapIndex) {
+        return heroMovementService.moveElement(tileMap, items, this.hero, moveDirection, mapNavigator, currentMapIndex);
+    }
+
+    public Hero initHero(int x, int y) {
+        if (hero != null) {
+            throw new IllegalStateException("Hero already initialized");
+        }
+
+        hero = heroFactory.createElement(Hero.HERO_TYPE, x, y);
         // TODO: inject inventory or use factory
         hero.setInventory(new Inventory());
 
+        return hero;
+    }
+
+    public Hero getHero() {
         return hero;
     }
 }

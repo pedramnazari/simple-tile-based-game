@@ -11,6 +11,9 @@ public abstract class Figure implements IMoveableTileElement {
         this.y = y;
     }
 
+    protected Figure() {
+    }
+
     public int getX() {
         return x;
     }
