@@ -45,4 +45,26 @@ public class EnemyServiceTest {
         final Enemy cEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 2).findFirst().orElse(null);
         assertNotNull(cEnemy);
     }
+
+    @Test
+    public void testMoveEnemies() {
+        int[][] map = new int[][] {
+                {0, 0, E},
+                {0, 0, 0},
+                {0, 0, 0},
+        };
+
+        final Collection<Enemy> enemies = enemyService.createEnemies(new TileMapConfig("map1", map));
+        assertNotNull(enemies);
+        assertEquals(1, enemies.size());
+
+        for (Enemy enemy : enemies) {
+            assertNotNull(enemy);
+        }
+
+        final Enemy aEnemy = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 0).findFirst().orElse(null);
+        assertNotNull(aEnemy);
+
+    }
+
 }

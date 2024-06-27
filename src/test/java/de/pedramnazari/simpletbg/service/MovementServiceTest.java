@@ -7,10 +7,10 @@ import de.pedramnazari.simpletbg.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MovementServiceTest {
 
@@ -75,6 +75,41 @@ public class MovementServiceTest {
 
         final Point point2 = validPositions.stream().filter(p -> p.getX() == 1 && p.getY() == 2).findFirst().orElse(null);
         assertNotNull(point2);
+    }
+
+    @Test
+    public void testMoveElementToPositionWithinMap() {
+        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+                {W, F, F},
+                {F, W, W},
+                {F, F, W}});
+
+        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 0, 2);
+        assertNotNull(tileMap);
+
+        hero = tileMapService.getHero();
+        assertNotNull(hero);
+
+        MovementResult result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 1, 2);
+        assertTrue(result.hasMoved());
+        assertEquals(1, hero.getX());
+        assertEquals(2, hero.getY());
+
+        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 2, 2);
+        assertFalse(result.hasMoved());
+        assertEquals(1, hero.getX());
+        assertEquals(2, hero.getY());
+
+        // Jumps are not allowed
+        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 1, 0);
+        assertFalse(result.hasMoved());
+
+        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 0, 1);
+        assertFalse(result.hasMoved());
+
+        assertEquals(1, hero.getX());
+        assertEquals(2, hero.getY());
+
     }
 
 

@@ -13,6 +13,7 @@ public class TileMapService {
     private MapNavigator mapNavigator;
     private String currentMapIndex;
 
+    // TODO: Introduce GameWorld class to hold all maps, items, enemies, hero etc.
     // Maps
     private TileMap tileMap;
     private Collection<Item> items = new ArrayList<>();

@@ -25,7 +25,10 @@ public class MovementService {
         MovementResult result;
 
         if (isValidMovePositionWithinMap(tileMap, element, newX, newY)) {
-            result = moveElementWithinMap(tileMap, items, element, newX, newY, currentMapIndex);
+            // TODO: isValidMovePositionWithinMap() is also invoked in moveElementToPositionWithinMap()
+            result = moveElementToPositionWithinMap(tileMap, items, element, newX, newY);
+            result.setOldMapIndex(currentMapIndex);
+            result.setNewMapIndex(currentMapIndex);
         }
         else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
             result = moveElementBetweenMaps(tileMap, element, moveDirection, mapNavigator, currentMapIndex);
@@ -61,17 +64,21 @@ public class MovementService {
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
     }
 
-    private MovementResult moveElementWithinMap(TileMap tileMap, Collection<Item> items, IMoveableTileElement element, int newX, int newY, final String currentMapIndex) {
-        element.setX(newX);
-        element.setY(newY);
-
+    public MovementResult moveElementToPositionWithinMap(TileMap tileMap, Collection<Item> items, IMoveableTileElement element, int newX, int newY) {
         final MovementResult result = new MovementResult();
         result.setOldX(element.getX());
         result.setOldY(element.getY());
-        result.setOldMapIndex(currentMapIndex);
+
+        if (!isValidMovePositionWithinMap(tileMap, element, newX, newY)) {
+            result.setHasMoved(false);
+            return result;
+        }
+
+        element.setX(newX);
+        element.setY(newY);
+
         result.setNewX(newX);
         result.setNewY(newY);
-        result.setNewMapIndex(currentMapIndex);
         result.setHasMoved(true);
 
         handleItems(items, element, newX, newY, result);
