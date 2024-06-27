@@ -1,14 +1,10 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.IItemCollectorElement;
 import de.pedramnazari.simpletbg.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.model.Item;
-import de.pedramnazari.simpletbg.view.TileMapVisualizer;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
