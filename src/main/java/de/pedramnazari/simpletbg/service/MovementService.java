@@ -3,16 +3,15 @@ package de.pedramnazari.simpletbg.service;
 import de.pedramnazari.simpletbg.model.*;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MovementService {
     private static final Logger logger = Logger.getLogger(MovementService.class.getName());
 
     // TODO: Simplify parameter list
-    public MovementResult moveTileMapElement(final TileMap tileMap, final Collection<Item> items,
-                                             final IMoveableTileElement element, final MoveDirection moveDirection,
-                                             final MapNavigator mapNavigator, final String currentMapIndex) {
+    public MovementResult moveElement(final TileMap tileMap, final Collection<Item> items,
+                                      final IMoveableTileElement element, final MoveDirection moveDirection,
+                                      final MapNavigator mapNavigator, final String currentMapIndex) {
         Objects.requireNonNull(moveDirection);
 
         final int oldX = element.getX();

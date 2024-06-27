@@ -16,7 +16,7 @@ public class HeroService {
 
 
     public MovementResult moveTileMapElement(TileMap tileMap, Collection<Item> items, Hero hero, MoveDirection moveDirection, MapNavigator mapNavigator, String currentMapIndex) {
-        return heroMovementService.moveTileMapElement(tileMap, items, hero, moveDirection, mapNavigator, currentMapIndex);
+        return heroMovementService.moveElement(tileMap, items, hero, moveDirection, mapNavigator, currentMapIndex);
     }
 
     public Hero createHero(int x, int y) {
