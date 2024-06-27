@@ -3,6 +3,8 @@ package de.pedramnazari.simpletbg.view;
 import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.service.HeroMovementService;
+import de.pedramnazari.simpletbg.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.service.Point;
 import javafx.application.Application;
@@ -18,7 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TileMapVisualizer extends Application {
+public class TileMapVisualizer extends Application implements IItemPickUpListener {
 
     private static final Logger logger = Logger.getLogger(TileMapVisualizer.class.getName());
 
@@ -35,6 +37,9 @@ public class TileMapVisualizer extends Application {
         final TileMapController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
         final Hero hero = controller.getHero();
+        // TODO: Refactor: View should not directly access HeroMovementService
+        HeroMovementService heroMovementService = controller.getHeroMovementService();
+        heroMovementService.addItemPickupListener(this);
 
         initFloorAndObstacleTiles(controller.getTileMap());
         initItems(controller.getItems());
@@ -71,17 +76,6 @@ public class TileMapVisualizer extends Application {
             if ((result != null) && result.hasMoved()) {
                 grid.getChildren().remove(heroRectangle);
                 grid.add(heroRectangle, (int) heroRectangle.getX(), (int) heroRectangle.getY());
-
-                if (result.isItemCollected()) {
-                    Point point = new Point(result.getNewX(), result.getNewY());
-                    Rectangle itemRectangle = itemRectangles.remove(point);
-
-                    if (itemRectangle == null) {
-                        throw new IllegalArgumentException("No item rectangle found for point: " + point);
-                    }
-
-                    grid.getChildren().remove(itemRectangle);
-                }
             }
         });
 
@@ -89,6 +83,8 @@ public class TileMapVisualizer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+
 
     private void initFloorAndObstacleTiles(TileMap tileMap) {
         for (int y = 0; y < tileMap.getHeight(); y++) {
@@ -148,5 +144,28 @@ public class TileMapVisualizer extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void onItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
+        Point point = new Point(itemX, itemY);
+        Rectangle itemRectangle = itemRectangles.remove(point);
+
+        if (itemRectangle == null) {
+            throw new IllegalArgumentException("No item rectangle found for point: " + point);
+        }
+
+        grid.getChildren().remove(itemRectangle);
+    }
+
+    private void updateItem(MovementResult result) {
+//        Point point = new Point(result.getNewX(), result.getNewY());
+//        Rectangle itemRectangle = itemRectangles.remove(point);
+//
+//        if (itemRectangle == null) {
+//            throw new IllegalArgumentException("No item rectangle found for point: " + point);
+//        }
+//
+//        grid.getChildren().remove(itemRectangle);
     }
 }

@@ -22,9 +22,9 @@ public class HeroMovementService extends MovementService {
         itemPickUpListeners.add(listener);
     }
 
-    private void notifyItemPickedUp(IItemCollectorElement element, Item item) {
+    private void notifyItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
         for (IItemPickUpListener listener : itemPickUpListeners) {
-            listener.onItemPickedUp(element, item);
+            listener.onItemPickedUp(element, item, itemX, itemY);
         }
     }
 
@@ -43,7 +43,7 @@ public class HeroMovementService extends MovementService {
                 // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
                 items.remove(item);
 
-                notifyItemPickedUp(hero, item);
+                notifyItemPickedUp(hero, item, newX, newY);
 
                 result.setCollectedItem(item);
             }

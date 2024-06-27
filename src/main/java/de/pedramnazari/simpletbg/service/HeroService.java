@@ -32,4 +32,8 @@ public class HeroService {
     public Hero getHero() {
         return hero;
     }
+
+    public HeroMovementService getHeroMovementService() {
+        return heroMovementService;
+    }
 }

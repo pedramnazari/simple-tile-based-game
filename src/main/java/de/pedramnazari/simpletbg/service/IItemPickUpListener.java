@@ -5,6 +5,6 @@ import de.pedramnazari.simpletbg.model.Item;
 
 public interface IItemPickUpListener {
 
-    void onItemPickedUp(IItemCollectorElement enemy, Item item);
+    void onItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY);
 
 }

@@ -149,4 +149,8 @@ public class TileMapService {
     public Collection<Enemy> getEnemies() {
         return enemyService.getEnemies();
     }
+
+    public HeroMovementService getHeroMovementService() {
+        return heroService.getHeroMovementService();
+    }
 }
