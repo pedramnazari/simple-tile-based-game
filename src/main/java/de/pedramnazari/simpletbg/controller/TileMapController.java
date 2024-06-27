@@ -1,9 +1,6 @@
 package de.pedramnazari.simpletbg.controller;
 
-import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.Item;
-import de.pedramnazari.simpletbg.model.TileMap;
+import de.pedramnazari.simpletbg.model.*;
 import de.pedramnazari.simpletbg.service.*;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.view.TileMapVisualizer;
@@ -11,7 +8,7 @@ import javafx.application.Platform;
 
 import java.util.Collection;
 
-public class TileMapController implements IEnemyObserver {
+public class TileMapController implements IEnemyObserver, IItemPickUpListener {
 
     private final TileMapService tileMapService;
     // TODO: remove this dependency
@@ -80,5 +77,15 @@ public class TileMapController implements IEnemyObserver {
 
     public HeroMovementService getHeroMovementService() {
         return tileMapService.getHeroMovementService();
+    }
+
+    public EnemyMovementService getEnemyMovementService() {
+        return tileMapService.getEnemyMovementService();
+    }
+
+    @Override
+    public void onItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> tileMapVisualizer.handleItemPickedUp(element, item, itemX, itemY));
     }
 }

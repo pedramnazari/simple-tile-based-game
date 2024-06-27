@@ -14,10 +14,16 @@ public class EnemyMovementService extends MovementService {
 
     final static Logger logger = Logger.getLogger(EnemyMovementService.class.getName());
 
+    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
+
+    public void addItemPickupListener(IItemPickUpListener listener) {
+        itemPickUpNotifier.addItemPickupListener(listener);
+    }
+
     @Override
     protected void handleItems(Collection<Item> items, IMoveableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
-        if ((element instanceof Enemy)) {
+        if ((element instanceof Enemy enemy)) {
             final Optional<Item> optItem = getItem(items, newX, newY);
             if (optItem.isPresent()) {
                 final Item item = optItem.get();
@@ -27,6 +33,8 @@ public class EnemyMovementService extends MovementService {
 
                 // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
                 items.remove(item);
+
+                itemPickUpNotifier.notifyItemPickedUp(enemy, item, newX, newY);
 
                 result.setCollectedItem(item);
             }

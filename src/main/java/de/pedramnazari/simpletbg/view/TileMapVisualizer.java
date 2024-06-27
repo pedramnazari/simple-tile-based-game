@@ -3,10 +3,7 @@ package de.pedramnazari.simpletbg.view;
 import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.service.HeroMovementService;
-import de.pedramnazari.simpletbg.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.service.MovementResult;
-import de.pedramnazari.simpletbg.service.Point;
+import de.pedramnazari.simpletbg.service.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -20,7 +17,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TileMapVisualizer extends Application implements IItemPickUpListener {
+public class TileMapVisualizer extends Application {
 
     private static final Logger logger = Logger.getLogger(TileMapVisualizer.class.getName());
 
@@ -37,9 +34,8 @@ public class TileMapVisualizer extends Application implements IItemPickUpListene
         final TileMapController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
         final Hero hero = controller.getHero();
-        // TODO: Refactor: View should not directly access HeroMovementService
-        HeroMovementService heroMovementService = controller.getHeroMovementService();
-        heroMovementService.addItemPickupListener(this);
+
+
 
         initFloorAndObstacleTiles(controller.getTileMap());
         initItems(controller.getItems());
@@ -146,8 +142,7 @@ public class TileMapVisualizer extends Application implements IItemPickUpListene
         launch(args);
     }
 
-    @Override
-    public void onItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
+    public void handleItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
         Point point = new Point(itemX, itemY);
         Rectangle itemRectangle = itemRectangles.remove(point);
 
@@ -156,16 +151,5 @@ public class TileMapVisualizer extends Application implements IItemPickUpListene
         }
 
         grid.getChildren().remove(itemRectangle);
-    }
-
-    private void updateItem(MovementResult result) {
-//        Point point = new Point(result.getNewX(), result.getNewY());
-//        Rectangle itemRectangle = itemRectangles.remove(point);
-//
-//        if (itemRectangle == null) {
-//            throw new IllegalArgumentException("No item rectangle found for point: " + point);
-//        }
-//
-//        grid.getChildren().remove(itemRectangle);
     }
 }

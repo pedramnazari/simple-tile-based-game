@@ -91,4 +91,8 @@ public class EnemyService implements IEnemySubject {
             observer.update(List.copyOf(enemies));
         }
     }
+
+    public EnemyMovementService getEnemyMovementService() {
+        return enemyMovementService;
+    }
 }

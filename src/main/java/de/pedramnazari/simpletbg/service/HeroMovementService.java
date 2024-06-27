@@ -4,6 +4,7 @@ import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.IItemCollectorElement;
 import de.pedramnazari.simpletbg.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.model.Item;
+import de.pedramnazari.simpletbg.view.TileMapVisualizer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,23 +17,16 @@ public class HeroMovementService extends MovementService {
 
     private static final Logger logger = Logger.getLogger(HeroMovementService.class.getName());
 
-    private List<IItemPickUpListener> itemPickUpListeners = new ArrayList<>();
+    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
-    public void addItemPickupListener(IItemPickUpListener listener) {
-        itemPickUpListeners.add(listener);
-    }
-
-    private void notifyItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
-        for (IItemPickUpListener listener : itemPickUpListeners) {
-            listener.onItemPickedUp(element, item, itemX, itemY);
-        }
+    public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
+        itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
     }
 
     @Override
     protected void handleItems(Collection<Item> items, IMoveableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
-        if ((element instanceof Hero)) {
-            final Hero hero = (Hero) element;
+        if ((element instanceof Hero hero)) {
             final Optional<Item> optItem = getItem(items, newX, newY);
             if (optItem.isPresent()) {
                 final Item item = optItem.get();
@@ -43,7 +37,7 @@ public class HeroMovementService extends MovementService {
                 // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
                 items.remove(item);
 
-                notifyItemPickedUp(hero, item, newX, newY);
+                itemPickUpNotifier.notifyItemPickedUp(hero, item, newX, newY);
 
                 result.setCollectedItem(item);
             }
