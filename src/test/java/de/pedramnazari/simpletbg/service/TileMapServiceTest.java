@@ -68,7 +68,7 @@ public class TileMapServiceTest {
 
     @Test
     public void testMoveHeroWithinSingleMap() {
-        TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{{6, 3, 1}, {5, 4, 2}});
+        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{{6, 3, 1}, {5, 4, 2}});
 
         final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
         assertNotNull(tileMap);

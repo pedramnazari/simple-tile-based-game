@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,20 +13,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class EnemyServiceTest {
 
     private EnemyService enemyService;
+    private static final int E = TileType.ENEMY.getType();
 
     @BeforeEach
     public void setUp() {
-        IEnemyFactory enemyFactory = new DefaultEnemyFactory();
-
-        enemyService = new EnemyService(enemyFactory);
+        enemyService = new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService());
     }
 
     @Test
     public void testCreateEnemies() {
         int[][] map = new int[][] {
-                {0, 0, 1},
-                {1, 0, 0},
-                {0, 1, 0},
+                {0, 0, E},
+                {E, 0, 0},
+                {0, E, 0},
         };
 
         final Collection<Enemy> enemies = enemyService.createEnemies(new TileMapConfig("map1", map));
@@ -35,7 +34,6 @@ public class EnemyServiceTest {
 
         for (Enemy enemy : enemies) {
             assertNotNull(enemy);
-            System.out.println(enemy.getX() + " " + enemy.getY());
         }
 
         final Enemy aEnemy = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 0).findFirst().orElse(null);

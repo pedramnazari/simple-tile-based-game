@@ -34,6 +34,8 @@ public class TileMapService {
     public TileMap createAndInitMap(TileMapConfig mapConfig, int heroX, int heroY) {
         Objects.requireNonNull(mapConfig);
 
+        // TODO: check whether hero position is valid
+
         this.hero = heroService.createHero(heroX, heroY);
 
         // TODO: use factory to create map

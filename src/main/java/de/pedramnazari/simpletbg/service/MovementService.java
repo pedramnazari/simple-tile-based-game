@@ -2,15 +2,14 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MovementService {
     private static final Logger logger = Logger.getLogger(MovementService.class.getName());
 
+    // TODO: Simplify parameter list
     public MovementResult moveTileMapElement(final TileMap tileMap, final Collection<Item> items,
                                              final IMoveableTileElement element, final MoveDirection moveDirection,
                                              final MapNavigator mapNavigator, final String currentMapIndex) {
@@ -115,7 +114,7 @@ public class MovementService {
                 mapNavigator.getMap(nextMapIndex);
                 result.setNewMapIndex(nextMapIndex);
 
-                switch(moveDirection) {
+                switch (moveDirection) {
                     case UP -> element.setY(tileMap.getHeight() - 1);
                     case DOWN -> element.setY(0);
                     case LEFT -> element.setX(tileMap.getWidth() - 1);
@@ -130,5 +129,29 @@ public class MovementService {
         }
 
         return result;
+    }
+
+    public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, IMoveableTileElement element) {
+        final Set<Point> validPositions = new HashSet<>();
+
+        final int x = element.getX();
+        final int y = element.getY();
+
+        for (MoveDirection moveDirection : MoveDirection.values()) {
+            final Point newPosition = calcNewPosition(moveDirection, x, y);
+
+            if (isPositionWithinBoundsOfCurrentMap(tileMap, newPosition.getX(), newPosition.getY())) {
+                final Tile newTile = tileMap.getTile(newPosition.getX(), newPosition.getY());
+                if (!newTile.isObstacle()) {
+                    validPositions.add(newPosition);
+                }
+            }
+        }
+
+        return validPositions;
+    }
+
+    public boolean isValidMovePositionWithinMap(TileMap tileMap, IMoveableTileElement element, Point newPosition) {
+        return calcValidMovePositionsWithinMap(tileMap, element).contains(newPosition);
     }
 }

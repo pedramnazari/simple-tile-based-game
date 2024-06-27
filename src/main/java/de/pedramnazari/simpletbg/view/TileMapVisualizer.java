@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class TileMapVisualizer extends Application {
 
-    public static final int TILE_SIZE = 80;
+    public static final int TILE_SIZE = 40;
 
     private final Map<Point, Rectangle> itemRectangles = new HashMap<>();
 
