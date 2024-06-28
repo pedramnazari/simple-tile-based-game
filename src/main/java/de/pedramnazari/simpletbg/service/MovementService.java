@@ -73,6 +73,11 @@ public class MovementService {
             return result;
         }
 
+        Optional<MoveDirection> direction = MoveDirection.getDirection(element.getX(), element.getY(), newX, newY);
+        System.out.println("Direction: " + direction.orElse(null));
+
+
+        element.setMoveDirection(direction.orElse(null));
         element.setX(newX);
         element.setY(newY);
 

@@ -1,9 +1,12 @@
 package de.pedramnazari.simpletbg.model;
 
+import java.util.Optional;
+
 public abstract class Figure implements IMoveableTileElement {
 
     private int x;
     private int y;
+    private MoveDirection moveDirection;
 
 
     protected Figure(int x, int y) {
@@ -29,6 +32,17 @@ public abstract class Figure implements IMoveableTileElement {
     public void setY(int y) {
         this.y = y;
     }
+
+    @Override
+    public void setMoveDirection(MoveDirection moveDirection) {
+        this.moveDirection = moveDirection;
+    }
+
+    public Optional<MoveDirection> getMoveDirection() {
+        return Optional.ofNullable(moveDirection);
+    }
+
+
 
 
 

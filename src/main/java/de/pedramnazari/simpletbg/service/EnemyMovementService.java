@@ -41,7 +41,6 @@ public class EnemyMovementService extends MovementService {
 
                 logger.log(Level.INFO, "Enemy collected item: " + item.getName());
 
-
                 // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
                 items.remove(item);
 

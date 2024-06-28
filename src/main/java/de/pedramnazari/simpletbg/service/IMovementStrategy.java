@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.model.Tile;
 import de.pedramnazari.simpletbg.model.TileMap;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public interface IMovementStrategy {
@@ -15,17 +16,27 @@ public interface IMovementStrategy {
     default Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, int currentX, int currentY) {
         final Set<Point> validPositions = new HashSet<>();
         for (MoveDirection moveDirection : MoveDirection.values()) {
-            final Point newPosition = calcNewPosition(moveDirection, currentX, currentY);
+            Point newPosition = calcValidMovePositionWithinMapForDirection(tileMap, currentX, currentY, moveDirection).orElse(null);
 
-            if (isPositionWithinBoundsOfCurrentMap(tileMap, newPosition.getX(), newPosition.getY())) {
-                final Tile newTile = tileMap.getTile(newPosition.getX(), newPosition.getY());
-                if (!newTile.isObstacle()) {
-                    validPositions.add(newPosition);
-                }
+            if (newPosition != null) {
+                validPositions.add(newPosition);
             }
         }
 
         return validPositions;
+    }
+
+    default Optional<Point> calcValidMovePositionWithinMapForDirection(TileMap tileMap, int currentX, int currentY, MoveDirection moveDirection) {
+        final Point newPosition = calcNewPosition(moveDirection, currentX, currentY);
+
+        if (isPositionWithinBoundsOfCurrentMap(tileMap, newPosition.getX(), newPosition.getY())) {
+            final Tile newTile = tileMap.getTile(newPosition.getX(), newPosition.getY());
+            if (!newTile.isObstacle()) {
+                return Optional.of(newPosition);
+            }
+        }
+
+        return Optional.empty();
     }
 
     default Point calcNewPosition(final MoveDirection moveDirection, int oldX, int oldY) {

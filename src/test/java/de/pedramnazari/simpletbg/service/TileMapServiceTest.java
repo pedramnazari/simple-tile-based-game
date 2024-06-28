@@ -83,24 +83,31 @@ public class TileMapServiceTest {
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
+        assertNull(hero.getMoveDirection().orElse(null));
         tileMapService.moveHero(MoveDirection.UP);
 
+
         // Same position as before
+        assertNull(hero.getMoveDirection().orElse(null));
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
         tileMapService.moveHero(MoveDirection.LEFT);
 
+        assertEquals(MoveDirection.LEFT, hero.getMoveDirection().orElse(null));
         assertEquals(0, hero.getX());
         assertEquals(0, hero.getY());
 
         tileMapService.moveHero(MoveDirection.RIGHT);
+        assertEquals(MoveDirection.RIGHT, hero.getMoveDirection().orElse(null));
         tileMapService.moveHero(MoveDirection.RIGHT);
+        assertEquals(MoveDirection.RIGHT, hero.getMoveDirection().orElse(null));
 
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());
 
         tileMapService.moveHero(MoveDirection.RIGHT);
+        assertEquals(MoveDirection.RIGHT, hero.getMoveDirection().orElse(null));
 
         // Same position as before
         assertEquals(2, hero.getX());
@@ -108,16 +115,19 @@ public class TileMapServiceTest {
 
         tileMapService.moveHero(MoveDirection.DOWN);
 
+        assertEquals(MoveDirection.DOWN, hero.getMoveDirection().orElse(null));
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
 
         tileMapService.moveHero(MoveDirection.DOWN);
+        assertEquals(MoveDirection.DOWN, hero.getMoveDirection().orElse(null));
 
         // Same position as before
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
 
         tileMapService.moveHero(MoveDirection.UP);
+        assertEquals(MoveDirection.UP, hero.getMoveDirection().orElse(null));
 
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());

@@ -2,7 +2,6 @@ package de.pedramnazari.simpletbg.config;
 
 import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.model.TileType;
-import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.*;
 
 public class GameInitializer {
@@ -11,9 +10,17 @@ public class GameInitializer {
     private static final int E = TileType.ENEMY.getType();
 
     public static TileMapController initAndStartGame() {
-        final TileMapConfig mapConfig = AllTileMapConfigData.getMapConfig("2");
 
         // TODO: move to AllTileMapConfigData
+        final TileMapConfig mapConfig = new TileMapConfig("map2", new int[][]{
+                {1, 1, 11, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 11, 1, 1, 1, 11, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 11, 1, 1, 1, 1, 11, 1, 1},
+
+        });
+
         final TileMapConfig itemConfig = new TileMapConfig("item2", new int[][]{
                 {O, O, O, O, O, 100, O, O, O, O},
                 {O, O, O, 100, O, O, 100, O, O, O},
@@ -32,7 +39,8 @@ public class GameInitializer {
 
         });
 
-        final EnemyService enemyService = new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService());
+        final EnemyService enemyService =
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy()));
 
         final TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
