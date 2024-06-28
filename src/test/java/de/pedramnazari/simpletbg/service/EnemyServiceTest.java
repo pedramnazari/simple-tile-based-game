@@ -34,7 +34,7 @@ public class EnemyServiceTest {
                 {O, E, O},
         };
 
-        enemyMovementService = new EnemyMovementService();
+        enemyMovementService = new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()));
         enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
 
         assertFalse(enemyService.isInitialized());
@@ -62,7 +62,7 @@ public class EnemyServiceTest {
 
     @Test
     public void testMoveEnemies() {
-        RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy();
+        RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy(new CollisionDetectionService());
         enemyMovementService = new EnemyMovementService(randomMovementStrategy);
         enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
 

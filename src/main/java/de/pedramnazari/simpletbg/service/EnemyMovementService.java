@@ -17,12 +17,6 @@ public class EnemyMovementService extends MovementService {
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
     private final IMovementStrategy movementStrategy;
 
-    // TODO: delete this constructor
-    public EnemyMovementService() {
-        this(new RandomMovementStrategy());
-    }
-
-
     public EnemyMovementService(IMovementStrategy movementStrategy) {
         this.movementStrategy = movementStrategy;
     }

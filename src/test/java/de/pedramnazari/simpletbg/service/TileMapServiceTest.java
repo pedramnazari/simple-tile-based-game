@@ -23,7 +23,7 @@ public class TileMapServiceTest {
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService()),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService()));
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()))));
 
         hero = tileMapService.getHero();
     }

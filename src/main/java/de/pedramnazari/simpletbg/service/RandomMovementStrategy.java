@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class RandomMovementStrategy implements IMovementStrategy {
+public class RandomMovementStrategy extends AbstractMovementStrategy {
+
+    public RandomMovementStrategy(CollisionDetectionService collisionDetectionService) {
+        super(collisionDetectionService);
+    }
 
     @Override
     public Point calcNextMove(TileMap tileMap, IMoveableTileElement element) {

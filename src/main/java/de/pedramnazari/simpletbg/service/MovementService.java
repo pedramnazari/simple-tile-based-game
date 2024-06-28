@@ -25,7 +25,7 @@ public class MovementService {
 
         if (isValidMovePositionWithinMap(tileMap, element, newX, newY)) {
             // TODO: isValidMovePositionWithinMap() is also invoked in moveElementToPositionWithinMap()
-            result = moveElementToPositionWithinMap(tileMap, items, element, newX, newY);
+            result = moveElementToPositionWithinMap(tileMap, items, List.of(), element, newX, newY);
             result.setOldMapIndex(currentMapIndex);
             result.setNewMapIndex(currentMapIndex);
         }
@@ -63,7 +63,7 @@ public class MovementService {
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
     }
 
-    public MovementResult moveElementToPositionWithinMap(TileMap tileMap, Collection<Item> items, IMoveableTileElement element, int newX, int newY) {
+    public MovementResult moveElementToPositionWithinMap(TileMap tileMap, Collection<Item> items, Collection<Enemy> enemies, IMoveableTileElement element, int newX, int newY) {
         final MovementResult result = new MovementResult();
         result.setOldX(element.getX());
         result.setOldY(element.getY());
@@ -74,8 +74,6 @@ public class MovementService {
         }
 
         Optional<MoveDirection> direction = MoveDirection.getDirection(element.getX(), element.getY(), newX, newY);
-        System.out.println("Direction: " + direction.orElse(null));
-
 
         element.setMoveDirection(direction.orElse(null));
         element.setX(newX);
@@ -147,7 +145,7 @@ public class MovementService {
     public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, int currentX, int currentY) {
         final Set<Point> validPositions = new HashSet<>();
         for (MoveDirection moveDirection : MoveDirection.values()) {
-            final Point newPosition = calcNewPosition(moveDirection, currentX, currentY);
+            final Point newPosition     = calcNewPosition(moveDirection, currentX, currentY);
 
             if (isPositionWithinBoundsOfCurrentMap(tileMap, newPosition.getX(), newPosition.getY())) {
                 final Tile newTile = tileMap.getTile(newPosition.getX(), newPosition.getY());

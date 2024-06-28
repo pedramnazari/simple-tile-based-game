@@ -43,7 +43,7 @@ public class EnemyService implements IEnemySubject {
             final Point newPosition = enemyMovementService.calcNextMove(tileMap, enemy);
 
             final MovementResult result = enemyMovementService
-                    .moveElementToPositionWithinMap(tileMap, items, enemy, newPosition.getX(), newPosition.getY());
+                    .moveElementToPositionWithinMap(tileMap, items, List.of(), enemy, newPosition.getX(), newPosition.getY());
 
             movementResults.add(result);
         }

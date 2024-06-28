@@ -40,7 +40,7 @@ public class GameInitializer {
         });
 
         final EnemyService enemyService =
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy()));
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy(new CollisionDetectionService())));
 
         final TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),

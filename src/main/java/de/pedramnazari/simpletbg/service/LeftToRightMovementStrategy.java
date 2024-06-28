@@ -6,7 +6,12 @@ import de.pedramnazari.simpletbg.model.TileMap;
 
 import static de.pedramnazari.simpletbg.model.MoveDirection.LEFT;
 
-public class LeftToRightMovementStrategy implements IMovementStrategy {
+public class LeftToRightMovementStrategy extends AbstractMovementStrategy {
+
+    public LeftToRightMovementStrategy(CollisionDetectionService collisionDetectionService) {
+        super(collisionDetectionService);
+    }
+
     @Override
     public Point calcNextMove(TileMap tileMap, IMoveableTileElement element) {
         int currentX = element.getX();

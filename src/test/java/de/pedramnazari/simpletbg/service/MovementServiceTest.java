@@ -30,7 +30,7 @@ public class MovementServiceTest {
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), movementService),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService()));
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()))));
     }
 
     @Test
@@ -91,26 +91,28 @@ public class MovementServiceTest {
         hero = tileMapService.getHero();
         assertNotNull(hero);
 
-        MovementResult result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 1, 2);
+        MovementResult result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 1, 2);
         assertTrue(result.hasMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
-        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 2, 2);
+        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 2, 2);
         assertFalse(result.hasMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
         // Jumps are not allowed
-        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 1, 0);
+        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 1, 0);
         assertFalse(result.hasMoved());
 
-        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), hero, 0, 1);
+        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 0, 1);
         assertFalse(result.hasMoved());
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
     }
+
+
 
 
 }
