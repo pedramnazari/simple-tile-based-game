@@ -33,6 +33,10 @@ public class TileMapController implements IEnemyObserver, IItemPickUpListener {
 
     public void startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
         tileMapService.createAndInitMap(mapConfig, itemConfig, enemiesConfig, heroX, heroY);
+        tileMapService.getHeroMovementService().addItemPickupListener(this);
+        tileMapService.getEnemyMovementService().addItemPickupListener(this);
+
+
         tileMapService.start();
     }
 
@@ -73,14 +77,6 @@ public class TileMapController implements IEnemyObserver, IItemPickUpListener {
     public void update(Collection<Enemy> enemies) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> tileMapVisualizer.updateEnemies(enemies));
-    }
-
-    public HeroMovementService getHeroMovementService() {
-        return tileMapService.getHeroMovementService();
-    }
-
-    public EnemyMovementService getEnemyMovementService() {
-        return tileMapService.getEnemyMovementService();
     }
 
     @Override

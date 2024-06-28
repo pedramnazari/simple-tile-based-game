@@ -41,11 +41,6 @@ public class GameInitializer {
                 enemyService);
         final TileMapController controller = new TileMapController(tileMapService);
         enemyService.registerObserver(controller);
-        HeroMovementService heroMovementService = controller.getHeroMovementService();
-        heroMovementService.addItemPickupListener(controller);
-
-        EnemyMovementService enemyMovementService = controller.getEnemyMovementService();
-        enemyMovementService.addItemPickupListener(controller);
 
         controller.startGameUsingMap(mapConfig, itemConfig, enemyConfig, 1, 0);
 

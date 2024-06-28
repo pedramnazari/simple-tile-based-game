@@ -23,8 +23,7 @@ public class EnemyServiceTest {
 
     @BeforeEach
     public void setUp() {
-        enemyMovementService = new EnemyMovementService();
-        enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
+
     }
 
     @Test
@@ -34,6 +33,9 @@ public class EnemyServiceTest {
                 {E, O, O},
                 {O, E, O},
         };
+
+        enemyMovementService = new EnemyMovementService();
+        enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
 
         assertFalse(enemyService.isInitialized());
         enemyService.init(new TileMapConfig("map1", map));
@@ -60,6 +62,10 @@ public class EnemyServiceTest {
 
     @Test
     public void testMoveEnemies() {
+        RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy();
+        enemyMovementService = new EnemyMovementService(randomMovementStrategy);
+        enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
+
         final int[][] enemyMapArray = new int[][]{
                 {O, E, O},
                 {O, O, O},

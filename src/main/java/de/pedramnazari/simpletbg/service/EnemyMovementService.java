@@ -3,6 +3,7 @@ package de.pedramnazari.simpletbg.service;
 import de.pedramnazari.simpletbg.model.Enemy;
 import de.pedramnazari.simpletbg.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.model.Item;
+import de.pedramnazari.simpletbg.model.TileMap;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -14,6 +15,17 @@ public class EnemyMovementService extends MovementService {
     final static Logger logger = Logger.getLogger(EnemyMovementService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
+    private final IMovementStrategy movementStrategy;
+
+    // TODO: delete this constructor
+    public EnemyMovementService() {
+        this(new RandomMovementStrategy());
+    }
+
+
+    public EnemyMovementService(IMovementStrategy movementStrategy) {
+        this.movementStrategy = movementStrategy;
+    }
 
     public void addItemPickupListener(IItemPickUpListener listener) {
         itemPickUpNotifier.addItemPickupListener(listener);
@@ -38,5 +50,9 @@ public class EnemyMovementService extends MovementService {
                 result.setCollectedItem(item);
             }
         }
+    }
+
+    public Point calcNextMove(TileMap tileMap, IMoveableTileElement element) {
+        return movementStrategy.calcNextMove(tileMap, element);
     }
 }

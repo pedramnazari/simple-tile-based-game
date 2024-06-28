@@ -1,8 +1,13 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.model.Enemy;
+import de.pedramnazari.simpletbg.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.model.Item;
+import de.pedramnazari.simpletbg.model.TileMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,19 +40,7 @@ public class EnemyService implements IEnemySubject {
         final List<MovementResult> movementResults = new ArrayList<>();
 
         for (Enemy enemy : enemies) {
-            final Set<Point> validPositions = enemyMovementService.calcValidMovePositionsWithinMap(tileMap, enemy);
-
-            int oldX = enemy.getX();
-            int oldY = enemy.getY();
-
-            // add current position (i.e., enemy does not move)
-            validPositions.add(new Point(oldX, oldY));
-
-            final List<Point> list = new ArrayList<>(validPositions);
-            final Random random = new Random();
-            int randomIndex = random.nextInt(list.size());
-
-            final Point newPosition = list.get(randomIndex);
+            final Point newPosition = enemyMovementService.calcNextMove(tileMap, enemy);
 
             final MovementResult result = enemyMovementService
                     .moveElementToPositionWithinMap(tileMap, items, enemy, newPosition.getX(), newPosition.getY());
