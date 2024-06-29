@@ -1,6 +1,9 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.model.Enemy;
+import de.pedramnazari.simpletbg.model.Hero;
+import de.pedramnazari.simpletbg.model.MapNavigator;
+import de.pedramnazari.simpletbg.model.TileMap;
 
 import java.util.ArrayList;
 import java.util.Collection;

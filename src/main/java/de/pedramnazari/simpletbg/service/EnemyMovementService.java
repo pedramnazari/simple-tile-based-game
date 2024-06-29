@@ -15,9 +15,11 @@ public class EnemyMovementService extends MovementService {
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
     private final IMovementStrategy movementStrategy;
+    private final CollisionDetectionService collisionDetectionService;
 
-    public EnemyMovementService(IMovementStrategy movementStrategy) {
+    public EnemyMovementService(IMovementStrategy movementStrategy, CollisionDetectionService collisionDetectionService) {
         this.movementStrategy = movementStrategy;
+        this.collisionDetectionService = collisionDetectionService;
     }
 
     public void addItemPickupListener(IItemPickUpListener listener) {
@@ -25,7 +27,18 @@ public class EnemyMovementService extends MovementService {
     }
 
     @Override
-    protected void handleItems(IItemService itemService, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    protected void handleElementHasMoved(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+        handleItems(gameContext.getItemService(), element, newX, newY, result);
+        handleCollisionsWithHero(gameContext, element, newX, newY, result);
+    }
+
+    private void handleCollisionsWithHero(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+        if (collisionDetectionService.isCollision(element, gameContext.getHero())) {
+            logger.log(Level.INFO, "Collision with hero detected at position: " + newX + ", " + newY);
+        }
+    }
+
+    private void handleItems(IItemService itemService, IMoveableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof Enemy enemy)) {
             final Optional<Item> optItem = itemService.getItem(newX, newY);

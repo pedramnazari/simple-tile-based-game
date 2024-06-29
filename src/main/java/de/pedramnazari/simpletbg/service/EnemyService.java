@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.GameContext;
 import de.pedramnazari.simpletbg.model.IEnemyFactory;
 
 import java.util.ArrayList;

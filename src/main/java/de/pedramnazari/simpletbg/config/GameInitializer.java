@@ -39,13 +39,14 @@ public class GameInitializer {
 
         });
 
+        final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyService enemyService =
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy(new CollisionDetectionService())));
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy(collisionDetectionService), collisionDetectionService));
 
         final TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
                 new DefaultItemFactory(),
-                new HeroService(new DefaultHeroFactory(), new HeroMovementService()),
+                new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 enemyService);
         final TileMapController controller = new TileMapController(tileMapService);
         enemyService.registerObserver(controller);

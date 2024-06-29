@@ -2,7 +2,10 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class MovementService {
@@ -31,22 +34,15 @@ public class MovementService {
             result = moveElementToPositionWithinMap(gameContext, element, newX, newY);
             result.setOldMapIndex(currentMapIndex);
             result.setNewMapIndex(currentMapIndex);
-        }
-        else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
+        } else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
             result = moveElementBetweenMaps(tileMap, element, moveDirection, mapNavigator, currentMapIndex);
-        }
-        else {
+        } else {
             result = new MovementResult();
             result.setOldX(element.getX());
             result.setOldY(element.getY());
             result.setOldMapIndex(currentMapIndex);
             result.hasMoved();
         }
-
-        if(result.hasMoved()) {
-            // TODO: check Collision with other elements
-        }
-
 
         return result;
 
@@ -92,32 +88,7 @@ public class MovementService {
         result.setNewY(newY);
         result.setHasMoved(true);
 
-        handleItems(gameContext.getItemService(), element, newX, newY, result);
-
-        return result;
-    }
-
-    public MovementResult moveElementToPositionWithinMap(TileMap tileMap, IItemService itemService, Collection<Enemy> enemies, IMoveableTileElement element, int newX, int newY) {
-        final MovementResult result = new MovementResult();
-        result.setOldX(element.getX());
-        result.setOldY(element.getY());
-
-        if (!isValidMovePositionWithinMap(tileMap, element, newX, newY)) {
-            result.setHasMoved(false);
-            return result;
-        }
-
-        Optional<MoveDirection> direction = MoveDirection.getDirection(element.getX(), element.getY(), newX, newY);
-
-        element.setMoveDirection(direction.orElse(null));
-        element.setX(newX);
-        element.setY(newY);
-
-        result.setNewX(newX);
-        result.setNewY(newY);
-        result.setHasMoved(true);
-
-        handleItems(itemService, element, newX, newY, result);
+        handleElementHasMoved(gameContext, element, newX, newY, result);
 
         return result;
     }
@@ -126,7 +97,8 @@ public class MovementService {
         return (oldX == newX) && (oldY == newY);
     }
 
-    protected void handleItems(IItemService itemsService, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    protected void handleElementHasMoved(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+
     }
 
     private MovementResult moveElementBetweenMaps(final TileMap tileMap,
@@ -161,6 +133,8 @@ public class MovementService {
                 result.setNewY(element.getY());
 
                 result.setHasMoved(true);
+
+                // TODO: invoke handleElementHasMoved() method
             }
         }
 
@@ -170,7 +144,7 @@ public class MovementService {
     public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, int currentX, int currentY) {
         final Set<Point> validPositions = new HashSet<>();
         for (MoveDirection moveDirection : MoveDirection.values()) {
-            final Point newPosition     = calcNewPosition(moveDirection, currentX, currentY);
+            final Point newPosition = calcNewPosition(moveDirection, currentX, currentY);
 
             if (isPositionWithinBoundsOfCurrentMap(tileMap, newPosition.getX(), newPosition.getY())) {
                 final Tile newTile = tileMap.getTile(newPosition.getX(), newPosition.getY());

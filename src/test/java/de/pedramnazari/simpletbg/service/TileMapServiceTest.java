@@ -20,10 +20,11 @@ public class TileMapServiceTest {
         ITileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
 
 
+        final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
-                new HeroService(new DefaultHeroFactory(), new HeroMovementService()),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()))));
+                new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
 
         hero = tileMapService.getHero();
     }

@@ -16,11 +16,12 @@ public class TileMapControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() {
+        final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         TileMapService tileMapService = new TileMapService(
                 new DefaultTileFactory(new DefaultItemFactory()),
                 new DefaultItemFactory(),
-                new HeroService(new DefaultHeroFactory(), new HeroMovementService()),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()))));
+                new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
 
         controller = new TileMapController(tileMapService);
     }

@@ -1,6 +1,9 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.model.Hero;
+import de.pedramnazari.simpletbg.model.ITileFactory;
+import de.pedramnazari.simpletbg.model.TileMap;
+import de.pedramnazari.simpletbg.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +24,13 @@ public class MovementServiceTest {
     public void setUp() {
         ITileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
 
-        movementService = new HeroMovementService();
+        final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+        movementService = new HeroMovementService(collisionDetectionService);
 
         tileMapService = new TileMapService(tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), movementService),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()))));
+                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
     }
 
     @Test

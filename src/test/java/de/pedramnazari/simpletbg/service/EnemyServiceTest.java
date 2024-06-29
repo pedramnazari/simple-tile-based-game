@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.GameContext;
+import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.TileMap;
 import de.pedramnazari.simpletbg.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,8 @@ public class EnemyServiceTest {
                 {O, E, O},
         };
 
-        enemyMovementService = new EnemyMovementService(new RandomMovementStrategy(new CollisionDetectionService()));
+        final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+        enemyMovementService = new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService);
         enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
 
         assertFalse(enemyService.isInitialized());
@@ -63,8 +64,9 @@ public class EnemyServiceTest {
 
     @Test
     public void testMoveEnemies() {
-        RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy(new CollisionDetectionService());
-        enemyMovementService = new EnemyMovementService(randomMovementStrategy);
+        CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+        RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy(collisionDetectionService);
+        enemyMovementService = new EnemyMovementService(randomMovementStrategy, collisionDetectionService);
         enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
 
         final int[][] enemyMapArray = new int[][]{
@@ -93,6 +95,7 @@ public class EnemyServiceTest {
         final GameContext gameContext = new GameContextBuilder()
                 .setTileMap(tileMap)
                 .setEnemies(enemies)
+                .setHero(new Hero(0, 0))
                 .setItemService(new ItemServiceMock())
                 .build();
 
