@@ -35,6 +35,7 @@ public class HeroMovementService extends MovementService {
 
         if (!collidingEnemies.isEmpty()) {
             logger.log(Level.INFO, "Collision with enemy detected at position: " + newX + ", " + newY);
+            result.addCollidingElements(collidingEnemies);
         }
     }
 

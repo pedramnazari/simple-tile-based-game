@@ -125,7 +125,7 @@ public class TileMapService implements IItemService {
 
         final MovementResult result = heroService.moveHero(moveDirection, gameContext);
 
-        if (result.hasMoved()) {
+        if (result.hasElementMoved()) {
             currentMapIndex = result.getNewMapIndex();
         }
 

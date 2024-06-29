@@ -41,7 +41,7 @@ public class MovementService {
             result.setOldX(element.getX());
             result.setOldY(element.getY());
             result.setOldMapIndex(currentMapIndex);
-            result.hasMoved();
+            result.hasElementMoved();
         }
 
         return result;
@@ -74,7 +74,7 @@ public class MovementService {
         result.setOldY(element.getY());
 
         if (!isValidMovePositionWithinMap(gameContext.getTileMap(), element, newX, newY)) {
-            result.setHasMoved(false);
+            result.setHasElementMoved(false);
             return result;
         }
 
@@ -86,7 +86,7 @@ public class MovementService {
 
         result.setNewX(newX);
         result.setNewY(newY);
-        result.setHasMoved(true);
+        result.setHasElementMoved(true);
 
         handleElementHasMoved(gameContext, element, newX, newY, result);
 
@@ -132,7 +132,7 @@ public class MovementService {
                 result.setNewX(element.getX());
                 result.setNewY(element.getY());
 
-                result.setHasMoved(true);
+                result.setHasElementMoved(true);
 
                 // TODO: invoke handleElementHasMoved() method
             }

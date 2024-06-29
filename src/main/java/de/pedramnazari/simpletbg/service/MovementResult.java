@@ -1,26 +1,31 @@
 package de.pedramnazari.simpletbg.service;
 
 
+import de.pedramnazari.simpletbg.model.ITileMapElement;
 import de.pedramnazari.simpletbg.model.Item;
+
+import java.util.Collection;
+import java.util.Set;
 
 public class MovementResult {
     private int oldX;
     private int oldY;
     private int newX;
     private int newY;
-    private boolean hasMoved;
+    private boolean hasElementMoved;
     private Item collectedItem;
+    private Set<ITileMapElement> collidingElements = Set.of();
 
     // TODO: move outside this class?
     private String oldMapIndex;
     private String newMapIndex;
 
-    public boolean hasMoved() {
-        return hasMoved;
+    public boolean hasElementMoved() {
+        return hasElementMoved;
     }
 
-    public void setHasMoved(boolean hasMoved) {
-        this.hasMoved = hasMoved;
+    public void setHasElementMoved(boolean hasMoved) {
+        this.hasElementMoved = hasMoved;
     }
 
     public int getOldX() {
@@ -63,10 +68,6 @@ public class MovementResult {
         this.collectedItem = collectedItem;
     }
 
-    public boolean isItemCollected() {
-        return collectedItem != null;
-    }
-
     public void setOldMapIndex(String oldMapIndex) {
         this.oldMapIndex = oldMapIndex;
     }
@@ -81,5 +82,17 @@ public class MovementResult {
 
     public String getNewMapIndex() {
         return newMapIndex;
+    }
+
+    public Set<ITileMapElement> getCollidingElements() {
+        return Set.copyOf(collidingElements);
+    }
+
+    public void addCollidingElement(ITileMapElement element) {
+        collidingElements.add(element);
+    }
+
+    public void addCollidingElements(Collection<? extends ITileMapElement> elements) {
+        collidingElements.addAll(elements);
     }
 }

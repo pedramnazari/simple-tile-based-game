@@ -98,21 +98,21 @@ public class MovementServiceTest {
                 .build();
 
         MovementResult result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);
-        assertTrue(result.hasMoved());
+        assertTrue(result.hasElementMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
         result = movementService.moveElementToPositionWithinMap(gameContext, hero, 2, 2);
-        assertFalse(result.hasMoved());
+        assertFalse(result.hasElementMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
         // Jumps are not allowed
         result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 0);
-        assertFalse(result.hasMoved());
+        assertFalse(result.hasElementMoved());
 
         result = movementService.moveElementToPositionWithinMap(gameContext, hero, 0, 1);
-        assertFalse(result.hasMoved());
+        assertFalse(result.hasElementMoved());
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());

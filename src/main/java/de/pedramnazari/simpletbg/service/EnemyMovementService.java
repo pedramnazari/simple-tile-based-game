@@ -1,9 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.model.Item;
-import de.pedramnazari.simpletbg.model.TileMap;
+import de.pedramnazari.simpletbg.model.*;
 
 import java.util.Optional;
 import java.util.logging.Level;
@@ -33,8 +30,10 @@ public class EnemyMovementService extends MovementService {
     }
 
     private void handleCollisionsWithHero(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
-        if (collisionDetectionService.isCollision(element, gameContext.getHero())) {
+        final Hero hero = gameContext.getHero();
+        if (collisionDetectionService.isCollision(element, hero)) {
             logger.log(Level.INFO, "Collision with hero detected at position: " + newX + ", " + newY);
+            result.addCollidingElement(hero);
         }
     }
 

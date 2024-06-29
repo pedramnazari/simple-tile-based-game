@@ -3,7 +3,8 @@ package de.pedramnazari.simpletbg.view;
 import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.service.*;
+import de.pedramnazari.simpletbg.service.MovementResult;
+import de.pedramnazari.simpletbg.service.Point;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -69,7 +70,7 @@ public class TileMapVisualizer extends Application {
                     break;
             }
 
-            if ((result != null) && result.hasMoved()) {
+            if ((result != null) && result.hasElementMoved()) {
                 grid.getChildren().remove(heroRectangle);
                 grid.add(heroRectangle, (int) heroRectangle.getX(), (int) heroRectangle.getY());
             }
