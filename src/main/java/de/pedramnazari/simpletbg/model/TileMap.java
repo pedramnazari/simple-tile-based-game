@@ -16,6 +16,12 @@ public class TileMap {
         this.load(mapConfig);
     }
 
+    public TileMap(final String mapId, final Tile[][] tiles) {
+        tileFactory = null;
+        this.mapId = mapId;
+        this.tiles = tiles;
+    }
+
     public int getWidth() {
         return tiles[0].length;
     }

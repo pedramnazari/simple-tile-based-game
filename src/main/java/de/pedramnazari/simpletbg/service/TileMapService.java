@@ -38,6 +38,29 @@ public class TileMapService implements IItemService {
         this.gameContextBuilder = new GameContextBuilder();
     }
 
+    public TileMap createAndInitMap(final Tile[][] tiles, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
+        if (initialized) {
+            throw new IllegalStateException("TileMapService already initialized");
+        }
+
+        // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
+        this.items = itemFactory.createElementsUsingTileMapConfig(itemConfig);
+
+        // TODO: check whether hero position is valid
+        heroService.init(heroX, heroY);
+
+        // TODO: use factory to create map
+        this.tileMap = new TileMap("", tiles);
+
+        initialized = true;
+
+        enemyService.init(enemiesConfig);
+
+        initialized = true;
+
+        return tileMap;
+    }
+
     public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
         if (initialized) {
             throw new IllegalStateException("TileMapService already initialized");

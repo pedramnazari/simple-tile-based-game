@@ -1,6 +1,8 @@
 package de.pedramnazari.simpletbg.config;
 
 import de.pedramnazari.simpletbg.controller.TileMapController;
+import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.model.Tile;
 import de.pedramnazari.simpletbg.model.TileType;
 import de.pedramnazari.simpletbg.service.*;
 
@@ -43,15 +45,18 @@ public class GameInitializer {
         final EnemyService enemyService =
                 new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy(collisionDetectionService), collisionDetectionService));
 
+        DefaultTileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
         final TileMapService tileMapService = new TileMapService(
-                new DefaultTileFactory(new DefaultItemFactory()),
+                tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 enemyService);
         final TileMapController controller = new TileMapController(tileMapService);
         enemyService.registerObserver(controller);
 
-        controller.startGameUsingMap(mapConfig, itemConfig, enemyConfig, 1, 0);
+        Tile[][] tiles = new TileConfigParser().parse(mapConfig.getMap(), tileFactory);
+
+        controller.startGameUsingMap(tiles, itemConfig, enemyConfig, 1, 0);
 
         return controller;
     }

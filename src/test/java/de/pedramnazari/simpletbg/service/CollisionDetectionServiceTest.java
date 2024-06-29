@@ -29,7 +29,7 @@ public class CollisionDetectionServiceTest {
                 {F, W, W},
                 {W, F, F}});
 
-        final TileMap tileMap = new TileMap(new DefaultTileFactory(new DefaultItemFactory()), mapConfig.getMapId(), mapConfig.getMap());
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults(mapConfig.getMapId(), mapConfig.getMap());
         assertNotNull(tileMap);
 
         assertFalse(collisionDetectionService.isCollisionWithObstacle(tileMap, 0, 0));

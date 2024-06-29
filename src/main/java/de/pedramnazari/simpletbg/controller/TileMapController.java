@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.controller;
 
 import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.service.*;
 import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
+import de.pedramnazari.simpletbg.service.*;
 import de.pedramnazari.simpletbg.view.TileMapVisualizer;
 import javafx.application.Platform;
 
@@ -31,8 +31,8 @@ public class TileMapController implements IEnemyObserver, IItemPickUpListener {
         return tileMapService.createAndInitMap(mapConfig, heroX, heroY);
     }
 
-    public void startGameUsingMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
-        tileMapService.createAndInitMap(mapConfig, itemConfig, enemiesConfig, heroX, heroY);
+    public void startGameUsingMap(final Tile[][] tiles, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
+        tileMapService.createAndInitMap(tiles, itemConfig, enemiesConfig, heroX, heroY);
         tileMapService.getHeroMovementService().addItemPickupListener(this);
         tileMapService.getEnemyMovementService().addItemPickupListener(this);
 

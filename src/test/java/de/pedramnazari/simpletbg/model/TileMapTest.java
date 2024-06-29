@@ -1,7 +1,5 @@
 package de.pedramnazari.simpletbg.model;
 
-import de.pedramnazari.simpletbg.service.DefaultItemFactory;
-import de.pedramnazari.simpletbg.service.DefaultTileFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,17 +19,14 @@ public class TileMapTest {
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         };
 
-
-        final TileMap tileMap = new TileMap(new DefaultTileFactory(new DefaultItemFactory()), "idMap1", mapConfig);
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults("idMap1", mapConfig);
 
         assertEquals("idMap1", tileMap.getMapId());
 
         assertEquals(mapConfig[0].length, tileMap.getWidth());
         assertEquals(mapConfig.length, tileMap.getHeight());
 
-        Tile[][] tiles = tileMap.getTiles();
-
-        for (Tile[] tileRow : tiles) {
+        for (Tile[] tileRow : tileMap.getTiles()) {
             for (Tile t : tileRow) {
                 assertNotNull(t);
             }

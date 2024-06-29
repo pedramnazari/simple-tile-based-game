@@ -1,9 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.model.TileType;
+import de.pedramnazari.simpletbg.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -81,7 +78,7 @@ public class EnemyServiceTest {
                 {W, F, F},
         };
 
-        final TileMap tileMap = new TileMap(new DefaultTileFactory(new DefaultItemFactory()), "map", tileMapArray);
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults("map", tileMapArray);
 
         enemyService.init(new TileMapConfig("enemyMap", enemyMapArray));
         final Collection<Enemy> enemies = enemyService.getEnemies();
