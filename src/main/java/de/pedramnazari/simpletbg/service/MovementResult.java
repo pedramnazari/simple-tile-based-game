@@ -5,6 +5,7 @@ import de.pedramnazari.simpletbg.model.ITileMapElement;
 import de.pedramnazari.simpletbg.model.Item;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class MovementResult {
@@ -14,7 +15,7 @@ public class MovementResult {
     private int newY;
     private boolean hasElementMoved;
     private Item collectedItem;
-    private Set<ITileMapElement> collidingElements = Set.of();
+    private final Set<ITileMapElement> collidingElements = new HashSet<>();
 
     // TODO: move outside this class?
     private String oldMapIndex;

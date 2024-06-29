@@ -97,10 +97,10 @@ public class TileMapVisualizer extends Application {
                         rectangle.setFill(Color.GRAY);
                         break;
                     case 11:
-                        rectangle.setFill(Color.RED);
+                        rectangle.setFill(Color.BLACK);
                         break;
                     default:
-                        rectangle.setFill(Color.BLACK);
+                        rectangle.setFill(Color.RED);
                         break;
                 }
 
