@@ -1,13 +1,9 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.ITileFactory;
-import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.model.TileType;
+import de.pedramnazari.simpletbg.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,21 +87,27 @@ public class MovementServiceTest {
         hero = tileMapService.getHero();
         assertNotNull(hero);
 
-        MovementResult result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 1, 2);
+        final GameContext gameContext = new GameContextBuilder()
+                .setTileMap(tileMap)
+                .setHero(hero)
+                .setItemService(tileMapService)
+                .build();
+
+        MovementResult result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);
         assertTrue(result.hasMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
-        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 2, 2);
+        result = movementService.moveElementToPositionWithinMap(gameContext, hero, 2, 2);
         assertFalse(result.hasMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
         // Jumps are not allowed
-        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 1, 0);
+        result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 0);
         assertFalse(result.hasMoved());
 
-        result = movementService.moveElementToPositionWithinMap(tileMap, List.of(), List.of(), hero, 0, 1);
+        result = movementService.moveElementToPositionWithinMap(gameContext, hero, 0, 1);
         assertFalse(result.hasMoved());
 
         assertEquals(1, hero.getX());

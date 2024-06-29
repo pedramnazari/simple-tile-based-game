@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TileMapService {
+public class TileMapService implements IItemService {
 
     private static final Logger logger = Logger.getLogger(TileMapService.class.getName());
 
@@ -17,6 +17,8 @@ public class TileMapService {
     private final EnemyService enemyService;
     private final ITileFactory tileFactory;
     private final IItemFactory itemFactory;
+
+    private final GameContextBuilder gameContextBuilder;
 
     private MapNavigator mapNavigator;
     private String currentMapIndex;
@@ -32,6 +34,8 @@ public class TileMapService {
         this.itemFactory = itemFactory;
         this.heroService = heroService;
         this.enemyService = enemyService;
+        // TODO: inject GameContextBuilder
+        this.gameContextBuilder = new GameContextBuilder();
     }
 
     public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
@@ -62,7 +66,7 @@ public class TileMapService {
             @Override
             public void run() {
                 try {
-                    enemyService.moveEnemiesRandomlyWithinMap(tileMap, items);
+                    enemyService.moveEnemiesRandomlyWithinMap(buildGameContext());
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -116,7 +120,10 @@ public class TileMapService {
     }
 
     protected MovementResult moveHero(MoveDirection moveDirection) {
-        final MovementResult result = heroService.moveHero(tileMap, items, moveDirection, mapNavigator, currentMapIndex);
+
+        final GameContext gameContext = buildGameContext();
+
+        final MovementResult result = heroService.moveHero(moveDirection, gameContext);
 
         if (result.hasMoved()) {
             currentMapIndex = result.getNewMapIndex();
@@ -125,12 +132,38 @@ public class TileMapService {
         return result;
     }
 
+    private GameContext buildGameContext() {
+        return gameContextBuilder
+                .setTileMap(tileMap)
+                .setItemService(this)
+                .setHero(heroService.getHero())
+                .setEnemies(enemyService.getEnemies())
+                .setCurrentMapIndex(currentMapIndex)
+                .setMapNavigator(mapNavigator)
+                .build();
+    }
+
     public String getCurrentMapIndex() {
         return currentMapIndex;
     }
 
+    @Override
     public Collection<Item> getItems() {
         return List.copyOf(items);
+    }
+
+    @Override
+    public Optional<Item> getItem(final int x, final int y) {
+        for (Item item : items) {
+            if ((item.getX() == x) && (item.getY() == y)) {
+                return Optional.of(item);
+            }
+        }
+        return Optional.empty();
+    }
+    @Override
+    public boolean removeItem(Item item) {
+        return items.remove(item);
     }
 
     public TileMap getTileMap() {
@@ -157,4 +190,6 @@ public class TileMapService {
     public EnemyMovementService getEnemyMovementService() {
         return enemyService.getEnemyMovementService();
     }
+
+
 }

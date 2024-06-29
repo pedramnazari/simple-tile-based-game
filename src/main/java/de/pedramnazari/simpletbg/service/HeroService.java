@@ -2,8 +2,6 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
-import java.util.Collection;
-
 public class HeroService {
 
     private final IHeroFactory heroFactory;
@@ -15,8 +13,8 @@ public class HeroService {
         this.heroMovementService = heroMovementService;
     }
 
-  public MovementResult moveHero(TileMap tileMap, Collection<Item> items, MoveDirection moveDirection, MapNavigator mapNavigator, String currentMapIndex) {
-        return heroMovementService.moveElement(tileMap, items, this.hero, moveDirection, mapNavigator, currentMapIndex);
+    public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
+        return heroMovementService.moveElement(hero, moveDirection, gameContext);
     }
 
     public void init(int heroStartX, int heroStartY) {

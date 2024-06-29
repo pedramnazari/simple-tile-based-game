@@ -20,10 +20,13 @@ public class CollisionDetectionService {
 
     public boolean isCollision(IMoveableTileElement element, Collection<? extends IMoveableTileElement> others) {
         return !getCollidingElements(element, others).isEmpty();
-
     }
 
     public boolean isCollision(IMoveableTileElement element1, IMoveableTileElement element2) {
+        if (element1 == element2) {
+            // Element cannot have a collision with itself
+            return false;
+        }
         return isCollision(element1.getX(), element1.getY(), element2.getX(), element2.getY());
     }
 

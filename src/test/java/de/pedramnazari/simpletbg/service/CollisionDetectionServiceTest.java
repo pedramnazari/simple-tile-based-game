@@ -62,9 +62,10 @@ public class CollisionDetectionServiceTest {
         final Enemy enemy2 = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 2).findFirst().orElse(null);
         assertNotNull(enemy2);
 
-        assertTrue(collisionDetectionService.isCollision(hero, hero));
-        assertTrue(collisionDetectionService.isCollision(enemy1, enemy1));
-        assertTrue(collisionDetectionService.isCollision(enemy2, enemy2));
+        // Elements cannot have collision with themselves
+        assertFalse(collisionDetectionService.isCollision(hero, hero));
+        assertFalse(collisionDetectionService.isCollision(enemy1, enemy1));
+        assertFalse(collisionDetectionService.isCollision(enemy2, enemy2));
 
 
         assertFalse(collisionDetectionService.isCollision(hero, enemy1));

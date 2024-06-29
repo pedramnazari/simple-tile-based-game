@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.Enemy;
+import de.pedramnazari.simpletbg.model.GameContext;
 import de.pedramnazari.simpletbg.model.TileMap;
 import de.pedramnazari.simpletbg.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,8 +90,14 @@ public class EnemyServiceTest {
         final Enemy aEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(aEnemy);
 
+        final GameContext gameContext = new GameContextBuilder()
+                .setTileMap(tileMap)
+                .setEnemies(enemies)
+                .setItemService(new ItemServiceMock())
+                .build();
+
         for (int i = 0; i < 20; i++) {
-            final List<MovementResult> results = enemyService.moveEnemiesRandomlyWithinMap(tileMap, List.of());
+            final List<MovementResult> results = enemyService.moveEnemiesRandomlyWithinMap(gameContext);
             assertEquals(enemies.size(), results.size());
 
             // Since the enemies move randomly (so we do not know the target position),

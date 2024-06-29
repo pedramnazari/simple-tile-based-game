@@ -4,7 +4,6 @@ import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.model.Item;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,10 +19,10 @@ public class HeroMovementService extends MovementService {
     }
 
     @Override
-    protected void handleItems(Collection<Item> items, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    protected void handleItems(IItemService itemService, IMoveableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof Hero hero)) {
-            final Optional<Item> optItem = getItem(items, newX, newY);
+            final Optional<Item> optItem = itemService.getItem(newX, newY);
             if (optItem.isPresent()) {
                 final Item item = optItem.get();
 
@@ -31,7 +30,7 @@ public class HeroMovementService extends MovementService {
                 hero.getInventory().addItem(item);
 
                 // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
-                items.remove(item);
+                itemService.removeItem(item);
 
                 itemPickUpNotifier.notifyItemPickedUp(hero, item, newX, newY);
 

@@ -9,10 +9,13 @@ public class MovementService {
     private static final Logger logger = Logger.getLogger(MovementService.class.getName());
 
     // TODO: Simplify parameter list
-    public MovementResult moveElement(final TileMap tileMap, final Collection<Item> items,
-                                      final IMoveableTileElement element, final MoveDirection moveDirection,
-                                      final MapNavigator mapNavigator, final String currentMapIndex) {
+    public MovementResult moveElement(IMoveableTileElement element, MoveDirection moveDirection, GameContext gameContext) {
         Objects.requireNonNull(moveDirection);
+
+        final TileMap tileMap = gameContext.getTileMap();
+        final IItemService itemService = gameContext.getItemService();
+        final MapNavigator mapNavigator = gameContext.getMapNavigator().orElse(null);
+        final String currentMapIndex = gameContext.getCurrentMapIndex();
 
         final int oldX = element.getX();
         final int oldY = element.getY();
@@ -25,7 +28,7 @@ public class MovementService {
 
         if (isValidMovePositionWithinMap(tileMap, element, newX, newY)) {
             // TODO: isValidMovePositionWithinMap() is also invoked in moveElementToPositionWithinMap()
-            result = moveElementToPositionWithinMap(tileMap, items, List.of(), element, newX, newY);
+            result = moveElementToPositionWithinMap(gameContext, element, newX, newY);
             result.setOldMapIndex(currentMapIndex);
             result.setNewMapIndex(currentMapIndex);
         }
@@ -40,7 +43,13 @@ public class MovementService {
             result.hasMoved();
         }
 
+        if(result.hasMoved()) {
+            // TODO: check Collision with other elements
+        }
+
+
         return result;
+
     }
 
     private Point calcNewPosition(final MoveDirection moveDirection, int oldX, int oldY) {
@@ -63,7 +72,32 @@ public class MovementService {
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
     }
 
-    public MovementResult moveElementToPositionWithinMap(TileMap tileMap, Collection<Item> items, Collection<Enemy> enemies, IMoveableTileElement element, int newX, int newY) {
+    public MovementResult moveElementToPositionWithinMap(final GameContext gameContext, IMoveableTileElement element, int newX, int newY) {
+        final MovementResult result = new MovementResult();
+        result.setOldX(element.getX());
+        result.setOldY(element.getY());
+
+        if (!isValidMovePositionWithinMap(gameContext.getTileMap(), element, newX, newY)) {
+            result.setHasMoved(false);
+            return result;
+        }
+
+        Optional<MoveDirection> direction = MoveDirection.getDirection(element.getX(), element.getY(), newX, newY);
+
+        element.setMoveDirection(direction.orElse(null));
+        element.setX(newX);
+        element.setY(newY);
+
+        result.setNewX(newX);
+        result.setNewY(newY);
+        result.setHasMoved(true);
+
+        handleItems(gameContext.getItemService(), element, newX, newY, result);
+
+        return result;
+    }
+
+    public MovementResult moveElementToPositionWithinMap(TileMap tileMap, IItemService itemService, Collection<Enemy> enemies, IMoveableTileElement element, int newX, int newY) {
         final MovementResult result = new MovementResult();
         result.setOldX(element.getX());
         result.setOldY(element.getY());
@@ -83,7 +117,7 @@ public class MovementService {
         result.setNewY(newY);
         result.setHasMoved(true);
 
-        handleItems(items, element, newX, newY, result);
+        handleItems(itemService, element, newX, newY, result);
 
         return result;
     }
@@ -92,16 +126,7 @@ public class MovementService {
         return (oldX == newX) && (oldY == newY);
     }
 
-    protected void handleItems(Collection<Item> items, IMoveableTileElement element, int newX, int newY, MovementResult result) {
-    }
-
-    protected Optional<Item> getItem(final Collection<Item> items, final int x, final int y) {
-        for (Item item : items) {
-            if ((item.getX() == x) && (item.getY() == y)) {
-                return Optional.of(item);
-            }
-        }
-        return Optional.empty();
+    protected void handleItems(IItemService itemsService, IMoveableTileElement element, int newX, int newY, MovementResult result) {
     }
 
     private MovementResult moveElementBetweenMaps(final TileMap tileMap,
