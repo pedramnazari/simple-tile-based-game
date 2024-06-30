@@ -1,10 +1,16 @@
 package de.pedramnazari.simpletbg.config;
 
 import de.pedramnazari.simpletbg.controller.TileMapController;
+import de.pedramnazari.simpletbg.interfaces.adapters.EnemyConfigParser;
+import de.pedramnazari.simpletbg.interfaces.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.model.Enemy;
+import de.pedramnazari.simpletbg.model.Item;
 import de.pedramnazari.simpletbg.model.Tile;
 import de.pedramnazari.simpletbg.model.TileType;
 import de.pedramnazari.simpletbg.service.*;
+
+import java.util.Collection;
 
 public class GameInitializer {
 
@@ -14,49 +20,52 @@ public class GameInitializer {
     public static TileMapController initAndStartGame() {
 
         // TODO: move to AllTileMapConfigData
-        final TileMapConfig mapConfig = new TileMapConfig("map2", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {1, 1, 11, 1, 1, 1, 1, 1, 1, 1},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                 {1, 1, 11, 1, 1, 1, 11, 1, 1, 1},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                 {1, 1, 11, 1, 1, 1, 1, 11, 1, 1},
 
-        });
+        };
 
-        final TileMapConfig itemConfig = new TileMapConfig("item2", new int[][]{
+        final int[][] itemConfig = new int[][]{
                 {O, O, O, O, O, 100, O, O, O, O},
                 {O, O, O, 100, O, O, 100, O, O, O},
                 {O, O, O, O, O, O, O, O, O, 100},
                 {O, 100, O, O, O, O, O, O, O, O},
                 {O, O, O, 100, O, O, 100, O, O, O},
 
-        });
+        };
 
-        final TileMapConfig enemyConfig = new TileMapConfig("enemy2", new int[][]{
+        final int[][] enemyConfig = new int[][]{
                 {O, O, O, O, O, O, O, O, E, O},
                 {O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O},
                 {O, E, O, O, O, O, O, O, O, O},
 
-        });
+        };
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyService enemyService =
                 new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new LeftToRightMovementStrategy(collisionDetectionService), collisionDetectionService));
 
-        DefaultTileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        DefaultItemFactory itemFactory = new DefaultItemFactory();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
         final TileMapService tileMapService = new TileMapService(
                 tileFactory,
-                new DefaultItemFactory(),
+                itemFactory,
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 enemyService);
         final TileMapController controller = new TileMapController(tileMapService);
         enemyService.registerObserver(controller);
 
-        Tile[][] tiles = new TileConfigParser().parse(mapConfig.getMap(), tileFactory);
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);
+        final Collection<Item> items = new ItemConfigParser().parse(itemConfig, itemFactory);
+        final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig, new DefaultEnemyFactory());
 
-        controller.startGameUsingMap(tiles, itemConfig, enemyConfig, 1, 0);
+        controller.startGameUsingMap(tiles, items, enemies, 1, 0);
 
         return controller;
     }

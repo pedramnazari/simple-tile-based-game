@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.controller;
 
+import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.model.Tile;
 import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
 import de.pedramnazari.simpletbg.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TileMapControllerIntegrationTest {
 
     private TileMapController controller;
+    private DefaultTileFactory tileFactory;
 
     @BeforeEach
     public void setUp() {
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+        tileFactory = new DefaultTileFactory(new DefaultItemFactory());
         TileMapService tileMapService = new TileMapService(
-                new DefaultTileFactory(new DefaultItemFactory()),
+                tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
@@ -28,13 +30,19 @@ public class TileMapControllerIntegrationTest {
 
     @Test
     public void testStartNewGame() {
-        final TileMap tileMap = controller.startNewGame();
+        final int[][] map1Config = new int[][] {
+                {3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+                {1, 1, 1, 1, 1, 2, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {3, 1, 1, 1, 1, 1, 1, 1, 1, 3},
+        };
+
+        final TileMap tileMap = controller.startGameUsingMap(new TileConfigParser().parse(map1Config, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
-        final TileMapConfig map1Config = AllTileMapConfigData.getMapConfig("1");
-
-        assertEquals(map1Config.getMap()[0].length, tileMap.getWidth());
-        assertEquals(map1Config.getMap().length, tileMap.getHeight());
+        assertEquals(map1Config[0].length, tileMap.getWidth());
+        assertEquals(map1Config.length, tileMap.getHeight());
 
         final Tile aTile = tileMap.getTile(0, 0);
         assertNotNull(aTile);
@@ -62,10 +70,7 @@ public class TileMapControllerIntegrationTest {
                 {5, 4, 2}
         };
 
-        final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
-
-
-        final TileMap tileMap = controller.startGameUsingMap(mapConfig, 1, 0);
+        final TileMap tileMap = controller.startGameUsingMap(new TileConfigParser().parse(mapArray, tileFactory), 1, 0);
         assertNotNull(tileMap);
         assertEquals(3, tileMap.getWidth());
         assertEquals(2, tileMap.getHeight());

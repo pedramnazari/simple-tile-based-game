@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
+import de.pedramnazari.simpletbg.interfaces.adapters.EnemyConfigParser;
 import de.pedramnazari.simpletbg.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,10 +35,12 @@ public class EnemyServiceTest {
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         enemyMovementService = new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService);
-        enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
+
+        final DefaultEnemyFactory enemyFactory = new DefaultEnemyFactory();
+        enemyService = new EnemyService(enemyFactory, enemyMovementService);
 
         assertFalse(enemyService.isInitialized());
-        enemyService.init(new TileMapConfig("map1", map));
+        enemyService.init(new EnemyConfigParser().parse(map, enemyFactory));
         assertTrue(enemyService.isInitialized());
 
         final Collection<Enemy> enemies = enemyService.getEnemies();
@@ -80,7 +83,7 @@ public class EnemyServiceTest {
 
         final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults("map", tileMapArray);
 
-        enemyService.init(new TileMapConfig("enemyMap", enemyMapArray));
+        enemyService.init(new EnemyConfigParser().parse(enemyMapArray, new DefaultEnemyFactory()));
         final Collection<Enemy> enemies = enemyService.getEnemies();
 
         assertNotNull(enemies);

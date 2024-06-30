@@ -1,12 +1,15 @@
 package de.pedramnazari.simpletbg.controller;
 
 import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.repository.AllTileMapConfigData;
-import de.pedramnazari.simpletbg.service.*;
+import de.pedramnazari.simpletbg.service.IEnemyObserver;
+import de.pedramnazari.simpletbg.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.service.MovementResult;
+import de.pedramnazari.simpletbg.service.TileMapService;
 import de.pedramnazari.simpletbg.view.TileMapVisualizer;
 import javafx.application.Platform;
 
 import java.util.Collection;
+import java.util.List;
 
 public class TileMapController implements IEnemyObserver, IItemPickUpListener {
 
@@ -22,20 +25,14 @@ public class TileMapController implements IEnemyObserver, IItemPickUpListener {
         this.tileMapVisualizer = tileMapVisualizer;
     }
 
-    @Deprecated
-    public TileMap startNewGame() {
-        return this.startGameUsingMap(AllTileMapConfigData.getMapConfig("1"), 1, 0);
+    public TileMap startGameUsingMap(Tile[][] tiles, int heroX, int heroY) {
+        return tileMapService.createAndInitMap(tiles, List.of(), List.of(), heroX, heroY);
     }
 
-    public TileMap startGameUsingMap(TileMapConfig mapConfig, int heroX, int heroY) {
-        return tileMapService.createAndInitMap(mapConfig, heroX, heroY);
-    }
-
-    public void startGameUsingMap(final Tile[][] tiles, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
-        tileMapService.createAndInitMap(tiles, itemConfig, enemiesConfig, heroX, heroY);
+    public void startGameUsingMap(final Tile[][] tiles, Collection<Item> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
+        tileMapService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
         tileMapService.getHeroMovementService().addItemPickupListener(this);
         tileMapService.getEnemyMovementService().addItemPickupListener(this);
-
 
         tileMapService.start();
     }

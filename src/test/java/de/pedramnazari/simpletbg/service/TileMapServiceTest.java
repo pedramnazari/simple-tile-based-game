@@ -1,5 +1,8 @@
 package de.pedramnazari.simpletbg.service;
 
+import de.pedramnazari.simpletbg.interfaces.adapters.EnemyConfigParser;
+import de.pedramnazari.simpletbg.interfaces.adapters.ItemConfigParser;
+import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +17,11 @@ public class TileMapServiceTest {
 
     private TileMapService tileMapService;
     private Hero hero;
+    private DefaultTileFactory tileFactory;
 
     @BeforeEach
     public void setUp() {
-        ITileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        tileFactory = new DefaultTileFactory(new DefaultItemFactory());
 
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
@@ -39,15 +43,11 @@ public class TileMapServiceTest {
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 6},
         };
 
-
-        final TileMapConfig mapConfig = new TileMapConfig("1", mapArray);
-
         final int width = mapArray[0].length;
         final int height = mapArray.length;
 
-
         assertFalse(tileMapService.isInitialized());
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
+        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapArray, tileFactory), 1, 0);
         assertTrue(tileMapService.isInitialized());
 
         assertNotNull(tileMap);
@@ -75,9 +75,9 @@ public class TileMapServiceTest {
 
     @Test
     public void testMoveHeroWithinSingleMap() {
-        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{{6, 3, 1}, {5, 4, 2}});
+        final int[][] mapConfig = new int[][]{{6, 3, 1}, {5, 4, 2}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
+        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
         final Hero hero = tileMapService.getHero();
@@ -136,12 +136,12 @@ public class TileMapServiceTest {
 
     @Test
     public void testMoveHeroWithinSingleMapWithObstacles() {
-        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {6, 3, 1},
                 {6, 11, 1},
-                {5, 4, 2}});
+                {5, 4, 2}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
+        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
         final Hero hero = tileMapService.getHero();
@@ -182,22 +182,26 @@ public class TileMapServiceTest {
 
     @Test
     public void testMoveHeroWithinSingleMapCollectingItems() {
-        final TileMapConfig mapConfig = new TileMapConfig("map1", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {6, 3, 1},
                 {6, 11, 5},
-                {5, 4, 2}});
+                {5, 4, 2}};
 
-        final TileMapConfig itemsConfig = new TileMapConfig("item1", new int[][]{
+        final int[][] itemsConfig = new int[][]{
                 {O, O, O},
                 {O, O, 100},
-                {O, O, O}});
+                {O, O, O}};
 
-        final TileMapConfig enemiesConfig = new TileMapConfig("enemies1", new int[][]{
+        final int[][] enemiesConfig = new int[][]{
                 {O, O, O},
                 {O, O, O},
-                {O, O, O}});
+                {O, O, O}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, itemsConfig, enemiesConfig, 1, 0);
+        final TileMap tileMap = tileMapService.createAndInitMap(
+                new TileConfigParser().parse(mapConfig, tileFactory),
+                new ItemConfigParser().parse(itemsConfig, new DefaultItemFactory()),
+                new EnemyConfigParser().parse(enemiesConfig, new DefaultEnemyFactory()),
+                1, 0);
         assertNotNull(tileMap);
 
         final Collection<Item> items = tileMapService.getItems();

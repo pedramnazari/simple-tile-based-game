@@ -1,7 +1,5 @@
 package de.pedramnazari.simpletbg.model;
 
-import de.pedramnazari.simpletbg.service.TileMapConfig;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,10 +18,8 @@ public abstract class AbstractTileMapElementFactory<T extends ITileMapElement> i
     protected abstract T createNonEmptyElement(int type, int x, int y);
 
     @Override
-    public Collection<T> createElementsUsingTileMapConfig(TileMapConfig mapConfig) {
+    public Collection<T> createElementsUsingTileMapConfig(int[][] map) {
         final Collection<T> elements = new ArrayList<>();
-
-        final int[][] map = mapConfig.getMap();
 
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map[0].length; col++) {

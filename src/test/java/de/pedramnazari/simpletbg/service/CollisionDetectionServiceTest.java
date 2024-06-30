@@ -24,12 +24,12 @@ public class CollisionDetectionServiceTest {
 
     @Test
     public void testIsCollisionWithObstacle() {
-        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {F, F, W},
                 {F, W, W},
-                {W, F, F}});
+                {W, F, F}};
 
-        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults(mapConfig.getMapId(), mapConfig.getMap());
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults(mapConfig);
         assertNotNull(tileMap);
 
         assertFalse(collisionDetectionService.isCollisionWithObstacle(tileMap, 0, 0));
@@ -45,10 +45,10 @@ public class CollisionDetectionServiceTest {
 
     @Test
     public void testCheckCollision_BetweenHeroAndEnemies() {
-        final TileMapConfig enemiesConfig = new TileMapConfig("1", new int[][]{
-                {O, E, O},
-                {O, O, O},
-                {O, O, E}});
+        final int[][] enemiesConfig = new int[][]{
+                                {O, E, O},
+                                {O, O, O},
+                                {O, O, E}};
 
 
         final Hero hero = new Hero(0, 0);

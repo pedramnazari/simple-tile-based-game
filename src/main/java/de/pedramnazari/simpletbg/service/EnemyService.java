@@ -25,12 +25,12 @@ public class EnemyService implements IEnemySubject {
         this.enemyMovementService = enemyMovementService;
     }
 
-    public void init(TileMapConfig enemyMapConfig) {
+    public void init(Collection<Enemy> enemies) {
         if (initialized) {
             throw new IllegalStateException("Enemies already initialized");
         }
 
-        enemies.addAll(enemyFactory.createElementsUsingTileMapConfig(enemyMapConfig));
+        this.enemies.addAll(enemies);
         initialized = true;
     }
 

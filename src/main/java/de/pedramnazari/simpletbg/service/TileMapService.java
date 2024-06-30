@@ -2,7 +2,10 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.model.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -38,19 +41,15 @@ public class TileMapService implements IItemService {
         this.gameContextBuilder = new GameContextBuilder();
     }
 
-    public TileMap createAndInitMap(final Tile[][] tiles, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
+    public TileMap createAndInitMap(final Tile[][] tiles, final Collection<Item> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
         if (initialized) {
             throw new IllegalStateException("TileMapService already initialized");
         }
 
         // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
-        this.items = itemFactory.createElementsUsingTileMapConfig(itemConfig);
+        this.items = items;
 
-        // TODO: check whether hero position is valid
-        heroService.init(heroX, heroY);
-
-        // TODO: use factory to create map
-        this.tileMap = new TileMap("", tiles);
+        this.createAndInitMap(tiles, heroX, heroY);
 
         initialized = true;
 
@@ -61,19 +60,27 @@ public class TileMapService implements IItemService {
         return tileMap;
     }
 
-    public TileMap createAndInitMap(TileMapConfig mapConfig, TileMapConfig itemConfig, TileMapConfig enemiesConfig, int heroX, int heroY) {
-        if (initialized) {
-            throw new IllegalStateException("TileMapService already initialized");
-        }
+    public TileMap createAndInitMap(final Tile[][] tiles, int heroX, int heroY) {
+        // TODO: check whether hero position is valid
+        heroService.init(heroX, heroY);
 
-        // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
-        this.items = itemFactory.createElementsUsingTileMapConfig(itemConfig);
-        final TileMap map = this.createAndInitMap(mapConfig, heroX, heroY);
-        enemyService.init(enemiesConfig);
+        // TODO: use factory to create map
+        this.tileMap = new TileMap("", tiles);
 
         initialized = true;
 
-        return map;
+        return tileMap;
+    }
+
+    public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap, int heroX, int heroY) {
+        this.mapNavigator = mapNavigator;
+        heroService.init(heroX, heroY);
+
+        this.currentMapIndex = idOfStartingMap;
+
+        this.tileMap = mapNavigator.getMap(idOfStartingMap);
+
+        return tileMap;
     }
 
     public void start() {
@@ -100,30 +107,7 @@ public class TileMapService implements IItemService {
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, 2, 750, TimeUnit.MILLISECONDS);
     }
 
-    public TileMap createAndInitMap(TileMapConfig mapConfig, int heroX, int heroY) {
-        Objects.requireNonNull(mapConfig);
 
-        // TODO: check whether hero position is valid
-        heroService.init(heroX, heroY);
-
-        // TODO: use factory to create map
-        this.tileMap = new TileMap(tileFactory, mapConfig.getMapId(), mapConfig.getMap());
-
-        initialized = true;
-
-        return tileMap;
-    }
-
-    public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap, int heroX, int heroY) {
-        this.mapNavigator = mapNavigator;
-        heroService.init(heroX, heroY);
-
-        this.currentMapIndex = idOfStartingMap;
-
-        this.tileMap = mapNavigator.getMap(idOfStartingMap);
-
-        return tileMap;
-    }
 
     // TODO: Move all moveHero* methods to HeroService?
     public MovementResult moveHeroToLeft() {

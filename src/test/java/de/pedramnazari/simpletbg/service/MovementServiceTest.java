@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
+import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.model.Hero;
 import de.pedramnazari.simpletbg.model.ITileFactory;
 import de.pedramnazari.simpletbg.model.TileMap;
@@ -19,10 +20,11 @@ public class MovementServiceTest {
     private HeroMovementService movementService;
     private TileMapService tileMapService;
     private Hero hero;
+    private ITileFactory tileFactory;
 
     @BeforeEach
     public void setUp() {
-        ITileFactory tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        tileFactory = new DefaultTileFactory(new DefaultItemFactory());
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         movementService = new HeroMovementService(collisionDetectionService);
@@ -35,12 +37,12 @@ public class MovementServiceTest {
 
     @Test
     public void testCalcValidMovePositionsWithinMap_AtMapBoundary() {
-        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {W, F, F},
                 {F, W, W},
-                {W, F, W}});
+                {W, F, W}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 1, 0);
+        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
         hero = tileMapService.getHero();
@@ -57,12 +59,12 @@ public class MovementServiceTest {
 
     @Test
     public void testCalcValidMovePositionsWithinMap_AtMapEdge() {
-        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {W, F, F},
                 {F, W, W},
-                {F, F, W}});
+                {F, F, W}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 0, 2);
+        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 2);
         assertNotNull(tileMap);
 
         hero = tileMapService.getHero();
@@ -80,12 +82,12 @@ public class MovementServiceTest {
 
     @Test
     public void testMoveElementToPositionWithinMap() {
-        final TileMapConfig mapConfig = new TileMapConfig("1", new int[][]{
+        final int[][] mapConfig = new int[][]{
                 {W, F, F},
                 {F, W, W},
-                {F, F, W}});
+                {F, F, W}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(mapConfig, 0, 2);
+        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 2);
         assertNotNull(tileMap);
 
         hero = tileMapService.getHero();
