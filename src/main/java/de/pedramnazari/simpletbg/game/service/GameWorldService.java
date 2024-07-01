@@ -9,7 +9,6 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
-import de.pedramnazari.simpletbg.model.MapNavigator;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
 import de.pedramnazari.simpletbg.tile.model.ITileFactory;
@@ -39,7 +38,6 @@ public class GameWorldService implements IItemService {
 
     private final GameContextBuilder gameContextBuilder;
 
-    private MapNavigator mapNavigator;
     private String currentMapIndex;
     private boolean initialized = false;
 
@@ -84,17 +82,6 @@ public class GameWorldService implements IItemService {
         this.tileMap = new TileMap("", tiles);
 
         initialized = true;
-
-        return tileMap;
-    }
-
-    public TileMap createAndInitMap(MapNavigator mapNavigator, final String idOfStartingMap, int heroX, int heroY) {
-        this.mapNavigator = mapNavigator;
-        heroService.init(heroX, heroY);
-
-        this.currentMapIndex = idOfStartingMap;
-
-        this.tileMap = mapNavigator.getMap(idOfStartingMap);
 
         return tileMap;
     }
@@ -162,7 +149,6 @@ public class GameWorldService implements IItemService {
                 .setHero(heroService.getHero())
                 .setEnemies(enemyService.getEnemies())
                 .setCurrentMapIndex(currentMapIndex)
-                .setMapNavigator(mapNavigator)
                 .build();
     }
 

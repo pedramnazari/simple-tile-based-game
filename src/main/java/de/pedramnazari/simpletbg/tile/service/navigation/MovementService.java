@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.tile.service.navigation;
 
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
-import de.pedramnazari.simpletbg.model.MapNavigator;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tile.model.*;
 
@@ -20,7 +19,6 @@ public class MovementService {
 
         final TileMap tileMap = gameContext.getTileMap();
         final IItemService itemService = gameContext.getItemService();
-        final MapNavigator mapNavigator = gameContext.getMapNavigator().orElse(null);
         final String currentMapIndex = gameContext.getCurrentMapIndex();
 
         final int oldX = element.getX();
@@ -38,7 +36,7 @@ public class MovementService {
             result.setOldMapIndex(currentMapIndex);
             result.setNewMapIndex(currentMapIndex);
         } else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
-            result = moveElementBetweenMaps(tileMap, element, moveDirection, mapNavigator, currentMapIndex);
+            result = moveElementBetweenMaps(tileMap, element, moveDirection, currentMapIndex);
         } else {
             result = new MovementResult();
             result.setOldX(element.getX());
@@ -107,41 +105,10 @@ public class MovementService {
     private MovementResult moveElementBetweenMaps(final TileMap tileMap,
                                                   final IMoveableTileElement element,
                                                   final MoveDirection moveDirection,
-                                                  final MapNavigator mapNavigator,
                                                   final String currentMapIndex) {
-        // Current assumptions:
-        // - all maps have the same side
-        // - no obstacles at the border of the map
-        // => no need to check whether the new position is an obstacle
 
-        final MovementResult result = new MovementResult();
-        result.setOldX(element.getX());
-        result.setOldY(element.getY());
-
-        if (mapNavigator != null) {
-            final String nextMapIndex = mapNavigator.getNextMapId(currentMapIndex, moveDirection);
-
-            if (!nextMapIndex.equals(currentMapIndex)) {
-                mapNavigator.getMap(nextMapIndex);
-                result.setNewMapIndex(nextMapIndex);
-
-                switch (moveDirection) {
-                    case UP -> element.setY(tileMap.getHeight() - 1);
-                    case DOWN -> element.setY(0);
-                    case LEFT -> element.setX(tileMap.getWidth() - 1);
-                    case RIGHT -> element.setX(0);
-                }
-
-                result.setNewX(element.getX());
-                result.setNewY(element.getY());
-
-                result.setHasElementMoved(true);
-
-                // TODO: invoke handleElementHasMoved() method
-            }
-        }
-
-        return result;
+        // TODO: implement
+        return null;
     }
 
     public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, int currentX, int currentY) {

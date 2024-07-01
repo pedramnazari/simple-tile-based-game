@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.service;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
-import de.pedramnazari.simpletbg.model.MapNavigator;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class GameContextBuilder {
     private Hero hero;
     private Collection<Enemy> enemies = new ArrayList<>();
     private String currentMapIndex;
-    private MapNavigator mapNavigator;
 
     public GameContextBuilder setTileMap(TileMap tileMap) {
         this.tileMap = tileMap;
@@ -42,16 +40,10 @@ public class GameContextBuilder {
         return this;
     }
 
-    public GameContextBuilder setMapNavigator(MapNavigator mapNavigator) {
-        this.mapNavigator = mapNavigator;
-        return this;
-    }
-
     public GameContext build() {
         enemies = (enemies != null) ? enemies : new ArrayList<>();
 
         GameContext gameContext = new GameContext(tileMap, itemService, hero, enemies, currentMapIndex);
-        gameContext.setMapNavigator(mapNavigator);
 
         return gameContext;
     }

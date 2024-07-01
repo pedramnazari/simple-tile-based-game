@@ -13,8 +13,6 @@ import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
-import de.pedramnazari.simpletbg.model.MapNavigator;
-import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tile.model.MoveDirection;
 import de.pedramnazari.simpletbg.tile.model.Tile;
@@ -254,79 +252,5 @@ public class GameWorldServiceTest {
         // ...removed from map/tile
         final Collection<Item> itemsAfterMove = gameWorldService.getItems();
         assertEquals(0, itemsAfterMove.size());
-    }
-
-    @Test
-    public void testMoveHeroBetweenSeveralMaps() {
-        final String idMap1 = "map1";
-        final String idMap2 = "map2";
-        final String idMap3 = "map3";
-        final String idMap4 = "map4";
-
-        final TileMap map1 = TileMapTestHelper.createMapUsingDefaults(idMap1, new int[][]{{1, 1, 1}, {1, 1, 1}});
-        final TileMap map2 = TileMapTestHelper.createMapUsingDefaults(idMap2, new int[][]{{2, 2, 2}, {2, 2, 2}});
-        final TileMap map3 = TileMapTestHelper.createMapUsingDefaults(idMap3, new int[][]{{3, 3, 3}, {3, 3, 3}});
-        final TileMap map4 = TileMapTestHelper.createMapUsingDefaults(idMap4, new int[][]{{4, 4, 4}, {4, 4, 4}});
-
-        /*      map1    map2
-                map3    map4
-         */
-        final MapNavigator mapNavigator = new MapNavigator();
-
-        mapNavigator.addMap(map1, idMap1);
-        mapNavigator.addMap(map2, idMap2);
-        mapNavigator.addMap(map3, idMap3);
-        mapNavigator.addMap(map4, idMap4);
-
-        mapNavigator.addConnection(idMap1, MoveDirection.RIGHT, idMap2);
-        mapNavigator.addConnection(idMap1, MoveDirection.DOWN, idMap3);
-        mapNavigator.addConnection(idMap2, MoveDirection.LEFT, idMap1);
-        mapNavigator.addConnection(idMap2, MoveDirection.DOWN, idMap4);
-        mapNavigator.addConnection(idMap3, MoveDirection.UP, idMap1);
-        mapNavigator.addConnection(idMap3, MoveDirection.RIGHT, idMap4);
-        mapNavigator.addConnection(idMap4, MoveDirection.LEFT, idMap3);
-        mapNavigator.addConnection(idMap4, MoveDirection.UP, idMap2);
-
-        final TileMap tileMap = gameWorldService.createAndInitMap(mapNavigator, idMap1, 1, 0);
-        assertNotNull(tileMap);
-
-        assertEquals(idMap1, gameWorldService.getCurrentMapIndex());
-
-        final Hero hero = gameWorldService.getHero();
-
-
-        assertEquals(1, hero.getX());
-        assertEquals(0, hero.getY());
-
-        gameWorldService.moveHero(MoveDirection.DOWN);
-
-        assertEquals(1, hero.getX());
-        assertEquals(1, hero.getY());
-        assertEquals(idMap1, gameWorldService.getCurrentMapIndex());
-
-        // Move to top of map 3 (id 2)
-        gameWorldService.moveHero(MoveDirection.DOWN);
-        assertEquals(1, hero.getX());
-        assertEquals(0, hero.getY());
-        assertEquals(idMap3, gameWorldService.getCurrentMapIndex());
-
-        // Move to left side of map 4 (id 3)
-        gameWorldService.moveHero(MoveDirection.RIGHT);
-        gameWorldService.moveHero(MoveDirection.RIGHT);
-        assertEquals(0, hero.getX());
-        assertEquals(0, hero.getY());
-        assertEquals(idMap4, gameWorldService.getCurrentMapIndex());
-
-        // Move to bottom of map 2 (id 1)
-        gameWorldService.moveHero(MoveDirection.UP);
-        assertEquals(0, hero.getX());
-        assertEquals(1, hero.getY());
-        assertEquals(idMap2, gameWorldService.getCurrentMapIndex());
-
-        // Move to right side of map 1 (id 0)
-        gameWorldService.moveHero(MoveDirection.LEFT);
-        assertEquals(2, hero.getX());
-        assertEquals(1, hero.getY());
-        assertEquals(idMap1, gameWorldService.getCurrentMapIndex());
     }
 }
