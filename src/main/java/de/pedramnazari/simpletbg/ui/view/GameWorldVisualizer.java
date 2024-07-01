@@ -13,7 +13,6 @@ import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -23,14 +22,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TileMapVisualizer extends Application {
+public class GameWorldVisualizer extends Application {
 
-    private static final Logger logger = Logger.getLogger(TileMapVisualizer.class.getName());
+    private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
 
     public static final int TILE_SIZE = 80;
 
-    private final Map<Point, ImageView> itemViews = new HashMap<>();
-    private final Map<Point, ImageView> enemyViews = new HashMap<>();
+    private final Map<Point, ItemView> itemViews = new HashMap<>();
+    private final Map<Point, EnemyView> enemyViews = new HashMap<>();
     private GridPane grid;
 
     @Override
@@ -51,12 +50,9 @@ public class TileMapVisualizer extends Application {
 
         // add hero to grid
         final Image heroImage = new Image(getClass().getResourceAsStream("/tiles/hero/hero.png"));
-        final ImageView heroView = new ImageView(heroImage);
+        final HeroView heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
-        heroView.setFitWidth(TILE_SIZE);
-        heroView.setFitHeight(TILE_SIZE);
-
-        grid.add(heroView, hero.getX(), hero.getY());
+        grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
         Scene scene = new Scene(grid, 800, 600);
         scene.setOnKeyPressed(event -> {
@@ -81,8 +77,8 @@ public class TileMapVisualizer extends Application {
             }
 
             if ((result != null) && result.hasElementMoved()) {
-                grid.getChildren().remove(heroView);
-                grid.add(heroView, (int) heroView.getX(), (int) heroView.getY());
+                grid.getChildren().remove(heroView.getImageView());
+                grid.add(heroView.getImageView(), (int) heroView.getX(), (int) heroView.getY());
             }
         });
 
@@ -98,29 +94,28 @@ public class TileMapVisualizer extends Application {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(x, y);
 
-                Image tileImage = null;
+
+                String imagePath = "";
 
                 switch (tile.getType()) {
                     case 0:
-                        tileImage = new Image(getClass().getResourceAsStream("/tiles/floor/empty.png"));
+                        imagePath = "/tiles/floor/empty.png";
                         break;
                     case 1:
-                        tileImage = new Image(getClass().getResourceAsStream("/tiles/floor/wood.png"));
+                        imagePath = "/tiles/floor/wood.png";
                         break;
                     case 11:
-                        tileImage = new Image(getClass().getResourceAsStream("/tiles/obstacles/wall.png"));
+                        imagePath = "/tiles/obstacles/wall.png";
                         break;
                     default:
-                        tileImage = new Image(getClass().getResourceAsStream("/tiles/floor/stone.png"));
+                        imagePath = "/tiles/floor/stone.png";
                         break;
                 }
 
-                final ImageView imageView = new ImageView(tileImage);
+                Image tileImage = new Image(getClass().getResourceAsStream(imagePath));
+                final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
 
-                imageView.setFitWidth(TILE_SIZE);
-                imageView.setFitHeight(TILE_SIZE);
-
-                grid.add(imageView, x, y);
+                grid.add(tileView.getImageView(), x, y);
             }
         }
     }
@@ -128,36 +123,30 @@ public class TileMapVisualizer extends Application {
     private void initItems(Collection<Item> itemMap) {
         for (Item item : itemMap) {
             final Image itemImage = new Image(getClass().getResourceAsStream("/tiles/items/yellow_key.png"));
-            final ImageView itemView = new ImageView(itemImage);
-
-            itemView.setFitWidth(TILE_SIZE);
-            itemView.setFitHeight(TILE_SIZE);
+            final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
 
             Point point = new Point(item.getX(), item.getY());
             itemViews.put(point, itemView);
 
-            grid.add(itemView, item.getX(), item.getY());
+            grid.add(itemView.getImageView(), item.getX(), item.getY());
         }
 
     }
 
     public void updateEnemies(Collection<Enemy> enemies) {
         for (Point point : enemyViews.keySet()) {
-            ImageView enemyRectangle = enemyViews.get(point);
-            grid.getChildren().remove(enemyRectangle);
+            EnemyView enemyView = enemyViews.get(point);
+            grid.getChildren().remove(enemyView.getImageView());
         }
 
         for (Enemy enemy : enemies) {
             final Image enemyImage = new Image(getClass().getResourceAsStream("/tiles/enemies/enemy.png"));
-            final ImageView enemyView = new ImageView(enemyImage);
-
-            enemyView.setFitWidth(TILE_SIZE);
-            enemyView.setFitHeight(TILE_SIZE);
+            final EnemyView enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
 
             Point point = new Point(enemy.getX(), enemy.getY());
             enemyViews.put(point, enemyView);
 
-            grid.add(enemyView, enemy.getX(), enemy.getY());
+            grid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
         }
 
     }
@@ -168,12 +157,12 @@ public class TileMapVisualizer extends Application {
 
     public void handleItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
         Point point = new Point(itemX, itemY);
-        ImageView itemView = itemViews.remove(point);
+        ItemView itemView = itemViews.remove(point);
 
         if (itemView == null) {
             throw new IllegalArgumentException("No item rectangle found for point: " + point);
         }
 
-        grid.getChildren().remove(itemView);
+        grid.getChildren().remove(itemView.getImageView());
     }
 }

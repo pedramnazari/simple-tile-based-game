@@ -10,7 +10,7 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
-import de.pedramnazari.simpletbg.ui.view.TileMapVisualizer;
+import de.pedramnazari.simpletbg.ui.view.GameWorldVisualizer;
 import javafx.application.Platform;
 
 import java.util.Collection;
@@ -20,14 +20,14 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener 
 
     private final GameWorldService gameWorldService;
     // TODO: remove this dependency
-    private TileMapVisualizer tileMapVisualizer;
+    private GameWorldVisualizer gameWorldVisualizer;
 
     public GameWorldController(final GameWorldService gameWorldService) {
         this.gameWorldService = gameWorldService;
     }
 
-    public void setTileMapVisualizer(TileMapVisualizer tileMapVisualizer) {
-        this.tileMapVisualizer = tileMapVisualizer;
+    public void setTileMapVisualizer(GameWorldVisualizer gameWorldVisualizer) {
+        this.gameWorldVisualizer = gameWorldVisualizer;
     }
 
     public TileMap startGameUsingMap(Tile[][] tiles, int heroX, int heroY) {
@@ -78,12 +78,12 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener 
     @Override
     public void update(Collection<Enemy> enemies) {
         // GUI operations must be executed on the JavaFX application thread
-        Platform.runLater(() -> tileMapVisualizer.updateEnemies(enemies));
+        Platform.runLater(() -> gameWorldVisualizer.updateEnemies(enemies));
     }
 
     @Override
     public void onItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
         // GUI operations must be executed on the JavaFX application thread
-        Platform.runLater(() -> tileMapVisualizer.handleItemPickedUp(element, item, itemX, itemY));
+        Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(element, item, itemX, itemY));
     }
 }
