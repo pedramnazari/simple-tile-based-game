@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.character.enemy.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.ITileMapElementFactory;
+import de.pedramnazari.simpletbg.character.model.ICharacterFactory;
 
-public interface IEnemyFactory extends ITileMapElementFactory<Enemy> {
+public interface IEnemyFactory extends ICharacterFactory<Enemy> {
 
 }
