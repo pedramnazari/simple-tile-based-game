@@ -106,9 +106,14 @@ public class MovementService {
                                                   final IMoveableTileElement element,
                                                   final MoveDirection moveDirection,
                                                   final String currentMapIndex) {
-
         // TODO: implement
-        return null;
+
+        final MovementResult result = new MovementResult();
+        result.setOldX(element.getX());
+        result.setOldY(element.getY());
+        result.setHasElementMoved(false);
+
+        return result;
     }
 
     public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, int currentX, int currentY) {
