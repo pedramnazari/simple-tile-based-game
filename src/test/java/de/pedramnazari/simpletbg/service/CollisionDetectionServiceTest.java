@@ -4,10 +4,10 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
-import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
-import de.pedramnazari.simpletbg.tile.model.TileType;
-import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
+import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

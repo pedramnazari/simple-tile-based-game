@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.character.model;
 
-import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.tile.model.MoveDirection;
+import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.model;
 
-import de.pedramnazari.simpletbg.tile.model.Tile;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

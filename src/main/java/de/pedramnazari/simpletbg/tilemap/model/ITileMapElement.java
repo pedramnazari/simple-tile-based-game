@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.tile.model;
+package de.pedramnazari.simpletbg.tilemap.model;
 
 public interface ITileMapElement {
     // TODO: create enum for tile types

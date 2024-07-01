@@ -12,12 +12,12 @@ import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
-import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.tile.model.Tile;
-import de.pedramnazari.simpletbg.tile.model.TileType;
-import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
-import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
-import de.pedramnazari.simpletbg.tile.service.navigation.LeftToRightMovementStrategy;
+import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tilemap.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.LeftToRightMovementStrategy;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.Collection;

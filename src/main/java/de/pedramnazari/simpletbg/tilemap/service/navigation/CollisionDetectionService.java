@@ -1,8 +1,8 @@
-package de.pedramnazari.simpletbg.tile.service.navigation;
+package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
-import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.tile.model.Tile;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
 import java.util.Collection;
 

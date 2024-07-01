@@ -1,8 +1,8 @@
-package de.pedramnazari.simpletbg.tile.service.navigation;
+package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.tile.model.*;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 
 import java.util.HashSet;
 import java.util.Objects;

@@ -2,8 +2,8 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
-import de.pedramnazari.simpletbg.tile.model.TileType;
-import de.pedramnazari.simpletbg.tile.service.AbstractTileMapElementFactory;
+import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
 
 public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> implements IEnemyFactory {
 

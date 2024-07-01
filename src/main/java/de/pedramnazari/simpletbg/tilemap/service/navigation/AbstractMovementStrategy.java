@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.tile.service.navigation;
+package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
 public abstract class AbstractMovementStrategy implements IMovementStrategy {
 

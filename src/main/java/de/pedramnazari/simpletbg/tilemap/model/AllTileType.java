@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.tile.model;
+package de.pedramnazari.simpletbg.tilemap.model;
 
 // TODO: should not know about hero and enemies. -> Split into different enums.
 public enum AllTileType {

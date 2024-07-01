@@ -2,8 +2,8 @@ package de.pedramnazari.simpletbg.inventory.service;
 
 import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.tile.service.AbstractTileMapElementFactory;
-import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
+import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 
 public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> implements IItemFactory {
 

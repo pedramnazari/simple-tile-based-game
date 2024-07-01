@@ -1,9 +1,9 @@
 package de.pedramnazari.simpletbg.model;
 
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
-import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
-import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 
 public class TileMapTestHelper {
 

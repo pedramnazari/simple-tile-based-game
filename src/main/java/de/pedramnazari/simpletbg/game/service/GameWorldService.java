@@ -11,11 +11,11 @@ import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
-import de.pedramnazari.simpletbg.tile.model.ITileFactory;
-import de.pedramnazari.simpletbg.tile.model.MoveDirection;
-import de.pedramnazari.simpletbg.tile.model.Tile;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
-import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
+import de.pedramnazari.simpletbg.tilemap.model.ITileFactory;
+import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
+import de.pedramnazari.simpletbg.tilemap.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -7,9 +7,9 @@ import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.tile.model.Tile;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
-import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
+import de.pedramnazari.simpletbg.tilemap.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.view.TileMapVisualizer;
 import javafx.application.Platform;
 

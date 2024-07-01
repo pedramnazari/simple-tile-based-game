@@ -1,7 +1,7 @@
-package de.pedramnazari.simpletbg.tile.service;
+package de.pedramnazari.simpletbg.tilemap.service;
 
-import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
-import de.pedramnazari.simpletbg.tile.model.ITileMapElementFactory;
+import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
+import de.pedramnazari.simpletbg.tilemap.model.ITileMapElementFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;

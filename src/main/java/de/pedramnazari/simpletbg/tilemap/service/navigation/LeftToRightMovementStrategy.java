@@ -1,11 +1,11 @@
-package de.pedramnazari.simpletbg.tile.service.navigation;
+package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
-import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.tile.model.MoveDirection;
-import de.pedramnazari.simpletbg.tile.model.Point;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
+import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
-import static de.pedramnazari.simpletbg.tile.model.MoveDirection.LEFT;
+import static de.pedramnazari.simpletbg.tilemap.model.MoveDirection.LEFT;
 
 public class LeftToRightMovementStrategy extends AbstractMovementStrategy {
 

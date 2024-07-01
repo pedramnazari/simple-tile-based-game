@@ -1,7 +1,7 @@
-package de.pedramnazari.simpletbg.tile.adapters;
+package de.pedramnazari.simpletbg.tilemap.adapters;
 
-import de.pedramnazari.simpletbg.tile.model.ITileFactory;
-import de.pedramnazari.simpletbg.tile.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.ITileFactory;
+import de.pedramnazari.simpletbg.tilemap.model.Tile;
 
 public class TileConfigParser {
 

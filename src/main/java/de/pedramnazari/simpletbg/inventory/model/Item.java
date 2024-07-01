@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
-import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
+import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
 
 public class Item implements ITileMapElement {
     private final int x;
