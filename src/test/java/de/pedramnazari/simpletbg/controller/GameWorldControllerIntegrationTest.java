@@ -14,15 +14,16 @@ import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tile.service.navigation.RandomMovementStrategy;
+import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class TileMapControllerIntegrationTest {
+public class GameWorldControllerIntegrationTest {
 
-    private TileMapController controller;
+    private GameWorldController controller;
     private DefaultTileFactory tileFactory;
 
     @BeforeEach
@@ -35,7 +36,7 @@ public class TileMapControllerIntegrationTest {
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
 
-        controller = new TileMapController(gameWorldService);
+        controller = new GameWorldController(gameWorldService);
     }
 
     @Test

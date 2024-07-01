@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.controller;
+package de.pedramnazari.simpletbg.ui.controller;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
@@ -16,13 +16,13 @@ import javafx.application.Platform;
 import java.util.Collection;
 import java.util.List;
 
-public class TileMapController implements IEnemyObserver, IItemPickUpListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener {
 
     private final GameWorldService gameWorldService;
     // TODO: remove this dependency
     private TileMapVisualizer tileMapVisualizer;
 
-    public TileMapController(final GameWorldService gameWorldService) {
+    public GameWorldController(final GameWorldService gameWorldService) {
         this.gameWorldService = gameWorldService;
     }
 

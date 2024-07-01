@@ -3,13 +3,13 @@ package de.pedramnazari.simpletbg.ui.view;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.config.GameInitializer;
-import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.tile.model.Point;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
+import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -37,7 +37,7 @@ public class TileMapVisualizer extends Application {
     public void start(Stage primaryStage) {
         grid = new GridPane();
 
-        final TileMapController controller = GameInitializer.initAndStartGame();
+        final GameWorldController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
         final Hero hero = controller.getHero();
 
