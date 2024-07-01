@@ -12,9 +12,9 @@ import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.Collection;
@@ -29,8 +29,8 @@ public class TileMapVisualizer extends Application {
 
     public static final int TILE_SIZE = 80;
 
-    private final Map<Point, Rectangle> itemRectangles = new HashMap<>();
-    private final Map<Point, Rectangle> enemyRectangles = new HashMap<>();
+    private final Map<Point, ImageView> itemViews = new HashMap<>();
+    private final Map<Point, ImageView> enemyViews = new HashMap<>();
     private GridPane grid;
 
     @Override
@@ -50,8 +50,13 @@ public class TileMapVisualizer extends Application {
         updateEnemies(enemies);
 
         // add hero to grid
-        final Rectangle heroRectangle = new Rectangle(TILE_SIZE, TILE_SIZE, Color.GREEN);
-        grid.add(heroRectangle, hero.getX(), hero.getY());
+        final Image heroImage = new Image(getClass().getResourceAsStream("/tiles/hero/hero.png"));
+        final ImageView heroView = new ImageView(heroImage);
+
+        heroView.setFitWidth(TILE_SIZE);
+        heroView.setFitHeight(TILE_SIZE);
+
+        grid.add(heroView, hero.getX(), hero.getY());
 
         Scene scene = new Scene(grid, 800, 600);
         scene.setOnKeyPressed(event -> {
@@ -59,25 +64,25 @@ public class TileMapVisualizer extends Application {
             switch (event.getCode()) {
                 case RIGHT:
                     result = controller.moveHeroToRight();
-                    heroRectangle.setX(hero.getX());
+                    heroView.setX(hero.getX());
                     break;
                 case LEFT:
                     result = controller.moveHeroToLeft();
-                    heroRectangle.setX(hero.getX());
+                    heroView.setX(hero.getX());
                     break;
                 case DOWN:
                     result = controller.moveHeroDown();
-                    heroRectangle.setY(hero.getY());
+                    heroView.setY(hero.getY());
                     break;
                 case UP:
                     result = controller.moveHeroUp();
-                    heroRectangle.setY(hero.getY());
+                    heroView.setY(hero.getY());
                     break;
             }
 
             if ((result != null) && result.hasElementMoved()) {
-                grid.getChildren().remove(heroRectangle);
-                grid.add(heroRectangle, (int) heroRectangle.getX(), (int) heroRectangle.getY());
+                grid.getChildren().remove(heroView);
+                grid.add(heroView, (int) heroView.getX(), (int) heroView.getY());
             }
         });
 
@@ -92,54 +97,67 @@ public class TileMapVisualizer extends Application {
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(x, y);
-                Rectangle rectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
+
+                Image tileImage = null;
 
                 switch (tile.getType()) {
                     case 0:
-                        rectangle.setFill(Color.BLUE);
+                        tileImage = new Image(getClass().getResourceAsStream("/tiles/floor/empty.png"));
                         break;
                     case 1:
-                        rectangle.setFill(Color.GRAY);
+                        tileImage = new Image(getClass().getResourceAsStream("/tiles/floor/wood.png"));
                         break;
                     case 11:
-                        rectangle.setFill(Color.BLACK);
+                        tileImage = new Image(getClass().getResourceAsStream("/tiles/obstacles/wall.png"));
                         break;
                     default:
-                        rectangle.setFill(Color.RED);
+                        tileImage = new Image(getClass().getResourceAsStream("/tiles/floor/stone.png"));
                         break;
                 }
 
-                grid.add(rectangle, x, y);
+                final ImageView imageView = new ImageView(tileImage);
+
+                imageView.setFitWidth(TILE_SIZE);
+                imageView.setFitHeight(TILE_SIZE);
+
+                grid.add(imageView, x, y);
             }
         }
     }
 
     private void initItems(Collection<Item> itemMap) {
         for (Item item : itemMap) {
-            final Rectangle itemRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
-            itemRectangle.setFill(Color.YELLOW);
-            Point point = new Point(item.getX(), item.getY());
-            itemRectangles.put(point, itemRectangle);
+            final Image itemImage = new Image(getClass().getResourceAsStream("/tiles/items/yellow_key.png"));
+            final ImageView itemView = new ImageView(itemImage);
 
-            grid.add(itemRectangle, item.getX(), item.getY());
+            itemView.setFitWidth(TILE_SIZE);
+            itemView.setFitHeight(TILE_SIZE);
+
+            Point point = new Point(item.getX(), item.getY());
+            itemViews.put(point, itemView);
+
+            grid.add(itemView, item.getX(), item.getY());
         }
 
     }
 
     public void updateEnemies(Collection<Enemy> enemies) {
-        for (Point point : enemyRectangles.keySet()) {
-            Rectangle enemyRectangle = enemyRectangles.get(point);
+        for (Point point : enemyViews.keySet()) {
+            ImageView enemyRectangle = enemyViews.get(point);
             grid.getChildren().remove(enemyRectangle);
         }
 
-
         for (Enemy enemy : enemies) {
-            final Rectangle enemyRectangle = new Rectangle(TILE_SIZE, TILE_SIZE);
-            enemyRectangle.setFill(Color.BLUE);
-            Point point = new Point(enemy.getX(), enemy.getY());
-            enemyRectangles.put(point, enemyRectangle);
+            final Image enemyImage = new Image(getClass().getResourceAsStream("/tiles/enemies/enemy.png"));
+            final ImageView enemyView = new ImageView(enemyImage);
 
-            grid.add(enemyRectangle, enemy.getX(), enemy.getY());
+            enemyView.setFitWidth(TILE_SIZE);
+            enemyView.setFitHeight(TILE_SIZE);
+
+            Point point = new Point(enemy.getX(), enemy.getY());
+            enemyViews.put(point, enemyView);
+
+            grid.add(enemyView, enemy.getX(), enemy.getY());
         }
 
     }
@@ -150,12 +168,12 @@ public class TileMapVisualizer extends Application {
 
     public void handleItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
         Point point = new Point(itemX, itemY);
-        Rectangle itemRectangle = itemRectangles.remove(point);
+        ImageView itemView = itemViews.remove(point);
 
-        if (itemRectangle == null) {
+        if (itemView == null) {
             throw new IllegalArgumentException("No item rectangle found for point: " + point);
         }
 
-        grid.getChildren().remove(itemRectangle);
+        grid.getChildren().remove(itemView);
     }
 }
