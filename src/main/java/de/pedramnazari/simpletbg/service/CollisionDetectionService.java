@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 

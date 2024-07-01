@@ -13,14 +13,15 @@ import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.model.MapNavigator;
-import de.pedramnazari.simpletbg.model.MoveDirection;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tile.model.MoveDirection;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.model.TileType;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tile.service.TileMapService;
+import de.pedramnazari.simpletbg.tile.service.navigation.RandomMovementStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

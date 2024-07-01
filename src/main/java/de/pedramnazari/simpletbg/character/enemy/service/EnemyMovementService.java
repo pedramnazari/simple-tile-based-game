@@ -6,9 +6,14 @@ import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
-import de.pedramnazari.simpletbg.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.service.*;
+import de.pedramnazari.simpletbg.service.CollisionDetectionService;
+import de.pedramnazari.simpletbg.service.GameContext;
+import de.pedramnazari.simpletbg.service.Point;
+import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.service.navigation.IMovementStrategy;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementService;
 
 import java.util.Optional;
 import java.util.logging.Level;

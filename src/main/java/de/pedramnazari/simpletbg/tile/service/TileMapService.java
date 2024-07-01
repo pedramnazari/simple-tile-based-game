@@ -10,13 +10,13 @@ import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.model.MapNavigator;
-import de.pedramnazari.simpletbg.model.MoveDirection;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
-import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.tile.model.ITileFactory;
+import de.pedramnazari.simpletbg.tile.model.MoveDirection;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
 
 import java.util.ArrayList;
 import java.util.Collection;

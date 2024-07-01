@@ -1,20 +1,23 @@
-package de.pedramnazari.simpletbg.model;
+package de.pedramnazari.simpletbg.character.model;
+
+import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tile.model.MoveDirection;
 
 import java.util.Optional;
 
-public abstract class Figure implements IMoveableTileElement {
+public abstract class Character implements IMoveableTileElement {
 
     private int x;
     private int y;
     private MoveDirection moveDirection;
 
 
-    protected Figure(int x, int y) {
+    protected Character(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    protected Figure() {
+    protected Character() {
     }
 
     public int getX() {

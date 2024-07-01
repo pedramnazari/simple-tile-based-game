@@ -5,11 +5,11 @@ import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
-import de.pedramnazari.simpletbg.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.service.CollisionDetectionService;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.service.MovementResult;
-import de.pedramnazari.simpletbg.service.MovementService;
+import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementService;
 
 import java.util.Collection;
 import java.util.Optional;

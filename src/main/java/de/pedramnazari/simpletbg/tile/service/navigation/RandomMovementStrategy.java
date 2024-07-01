@@ -1,6 +1,8 @@
-package de.pedramnazari.simpletbg.service;
+package de.pedramnazari.simpletbg.tile.service.navigation;
 
-import de.pedramnazari.simpletbg.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.service.CollisionDetectionService;
+import de.pedramnazari.simpletbg.service.Point;
+import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 
 import java.util.ArrayList;

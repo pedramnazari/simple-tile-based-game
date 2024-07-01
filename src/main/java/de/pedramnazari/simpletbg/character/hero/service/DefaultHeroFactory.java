@@ -2,7 +2,7 @@ package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
-import de.pedramnazari.simpletbg.model.AbstractTileMapElementFactory;
+import de.pedramnazari.simpletbg.tile.service.AbstractTileMapElementFactory;
 
 public class DefaultHeroFactory extends AbstractTileMapElementFactory<Hero> implements IHeroFactory {
 

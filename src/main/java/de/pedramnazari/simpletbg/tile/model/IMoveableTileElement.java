@@ -1,6 +1,4 @@
-package de.pedramnazari.simpletbg.model;
-
-import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
+package de.pedramnazari.simpletbg.tile.model;
 
 import java.util.Optional;
 

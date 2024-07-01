@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.model;
+package de.pedramnazari.simpletbg.tile.service;
 
 import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
 import de.pedramnazari.simpletbg.tile.model.ITileMapElementFactory;

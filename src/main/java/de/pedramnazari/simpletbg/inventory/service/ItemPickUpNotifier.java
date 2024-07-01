@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.inventory.model.IItemCollectorElement;
+import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class ItemPickUpNotifier {
         itemPickUpListeners.add(listener);
     }
 
-    public void notifyItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
+    public void notifyItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
         for (IItemPickUpListener listener : itemPickUpListeners) {
             listener.onItemPickedUp(element, item, itemX, itemY);
         }

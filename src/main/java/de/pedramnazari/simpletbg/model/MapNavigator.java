@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.model;
 
+import de.pedramnazari.simpletbg.tile.model.MoveDirection;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 
 import java.util.HashMap;

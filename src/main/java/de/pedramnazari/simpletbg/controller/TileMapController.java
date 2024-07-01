@@ -3,13 +3,13 @@ package de.pedramnazari.simpletbg.controller;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.inventory.model.IItemCollectorElement;
+import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.service.TileMapService;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.view.TileMapVisualizer;
 import javafx.application.Platform;
 
@@ -82,7 +82,7 @@ public class TileMapController implements IEnemyObserver, IItemPickUpListener {
     }
 
     @Override
-    public void onItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
+    public void onItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> tileMapVisualizer.handleItemPickedUp(element, item, itemX, itemY));
     }

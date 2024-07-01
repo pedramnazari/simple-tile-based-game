@@ -8,12 +8,12 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.service.CollisionDetectionService;
-import de.pedramnazari.simpletbg.service.RandomMovementStrategy;
 import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tile.service.TileMapService;
+import de.pedramnazari.simpletbg.tile.service.navigation.RandomMovementStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

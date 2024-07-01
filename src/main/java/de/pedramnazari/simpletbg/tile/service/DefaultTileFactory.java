@@ -2,7 +2,6 @@ package de.pedramnazari.simpletbg.tile.service;
 
 import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.model.AbstractTileMapElementFactory;
 import de.pedramnazari.simpletbg.tile.model.ITileFactory;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 

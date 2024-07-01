@@ -4,12 +4,12 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.controller.TileMapController;
-import de.pedramnazari.simpletbg.inventory.model.IItemCollectorElement;
+import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.service.MovementResult;
 import de.pedramnazari.simpletbg.service.Point;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -148,7 +148,7 @@ public class TileMapVisualizer extends Application {
         launch(args);
     }
 
-    public void handleItemPickedUp(IItemCollectorElement element, Item item, int itemX, int itemY) {
+    public void handleItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
         Point point = new Point(itemX, itemY);
         Rectangle itemRectangle = itemRectangles.remove(point);
 

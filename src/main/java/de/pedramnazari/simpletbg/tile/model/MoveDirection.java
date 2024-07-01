@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.model;
+package de.pedramnazari.simpletbg.tile.model;
 
 import java.util.Optional;
 
