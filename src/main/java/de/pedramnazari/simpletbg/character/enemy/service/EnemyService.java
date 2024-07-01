@@ -3,7 +3,7 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.service.Point;
+import de.pedramnazari.simpletbg.tile.model.Point;
 import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
 
 import java.util.ArrayList;

@@ -12,12 +12,12 @@ import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
-import de.pedramnazari.simpletbg.service.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileType;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tile.service.TileMapService;
+import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tile.service.navigation.LeftToRightMovementStrategy;
 
 import java.util.Collection;

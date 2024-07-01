@@ -1,7 +1,5 @@
 package de.pedramnazari.simpletbg.tile.service.navigation;
 
-import de.pedramnazari.simpletbg.service.CollisionDetectionService;
-
 public abstract class AbstractMovementStrategy implements IMovementStrategy {
 
     private final CollisionDetectionService collisionDetectionService;

@@ -6,7 +6,7 @@ import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.controller.TileMapController;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.service.Point;
+import de.pedramnazari.simpletbg.tile.model.Point;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;

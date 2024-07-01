@@ -3,11 +3,7 @@ package de.pedramnazari.simpletbg.tile.service.navigation;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.model.MapNavigator;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.service.Point;
-import de.pedramnazari.simpletbg.tile.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.tile.model.MoveDirection;
-import de.pedramnazari.simpletbg.tile.model.Tile;
-import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.model.*;
 
 import java.util.HashSet;
 import java.util.Objects;

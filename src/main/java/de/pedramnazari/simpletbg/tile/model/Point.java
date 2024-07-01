@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.service;
+package de.pedramnazari.simpletbg.tile.model;
 
 import java.util.Objects;
 
