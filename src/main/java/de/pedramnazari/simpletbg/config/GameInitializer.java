@@ -1,14 +1,24 @@
 package de.pedramnazari.simpletbg.config;
 
+import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
+import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
+import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
+import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
+import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
+import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
+import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
+import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.controller.TileMapController;
-import de.pedramnazari.simpletbg.interfaces.adapters.EnemyConfigParser;
-import de.pedramnazari.simpletbg.interfaces.adapters.ItemConfigParser;
-import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.model.Enemy;
-import de.pedramnazari.simpletbg.model.Item;
-import de.pedramnazari.simpletbg.model.Tile;
-import de.pedramnazari.simpletbg.model.TileType;
-import de.pedramnazari.simpletbg.service.*;
+import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
+import de.pedramnazari.simpletbg.service.CollisionDetectionService;
+import de.pedramnazari.simpletbg.service.LeftToRightMovementStrategy;
+import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tile.model.Tile;
+import de.pedramnazari.simpletbg.tile.model.TileType;
+import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tile.service.TileMapService;
 
 import java.util.Collection;
 

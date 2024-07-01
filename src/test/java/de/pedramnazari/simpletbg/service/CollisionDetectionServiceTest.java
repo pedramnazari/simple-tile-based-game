@@ -1,6 +1,12 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
+import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
+import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.model.TileMapTestHelper;
+import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -22,7 +22,7 @@ dependencies {
 
 application {
     mainModule = 'de.pedramnazari.simpletbg'
-    mainClass = 'de.pedramnazari.simpletbg.view.TileMapVisualizer'
+    mainClass = 'de.pedramnazari.simpletbg.ui.view.TileMapVisualizer'
 }
 
 test {

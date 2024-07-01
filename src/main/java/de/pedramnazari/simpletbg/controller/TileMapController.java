@@ -1,11 +1,16 @@
 package de.pedramnazari.simpletbg.controller;
 
-import de.pedramnazari.simpletbg.model.*;
-import de.pedramnazari.simpletbg.service.IEnemyObserver;
-import de.pedramnazari.simpletbg.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
+import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
+import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.inventory.model.IItemCollectorElement;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.service.MovementResult;
-import de.pedramnazari.simpletbg.service.TileMapService;
-import de.pedramnazari.simpletbg.view.TileMapVisualizer;
+import de.pedramnazari.simpletbg.tile.model.Tile;
+import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.service.TileMapService;
+import de.pedramnazari.simpletbg.ui.view.TileMapVisualizer;
 import javafx.application.Platform;
 
 import java.util.Collection;

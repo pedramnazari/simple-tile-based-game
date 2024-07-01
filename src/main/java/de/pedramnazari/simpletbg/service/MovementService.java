@@ -1,6 +1,11 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.*;
+import de.pedramnazari.simpletbg.inventory.service.IItemService;
+import de.pedramnazari.simpletbg.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.model.MapNavigator;
+import de.pedramnazari.simpletbg.model.MoveDirection;
+import de.pedramnazari.simpletbg.tile.model.Tile;
+import de.pedramnazari.simpletbg.tile.model.TileMap;
 
 import java.util.HashSet;
 import java.util.Objects;

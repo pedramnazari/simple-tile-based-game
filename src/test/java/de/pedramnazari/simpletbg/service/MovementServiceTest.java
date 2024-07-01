@@ -1,10 +1,19 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.interfaces.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.model.Hero;
-import de.pedramnazari.simpletbg.model.ITileFactory;
-import de.pedramnazari.simpletbg.model.TileMap;
-import de.pedramnazari.simpletbg.model.TileType;
+import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
+import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
+import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
+import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
+import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
+import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
+import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tile.model.ITileFactory;
+import de.pedramnazari.simpletbg.tile.model.TileMap;
+import de.pedramnazari.simpletbg.tile.model.TileType;
+import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tile.service.TileMapService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

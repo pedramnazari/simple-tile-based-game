@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.service;
 
 
-import de.pedramnazari.simpletbg.model.ITileMapElement;
-import de.pedramnazari.simpletbg.model.Item;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
 
 import java.util.Collection;
 import java.util.HashSet;

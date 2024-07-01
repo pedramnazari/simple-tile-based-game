@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.model.Item;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.service.IItemService;
 
 import java.util.Collection;
 import java.util.List;

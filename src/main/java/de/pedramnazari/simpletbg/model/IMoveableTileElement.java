@@ -1,5 +1,7 @@
 package de.pedramnazari.simpletbg.model;
 
+import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
+
 import java.util.Optional;
 
 public interface IMoveableTileElement extends ITileMapElement {

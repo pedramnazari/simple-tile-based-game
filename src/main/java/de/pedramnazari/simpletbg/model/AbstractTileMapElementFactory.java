@@ -1,5 +1,8 @@
 package de.pedramnazari.simpletbg.model;
 
+import de.pedramnazari.simpletbg.tile.model.ITileMapElement;
+import de.pedramnazari.simpletbg.tile.model.ITileMapElementFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 

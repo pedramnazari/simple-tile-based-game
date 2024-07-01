@@ -5,5 +5,5 @@ module de.pedramnazari.simpletbg {
     requires org.controlsfx.controls;
     requires java.logging;
 
-    exports de.pedramnazari.simpletbg.view;
+    exports de.pedramnazari.simpletbg.ui.view;
 }
