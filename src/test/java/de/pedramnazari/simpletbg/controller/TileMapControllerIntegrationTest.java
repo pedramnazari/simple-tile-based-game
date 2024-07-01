@@ -6,12 +6,12 @@ import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
-import de.pedramnazari.simpletbg.tile.service.TileMapService;
 import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tile.service.navigation.RandomMovementStrategy;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,13 +29,13 @@ public class TileMapControllerIntegrationTest {
     public void setUp() {
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         tileFactory = new DefaultTileFactory(new DefaultItemFactory());
-        TileMapService tileMapService = new TileMapService(
+        GameWorldService gameWorldService = new GameWorldService(
                 tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
 
-        controller = new TileMapController(tileMapService);
+        controller = new TileMapController(gameWorldService);
     }
 
     @Test

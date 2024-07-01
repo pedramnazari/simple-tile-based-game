@@ -1,6 +1,6 @@
-package de.pedramnazari.simpletbg.gamestate.service;
+package de.pedramnazari.simpletbg.game.service;
 
-import de.pedramnazari.simpletbg.gamestate.model.GameState;
+import de.pedramnazari.simpletbg.game.model.GameState;
 
 public class GameStateService {
 

@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.tile.service;
+package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TileMapService implements IItemService {
+public class GameWorldService implements IItemService {
 
-    private static final Logger logger = Logger.getLogger(TileMapService.class.getName());
+    private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
 
     private final HeroService heroService;
     private final EnemyService enemyService;
@@ -48,7 +48,7 @@ public class TileMapService implements IItemService {
     private TileMap tileMap;
     private Collection<Item> items = new ArrayList<>();
 
-    public TileMapService(ITileFactory tileFactory, IItemFactory itemFactory, HeroService heroService, EnemyService enemyService) {
+    public GameWorldService(ITileFactory tileFactory, IItemFactory itemFactory, HeroService heroService, EnemyService enemyService) {
         this.tileFactory = tileFactory;
         this.itemFactory = itemFactory;
         this.heroService = heroService;

@@ -3,12 +3,12 @@ package de.pedramnazari.simpletbg.controller;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
-import de.pedramnazari.simpletbg.tile.service.TileMapService;
 import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.view.TileMapVisualizer;
 import javafx.application.Platform;
@@ -18,12 +18,12 @@ import java.util.List;
 
 public class TileMapController implements IEnemyObserver, IItemPickUpListener {
 
-    private final TileMapService tileMapService;
+    private final GameWorldService gameWorldService;
     // TODO: remove this dependency
     private TileMapVisualizer tileMapVisualizer;
 
-    public TileMapController(final TileMapService tileMapService) {
-        this.tileMapService = tileMapService;
+    public TileMapController(final GameWorldService gameWorldService) {
+        this.gameWorldService = gameWorldService;
     }
 
     public void setTileMapVisualizer(TileMapVisualizer tileMapVisualizer) {
@@ -31,48 +31,48 @@ public class TileMapController implements IEnemyObserver, IItemPickUpListener {
     }
 
     public TileMap startGameUsingMap(Tile[][] tiles, int heroX, int heroY) {
-        return tileMapService.createAndInitMap(tiles, List.of(), List.of(), heroX, heroY);
+        return gameWorldService.createAndInitMap(tiles, List.of(), List.of(), heroX, heroY);
     }
 
     public void startGameUsingMap(final Tile[][] tiles, Collection<Item> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
-        tileMapService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
-        tileMapService.getHeroMovementService().addItemPickupListener(this);
-        tileMapService.getEnemyMovementService().addItemPickupListener(this);
+        gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
+        gameWorldService.getHeroMovementService().addItemPickupListener(this);
+        gameWorldService.getEnemyMovementService().addItemPickupListener(this);
 
-        tileMapService.start();
+        gameWorldService.start();
     }
 
     public MovementResult moveHeroToRight() {
-        return tileMapService.moveHeroToRight();
+        return gameWorldService.moveHeroToRight();
     }
 
     public MovementResult moveHeroToLeft() {
-        return tileMapService.moveHeroToLeft();
+        return gameWorldService.moveHeroToLeft();
     }
 
     public MovementResult moveHeroUp() {
-        return tileMapService.moveHeroUp();
+        return gameWorldService.moveHeroUp();
     }
 
     public MovementResult moveHeroDown() {
-        return tileMapService.moveHeroDown();
+        return gameWorldService.moveHeroDown();
     }
 
     public Collection<Item> getItems() {
-        return tileMapService.getItems();
+        return gameWorldService.getItems();
     }
 
 
     public TileMap getTileMap() {
-        return tileMapService.getTileMap();
+        return gameWorldService.getTileMap();
     }
 
     public Hero getHero() {
-        return tileMapService.getHero();
+        return gameWorldService.getHero();
     }
 
     public Collection<Enemy> getEnemies() {
-        return tileMapService.getEnemies();
+        return gameWorldService.getEnemies();
     }
 
     @Override

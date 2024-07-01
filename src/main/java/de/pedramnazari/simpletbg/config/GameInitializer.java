@@ -9,6 +9,7 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.controller.TileMapController;
+import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
@@ -16,7 +17,6 @@ import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tile.model.Tile;
 import de.pedramnazari.simpletbg.tile.model.TileType;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
-import de.pedramnazari.simpletbg.tile.service.TileMapService;
 import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tile.service.navigation.LeftToRightMovementStrategy;
 
@@ -63,12 +63,12 @@ public class GameInitializer {
 
         DefaultItemFactory itemFactory = new DefaultItemFactory();
         DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
-        final TileMapService tileMapService = new TileMapService(
+        final GameWorldService gameWorldService = new GameWorldService(
                 tileFactory,
                 itemFactory,
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 enemyService);
-        final TileMapController controller = new TileMapController(tileMapService);
+        final TileMapController controller = new TileMapController(gameWorldService);
         enemyService.registerObserver(controller);
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);

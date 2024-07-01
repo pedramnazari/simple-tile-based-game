@@ -7,6 +7,7 @@ import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.tile.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tile.model.ITileFactory;
@@ -14,7 +15,6 @@ import de.pedramnazari.simpletbg.tile.model.Point;
 import de.pedramnazari.simpletbg.tile.model.TileMap;
 import de.pedramnazari.simpletbg.tile.model.TileType;
 import de.pedramnazari.simpletbg.tile.service.DefaultTileFactory;
-import de.pedramnazari.simpletbg.tile.service.TileMapService;
 import de.pedramnazari.simpletbg.tile.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tile.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tile.service.navigation.RandomMovementStrategy;
@@ -31,7 +31,7 @@ public class MovementServiceTest {
     private static final int W = TileType.WALL.getType();
 
     private HeroMovementService movementService;
-    private TileMapService tileMapService;
+    private GameWorldService gameWorldService;
     private Hero hero;
     private ITileFactory tileFactory;
 
@@ -42,7 +42,7 @@ public class MovementServiceTest {
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         movementService = new HeroMovementService(collisionDetectionService);
 
-        tileMapService = new TileMapService(tileFactory,
+        gameWorldService = new GameWorldService(tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), movementService),
                 new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
@@ -55,10 +55,10 @@ public class MovementServiceTest {
                 {F, W, W},
                 {W, F, W}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
+        final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
-        hero = tileMapService.getHero();
+        hero = gameWorldService.getHero();
         assertNotNull(hero);
 
         final Set<Point> validPositions = movementService.calcValidMovePositionsWithinMap(tileMap, hero);
@@ -77,10 +77,10 @@ public class MovementServiceTest {
                 {F, W, W},
                 {F, F, W}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 2);
+        final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 2);
         assertNotNull(tileMap);
 
-        hero = tileMapService.getHero();
+        hero = gameWorldService.getHero();
         assertNotNull(hero);
 
         final Set<Point> validPositions = movementService.calcValidMovePositionsWithinMap(tileMap, hero);
@@ -100,16 +100,16 @@ public class MovementServiceTest {
                 {F, W, W},
                 {F, F, W}};
 
-        final TileMap tileMap = tileMapService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 2);
+        final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 2);
         assertNotNull(tileMap);
 
-        hero = tileMapService.getHero();
+        hero = gameWorldService.getHero();
         assertNotNull(hero);
 
         final GameContext gameContext = new GameContextBuilder()
                 .setTileMap(tileMap)
                 .setHero(hero)
-                .setItemService(tileMapService)
+                .setItemService(gameWorldService)
                 .build();
 
         MovementResult result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);

@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.gamestate.model;
+package de.pedramnazari.simpletbg.game.model;
 
 public class GameState {
     private int score;
