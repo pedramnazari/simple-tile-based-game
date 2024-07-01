@@ -13,12 +13,16 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
         String itemDescription;
 
         if (type == 100) {
-            itemName = DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_NAME;
-            itemDescription = DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_DESC;
+            itemName = DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_NAME;
+            itemDescription = DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_DESC;
+        }
+        else if (type == 101) {
+                itemName = DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_NAME;
+                itemDescription = DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_DESC;
         } else {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
 
-        return new Item(x, y, itemName, itemDescription);
+        return new Item(x, y, itemName, itemDescription, type);
     }
 }

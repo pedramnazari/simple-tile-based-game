@@ -7,12 +7,15 @@ public class Item implements ITileMapElement {
     private final int y;
     private final String name;
     private final String description;
+    // TODO: move to ITileMapElement and change type to enum
+    private final int type;
 
-    public Item(int x, int y, String name, String description) {
+    public Item(int x, int y, String name, String description, int type) {
         this.x = x;
         this.y = y;
         this.name = name;
         this.description = description;
+        this.type = type;
     }
 
     public String getName() {
@@ -31,5 +34,9 @@ public class Item implements ITileMapElement {
     @Override
     public int getY() {
         return y;
+    }
+
+    public int getType() {
+        return type;
     }
 }

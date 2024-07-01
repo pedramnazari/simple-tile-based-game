@@ -228,8 +228,8 @@ public class GameWorldServiceTest {
         final Item item = items.iterator().next();
 
         assertNotNull(item);
-        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_NAME, item.getName());
-        assertEquals(DefaultTileFactory.ITEM_MAGIC_BLACK_KEY_DESC, item.getDescription());
+        assertEquals(DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_NAME, item.getName());
+        assertEquals(DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_DESC, item.getDescription());
 
         final Hero hero = gameWorldService.getHero();
         assertNotNull(hero);

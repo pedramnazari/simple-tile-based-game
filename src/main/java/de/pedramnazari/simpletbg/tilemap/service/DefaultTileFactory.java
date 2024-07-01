@@ -8,8 +8,8 @@ import de.pedramnazari.simpletbg.tilemap.model.Tile;
 // TODO: separate TileFactory for obstacles, items etc
 public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> implements ITileFactory {
 
-    public static final String ITEM_MAGIC_BLACK_KEY_NAME = "Magic Black Key";
-    public static final String ITEM_MAGIC_BLACK_KEY_DESC = "A black key that opens the door to the next level.";
+    public static final String ITEM_MAGIC_YELLOW_KEY_NAME = "Magic Black Key";
+    public static final String ITEM_MAGIC_YELLOW_KEY_DESC = "A black key that opens the door to the next level.";
     private final IItemFactory itemFactory;
 
     public DefaultTileFactory(IItemFactory itemFactory) {

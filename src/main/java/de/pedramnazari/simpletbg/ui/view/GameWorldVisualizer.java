@@ -98,17 +98,17 @@ public class GameWorldVisualizer extends Application {
                 String imagePath = "";
 
                 switch (tile.getType()) {
-                    case 0:
-                        imagePath = "/tiles/floor/empty.png";
-                        break;
                     case 1:
                         imagePath = "/tiles/floor/wood.png";
+                        break;
+                    case 2:
+                        imagePath = "/tiles/floor/stone.png";
                         break;
                     case 11:
                         imagePath = "/tiles/obstacles/wall.png";
                         break;
                     default:
-                        imagePath = "/tiles/floor/stone.png";
+                        imagePath = "/tiles/floor/empty.png";
                         break;
                 }
 
@@ -122,7 +122,21 @@ public class GameWorldVisualizer extends Application {
 
     private void initItems(Collection<Item> itemMap) {
         for (Item item : itemMap) {
-            final Image itemImage = new Image(getClass().getResourceAsStream("/tiles/items/yellow_key.png"));
+
+            String imagePath = "";
+
+            switch (item.getType()) {
+                case 100:
+                    imagePath = "/tiles/items/yellow_key.png";
+                    break;
+                case 101:
+                    imagePath = "/tiles/items/yellow_key_stone.png";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown item type: " + item.getType());
+            }
+
+            final Image itemImage = new Image(getClass().getResourceAsStream(imagePath));
             final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
 
             Point point = new Point(item.getX(), item.getY());
