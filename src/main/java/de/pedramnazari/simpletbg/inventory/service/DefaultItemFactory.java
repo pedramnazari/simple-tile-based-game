@@ -19,7 +19,8 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
         else if (type == 101) {
                 itemName = DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_NAME;
                 itemDescription = DefaultTileFactory.ITEM_MAGIC_YELLOW_KEY_DESC;
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
 

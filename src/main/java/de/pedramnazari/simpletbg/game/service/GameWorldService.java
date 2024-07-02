@@ -129,7 +129,7 @@ public class GameWorldService implements IItemService {
         return moveHero(MoveDirection.DOWN);
     }
 
-    public MovementResult moveHero(MoveDirection moveDirection) {
+    protected MovementResult moveHero(MoveDirection moveDirection) {
 
         final GameContext gameContext = buildGameContext();
 

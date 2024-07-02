@@ -102,7 +102,7 @@ public class GameWorldServiceTest {
         assertEquals(0, hero.getY());
 
         assertNull(hero.getMoveDirection().orElse(null));
-        gameWorldService.moveHero(MoveDirection.UP);
+        gameWorldService.moveHeroUp();
 
 
         // Same position as before
@@ -110,41 +110,41 @@ public class GameWorldServiceTest {
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.LEFT);
+        gameWorldService.moveHeroToLeft();
 
         assertEquals(MoveDirection.LEFT, hero.getMoveDirection().orElse(null));
         assertEquals(0, hero.getX());
         assertEquals(0, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.RIGHT);
+        gameWorldService.moveHeroToRight();
         assertEquals(MoveDirection.RIGHT, hero.getMoveDirection().orElse(null));
-        gameWorldService.moveHero(MoveDirection.RIGHT);
+        gameWorldService.moveHeroToRight();
         assertEquals(MoveDirection.RIGHT, hero.getMoveDirection().orElse(null));
 
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.RIGHT);
+        gameWorldService.moveHeroToRight();
         assertEquals(MoveDirection.RIGHT, hero.getMoveDirection().orElse(null));
 
         // Same position as before
         assertEquals(2, hero.getX());
         assertEquals(0, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.DOWN);
+        gameWorldService.moveHeroDown();
 
         assertEquals(MoveDirection.DOWN, hero.getMoveDirection().orElse(null));
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.DOWN);
+        gameWorldService.moveHeroDown();
         assertEquals(MoveDirection.DOWN, hero.getMoveDirection().orElse(null));
 
         // Same position as before
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.UP);
+        gameWorldService.moveHeroUp();
         assertEquals(MoveDirection.UP, hero.getMoveDirection().orElse(null));
 
         assertEquals(2, hero.getX());
@@ -170,28 +170,28 @@ public class GameWorldServiceTest {
         // ensure that the hero does not move to
         // the obstacle tiles no matter the direction
 
-        gameWorldService.moveHero(MoveDirection.DOWN);
+        gameWorldService.moveHeroDown();
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.LEFT);
-        gameWorldService.moveHero(MoveDirection.DOWN);
-        gameWorldService.moveHero(MoveDirection.RIGHT);
+        gameWorldService.moveHeroToLeft();
+        gameWorldService.moveHeroDown();
+        gameWorldService.moveHeroToRight();
 
         assertEquals(0, hero.getX());
         assertEquals(1, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.DOWN);
-        gameWorldService.moveHero(MoveDirection.RIGHT);
-        gameWorldService.moveHero(MoveDirection.UP);
+        gameWorldService.moveHeroDown();
+        gameWorldService.moveHeroToRight();
+        gameWorldService.moveHeroUp();
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
-        gameWorldService.moveHero(MoveDirection.RIGHT);
-        gameWorldService.moveHero(MoveDirection.UP);
-        gameWorldService.moveHero(MoveDirection.LEFT);
+        gameWorldService.moveHeroToRight();
+        gameWorldService.moveHeroUp();
+        gameWorldService.moveHeroToLeft();
 
         assertEquals(2, hero.getX());
         assertEquals(1, hero.getY());
