@@ -11,10 +11,7 @@ import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
-import de.pedramnazari.simpletbg.tilemap.model.ITileFactory;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Tile;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.ArrayList;
@@ -45,6 +42,8 @@ public class GameWorldService implements IItemService {
     // Maps
     private TileMap tileMap;
     private Collection<Item> items = new ArrayList<>();
+
+
 
     public GameWorldService(ITileFactory tileFactory, IItemFactory itemFactory, HeroService heroService, EnemyService enemyService) {
         this.tileFactory = tileFactory;
@@ -100,8 +99,7 @@ public class GameWorldService implements IItemService {
             public void run() {
                 try {
                     enemyService.moveEnemiesRandomlyWithinMap(buildGameContext());
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -169,6 +167,7 @@ public class GameWorldService implements IItemService {
         }
         return Optional.empty();
     }
+
     @Override
     public boolean removeItem(Item item) {
         return items.remove(item);
@@ -200,4 +199,59 @@ public class GameWorldService implements IItemService {
     }
 
 
+    public List<Point> heroAttacks() {
+        final Hero hero = getHero();
+        final int damage = 40;
+
+        final List<Point> attackPoints = new ArrayList<>();
+        // Attack also enemies in same position as hero
+        attackPoints.add(new Point(hero.getX(), hero.getY()));
+
+        int targetX, targetY;
+
+        MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
+        if (moveDirection != null) {
+            switch (moveDirection) {
+                case UP -> {
+                    targetX = hero.getX();
+                    targetY = hero.getY() - 1;
+                }
+                case DOWN -> {
+                    targetX = hero.getX();
+                    targetY = hero.getY() + 1;
+                }
+                case LEFT -> {
+                    targetX = hero.getX() - 1;
+                    targetY = hero.getY();
+                }
+                case RIGHT -> {
+                    targetX = hero.getX() + 1;
+                    targetY = hero.getY();
+                }
+                default -> {
+                    targetX = hero.getX();
+                    targetY = hero.getY();
+                }
+            }
+
+            attackPoints.add(new Point(targetX, targetY));
+        }
+
+        final Collection<Enemy> enemies = enemyService.getEnemies();
+
+        for (Point attackPoint : attackPoints) {
+            for (Enemy enemy : enemies) {
+                if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
+                    enemyService.attackEnemy(enemy, damage);
+                }
+            }
+        }
+
+        return attackPoints;
+    }
+
+
+    public EnemyService getEnemyService() {
+        return enemyService;
+    }
 }

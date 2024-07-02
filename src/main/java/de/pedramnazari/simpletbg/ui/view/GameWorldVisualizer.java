@@ -57,6 +57,11 @@ public class GameWorldVisualizer extends Application {
         Scene scene = new Scene(grid, 800, 600);
         scene.setOnKeyPressed(event -> {
             MovementResult result = null;
+
+            if (event.isControlDown()) {
+                controller.heroAttacks();
+            }
+
             switch (event.getCode()) {
                 case RIGHT:
                     result = controller.moveHeroToRight();
@@ -147,6 +152,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void updateEnemies(Collection<Enemy> enemies) {
+        // TODO: do not delete views, instead update them
         for (Point point : enemyViews.keySet()) {
             EnemyView enemyView = enemyViews.get(point);
             grid.getChildren().remove(enemyView.getImageView());
@@ -189,5 +195,17 @@ public class GameWorldVisualizer extends Application {
         }
 
         grid.getChildren().remove(itemView.getImageView());
+    }
+
+    public void updateEnemy(Enemy enemy, int damage) {
+        Point point = new Point(enemy.getX(), enemy.getY());
+        EnemyView enemyView = enemyViews.get(point);
+
+        if (enemyView == null) {
+            throw new IllegalArgumentException("No enemy rectangle found for point: " + point);
+        }
+
+        grid.getChildren().remove(enemyView.getImageView());
+        enemyViews.remove(point);
     }
 }

@@ -43,10 +43,10 @@ public class CircularMovementStrategy extends AbstractMovementStrategy {
         Point nextPosition = new Point(currentX, currentY);
 
         for (MoveDirection direction : nextMoveMap.get(currentDirection)) {
-            Point newPosition = calcValidMovePositionWithinMapForDirection(tileMap, currentX, currentY, direction).orElse(null);
+            Point p = calcValidMovePositionWithinMapForDirection(tileMap, currentX, currentY, direction).orElse(null);
 
-            if (newPosition != null) {
-                nextPosition = newPosition;
+            if (p != null) {
+                nextPosition = p;
                 break;
             }
         }

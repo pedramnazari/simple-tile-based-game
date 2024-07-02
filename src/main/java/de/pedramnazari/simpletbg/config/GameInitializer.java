@@ -77,6 +77,7 @@ public class GameInitializer {
         final GameWorldController controller = new GameWorldController(gameWorldService);
         enemyService.registerObserver(controller);
 
+
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);
         final Collection<Item> items = new ItemConfigParser().parse(itemConfig, itemFactory);
         final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig, new DefaultEnemyFactory(collisionDetectionService));

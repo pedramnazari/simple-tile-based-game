@@ -22,6 +22,7 @@ public class EnemyService implements IEnemySubject {
     private boolean initialized = false;
 
     private final List<IEnemyObserver> observers = new ArrayList<>();
+    final EnemyHitNotifier enemyHitNotifier = new EnemyHitNotifier();
 
     public EnemyService(IEnemyFactory enemyFactory, EnemyMovementService enemyMovementService) {
         this.enemyFactory = enemyFactory;
@@ -88,5 +89,25 @@ public class EnemyService implements IEnemySubject {
 
     public EnemyMovementService getEnemyMovementService() {
         return enemyMovementService;
+    }
+
+    public void attackEnemy(Enemy enemy, int damage) {
+        int newHealth = Math.max(0, enemy.getHealth() - damage);
+        enemy.setHealth(newHealth);
+
+        logger.log(Level.INFO, "Hero attacks enemy. Health: {0}", enemy.getHealth());
+
+        if (newHealth == 0) {
+            enemies.remove(enemy);
+            enemyHitNotifier.notifyEnemyHit(enemy, damage);
+        }
+    }
+
+    public void addEnemyHitListener(IEnemyHitListener listener) {
+        enemyHitNotifier.addListener(listener);
+    }
+
+    public void notifyEnemyHit(Enemy enemy, int damage) {
+        enemyHitNotifier.notifyEnemyHit(enemy, damage);
     }
 }

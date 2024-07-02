@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemPickUpNotifier {
-    private List<IItemPickUpListener> itemPickUpListeners = new ArrayList<>();
+    private final List<IItemPickUpListener> itemPickUpListeners = new ArrayList<>();
 
     public void addItemPickupListener(IItemPickUpListener listener) {
         itemPickUpListeners.add(listener);
