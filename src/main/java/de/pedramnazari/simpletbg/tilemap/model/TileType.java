@@ -6,10 +6,10 @@ public enum TileType {
     FLOOR(1),
     WALL(20),
     HERO(1000),
-    ENEMY(500),
+    ENEMY_LR(500), // left-right
+    ENEMY_UD(510), // up-down
     ITEM(200),
-    EXIT(400),
-    ENEMY_EXIT(600);
+    EXIT(400);
 
     private final int type;
 

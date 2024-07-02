@@ -10,10 +10,15 @@ public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> im
     @Override
     protected Enemy createNonEmptyElement(int type, int x, int y) {
         final Enemy enemy;
-        if (type == TileType.ENEMY.getType()) {
+        if (type == TileType.ENEMY_LR.getType()) {
             enemy = new Enemy(x, y);
             System.out.println("Created enemy at " + x + ", " + y);
-        } else {
+        }
+        else if (type == TileType.ENEMY_UD.getType()) {
+            enemy = new Enemy(x, y);
+            System.out.println("Created enemy at " + x + ", " + y);
+        }
+        else {
             throw new IllegalArgumentException("Unknown enemy type: " + type);
         }
 

@@ -25,7 +25,7 @@ import java.util.Collection;
 public class GameInitializer {
 
     private static final int O = TileType.EMPTY.getType();
-    private static final int E = TileType.ENEMY.getType();
+    private static final int E = TileType.ENEMY_LR.getType();
 
     public static GameWorldController initAndStartGame() {
 
