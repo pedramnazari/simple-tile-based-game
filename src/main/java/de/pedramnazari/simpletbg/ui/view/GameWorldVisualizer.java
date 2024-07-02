@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
@@ -39,7 +40,6 @@ public class GameWorldVisualizer extends Application {
         final GameWorldController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
         final Hero hero = controller.getHero();
-
 
 
         initFloorAndObstacleTiles(controller.getTileMap());
@@ -88,7 +88,6 @@ public class GameWorldVisualizer extends Application {
     }
 
 
-
     private void initFloorAndObstacleTiles(TileMap tileMap) {
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
@@ -123,7 +122,7 @@ public class GameWorldVisualizer extends Application {
     private void initItems(Collection<Item> itemMap) {
         for (Item item : itemMap) {
 
-            String imagePath = "";
+            String imagePath;
 
             switch (item.getType()) {
                 case 100:
@@ -154,7 +153,17 @@ public class GameWorldVisualizer extends Application {
         }
 
         for (Enemy enemy : enemies) {
-            final Image enemyImage = new Image(getClass().getResourceAsStream("/tiles/enemies/enemy.png"));
+            String imagePath = "";
+
+            if (enemy.getType() == TileType.ENEMY_LR.getType()) {
+                imagePath = "/tiles/enemies/enemy.png";
+            } else if (enemy.getType() == TileType.ENEMY_TD.getType()) {
+                imagePath = "/tiles/enemies/enemy2.png";
+            } else {
+                throw new IllegalArgumentException("Unknown enemy type: " + enemy.getType());
+            }
+
+            final Image enemyImage = new Image(getClass().getResourceAsStream(imagePath));
             final EnemyView enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
 
             Point point = new Point(enemy.getX(), enemy.getY());
@@ -162,7 +171,6 @@ public class GameWorldVisualizer extends Application {
 
             grid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
         }
-
     }
 
     public static void main(String[] args) {

@@ -4,7 +4,7 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
-import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
@@ -60,7 +60,7 @@ public class CollisionDetectionServiceTest {
 
         final Hero hero = new Hero(0, 0);
 
-        final Collection<Enemy> enemies = new DefaultEnemyFactory().createElementsUsingTileMapConfig(enemiesConfig);
+        final Collection<Enemy> enemies = new DefaultEnemyFactory(collisionDetectionService).createElementsUsingTileMapConfig(enemiesConfig);
         assertEquals(2, enemies.size());
 
         final Enemy enemy1 = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
@@ -80,7 +80,7 @@ public class CollisionDetectionServiceTest {
         assertFalse(collisionDetectionService.isCollision(enemy1, hero));
         assertFalse(collisionDetectionService.isCollision(enemy2, hero));
 
-        Collection<? extends IMoveableTileElement> collisionElements = collisionDetectionService.getCollidingElements(hero, enemies);
+        Collection<? extends IMovableTileElement> collisionElements = collisionDetectionService.getCollidingElements(hero, enemies);
         assertEquals(0, collisionElements.size());
 
         hero.setX(1);

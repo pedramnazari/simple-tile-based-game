@@ -30,11 +30,15 @@ public class GameWorldControllerIntegrationTest {
     public void setUp() {
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
+        enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
+
         GameWorldService gameWorldService = new GameWorldService(
                 tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
+                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
+
 
         controller = new GameWorldController(gameWorldService);
     }

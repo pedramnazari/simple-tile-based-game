@@ -1,9 +1,6 @@
-package de.pedramnazari.simpletbg.tilemap.service.navigation;
+package de.pedramnazari.simpletbg.tilemap.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -11,7 +8,9 @@ import java.util.Set;
 
 public interface IMovementStrategy {
 
-    Point calcNextMove(final TileMap tileMap, final IMoveableTileElement element);
+    // TODO: use GameContext instead of TileMap?
+
+    Point calcNextMove(final TileMap tileMap, final IMovableTileElement element);
 
     CollisionDetectionService getCollisionDetectionService();
 

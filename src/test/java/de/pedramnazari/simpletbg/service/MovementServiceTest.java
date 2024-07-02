@@ -30,7 +30,7 @@ public class MovementServiceTest {
     private static final int F = TileType.FLOOR.getType();
     private static final int W = TileType.WALL.getType();
 
-    private HeroMovementService movementService;
+    private HeroMovementService heroMovementService;
     private GameWorldService gameWorldService;
     private Hero hero;
     private ITileFactory tileFactory;
@@ -40,12 +40,15 @@ public class MovementServiceTest {
         tileFactory = new DefaultTileFactory(new DefaultItemFactory());
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
-        movementService = new HeroMovementService(collisionDetectionService);
+        heroMovementService = new HeroMovementService(collisionDetectionService);
+
+        final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
+        enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
         gameWorldService = new GameWorldService(tileFactory,
                 new DefaultItemFactory(),
-                new HeroService(new DefaultHeroFactory(), movementService),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
+                new HeroService(new DefaultHeroFactory(), heroMovementService),
+                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
     }
 
     @Test
@@ -61,7 +64,7 @@ public class MovementServiceTest {
         hero = gameWorldService.getHero();
         assertNotNull(hero);
 
-        final Set<Point> validPositions = movementService.calcValidMovePositionsWithinMap(tileMap, hero);
+        final Set<Point> validPositions = heroMovementService.calcValidMovePositionsWithinMap(tileMap, hero);
         assertEquals(1, validPositions.size());
 
         final Point point = validPositions.iterator().next();
@@ -83,7 +86,7 @@ public class MovementServiceTest {
         hero = gameWorldService.getHero();
         assertNotNull(hero);
 
-        final Set<Point> validPositions = movementService.calcValidMovePositionsWithinMap(tileMap, hero);
+        final Set<Point> validPositions = heroMovementService.calcValidMovePositionsWithinMap(tileMap, hero);
         assertEquals(2, validPositions.size());
 
         final Point point1 = validPositions.stream().filter(p -> p.getX() == 0 && p.getY() == 1).findFirst().orElse(null);
@@ -112,21 +115,21 @@ public class MovementServiceTest {
                 .setItemService(gameWorldService)
                 .build();
 
-        MovementResult result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);
+        MovementResult result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);
         assertTrue(result.hasElementMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
-        result = movementService.moveElementToPositionWithinMap(gameContext, hero, 2, 2);
+        result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 2, 2);
         assertFalse(result.hasElementMoved());
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
 
         // Jumps are not allowed
-        result = movementService.moveElementToPositionWithinMap(gameContext, hero, 1, 0);
+        result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 1, 0);
         assertFalse(result.hasElementMoved());
 
-        result = movementService.moveElementToPositionWithinMap(gameContext, hero, 0, 1);
+        result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 0, 1);
         assertFalse(result.hasElementMoved());
 
         assertEquals(1, hero.getX());

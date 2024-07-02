@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
-import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
 public class CollisionDetectionService {
 
 
-    public boolean isCollisionWithObstacle(final TileMap tileMap, IMoveableTileElement element) {
+    public boolean isCollisionWithObstacle(final TileMap tileMap, IMovableTileElement element) {
         return this.isCollisionWithObstacle(tileMap, element.getX(), element.getY());
     }
 
@@ -18,11 +18,11 @@ public class CollisionDetectionService {
         return newTile.isObstacle();
     }
 
-    public boolean isCollision(IMoveableTileElement element, Collection<? extends IMoveableTileElement> others) {
+    public boolean isCollision(IMovableTileElement element, Collection<? extends IMovableTileElement> others) {
         return !getCollidingElements(element, others).isEmpty();
     }
 
-    public boolean isCollision(IMoveableTileElement element1, IMoveableTileElement element2) {
+    public boolean isCollision(IMovableTileElement element1, IMovableTileElement element2) {
         if (element1 == element2) {
             // Element cannot have a collision with itself
             return false;
@@ -35,7 +35,7 @@ public class CollisionDetectionService {
     }
 
 
-    public Collection<? extends IMoveableTileElement> getCollidingElements(IMoveableTileElement element, Collection<? extends IMoveableTileElement> others) {
+    public Collection<? extends IMovableTileElement> getCollidingElements(IMovableTileElement element, Collection<? extends IMovableTileElement> others) {
         return others.stream()
                 .filter(e -> isCollision(element, e))
                 .toList();

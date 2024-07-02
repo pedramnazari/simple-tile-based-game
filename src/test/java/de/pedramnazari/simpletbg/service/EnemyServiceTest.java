@@ -44,9 +44,10 @@ public class EnemyServiceTest {
         };
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
-        enemyMovementService = new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService);
+        final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
+        enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
-        final DefaultEnemyFactory enemyFactory = new DefaultEnemyFactory();
+        final DefaultEnemyFactory enemyFactory = new DefaultEnemyFactory(collisionDetectionService);
         enemyService = new EnemyService(enemyFactory, enemyMovementService);
 
         assertFalse(enemyService.isInitialized());
@@ -76,8 +77,9 @@ public class EnemyServiceTest {
     public void testMoveEnemies() {
         CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy(collisionDetectionService);
-        enemyMovementService = new EnemyMovementService(randomMovementStrategy, collisionDetectionService);
-        enemyService = new EnemyService(new DefaultEnemyFactory(), enemyMovementService);
+        enemyMovementService = new EnemyMovementService(collisionDetectionService);
+        enemyMovementService.addMovementStrategy(randomMovementStrategy);
+        enemyService = new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService);
 
         final int[][] enemyMapArray = new int[][]{
                 {O, E, O},
@@ -93,7 +95,7 @@ public class EnemyServiceTest {
 
         final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults("map", tileMapArray);
 
-        enemyService.init(new EnemyConfigParser().parse(enemyMapArray, new DefaultEnemyFactory()));
+        enemyService.init(new EnemyConfigParser().parse(enemyMapArray, new DefaultEnemyFactory(collisionDetectionService)));
         final Collection<Enemy> enemies = enemyService.getEnemies();
 
         assertNotNull(enemies);

@@ -10,7 +10,7 @@ public class Hero extends Character implements IItemCollector {
     private Inventory inventory;
 
     public Hero(int x, int y) {
-        super(x, y);
+        super(HERO_TYPE, x, y);
     }
 
     public Inventory getInventory() {
@@ -20,4 +20,5 @@ public class Hero extends Character implements IItemCollector {
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
+
 }

@@ -4,8 +4,11 @@ public interface ITileMapElement {
     // TODO: create enum for tile types
     int EMPTY_TILE_TYPE = 0;
 
-    // TODO: add TileType getType() Methode
+
+    int getY();
 
     int getX();
-    int getY();
+
+    // TODO: change to TileType getType()
+    int getType();
 }

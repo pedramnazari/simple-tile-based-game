@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
-import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
@@ -16,7 +16,7 @@ public class RandomMovementStrategy extends AbstractMovementStrategy {
     }
 
     @Override
-    public Point calcNextMove(TileMap tileMap, IMoveableTileElement element) {
+    public Point calcNextMove(TileMap tileMap, IMovableTileElement element) {
         int currentX = element.getX();
         int currentY = element.getY();
 

@@ -107,7 +107,8 @@ public class GameWorldService implements IItemService {
             }
         };
 
-        scheduler.scheduleAtFixedRate(moveEnemiesRunner, 2, 750, TimeUnit.MILLISECONDS);
+        // Wait 3 seconds before starting the first move to ensure that game is fully initialize
+        scheduler.scheduleAtFixedRate(moveEnemiesRunner, 3000, 750, TimeUnit.MILLISECONDS);
     }
 
 

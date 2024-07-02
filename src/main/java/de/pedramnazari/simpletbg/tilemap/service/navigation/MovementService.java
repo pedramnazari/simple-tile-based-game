@@ -14,7 +14,7 @@ public class MovementService {
     private static final Logger logger = Logger.getLogger(MovementService.class.getName());
 
     // TODO: Simplify parameter list
-    public MovementResult moveElement(IMoveableTileElement element, MoveDirection moveDirection, GameContext gameContext) {
+    public MovementResult moveElement(IMovableTileElement element, MoveDirection moveDirection, GameContext gameContext) {
         Objects.requireNonNull(moveDirection);
 
         final TileMap tileMap = gameContext.getTileMap();
@@ -69,7 +69,7 @@ public class MovementService {
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
     }
 
-    public MovementResult moveElementToPositionWithinMap(final GameContext gameContext, IMoveableTileElement element, int newX, int newY) {
+    public MovementResult moveElementToPositionWithinMap(final GameContext gameContext, IMovableTileElement element, int newX, int newY) {
         final MovementResult result = new MovementResult();
         result.setOldX(element.getX());
         result.setOldY(element.getY());
@@ -98,12 +98,12 @@ public class MovementService {
         return (oldX == newX) && (oldY == newY);
     }
 
-    protected void handleElementHasMoved(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    protected void handleElementHasMoved(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
 
     }
 
     private MovementResult moveElementBetweenMaps(final TileMap tileMap,
-                                                  final IMoveableTileElement element,
+                                                  final IMovableTileElement element,
                                                   final MoveDirection moveDirection,
                                                   final String currentMapIndex) {
         // TODO: implement
@@ -132,11 +132,11 @@ public class MovementService {
         return validPositions;
     }
 
-    public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, IMoveableTileElement element) {
+    public Set<Point> calcValidMovePositionsWithinMap(TileMap tileMap, IMovableTileElement element) {
         return calcValidMovePositionsWithinMap(tileMap, element.getX(), element.getY());
     }
 
-    public boolean isValidMovePositionWithinMap(TileMap tileMap, IMoveableTileElement element, int newX, int newY) {
+    public boolean isValidMovePositionWithinMap(TileMap tileMap, IMovableTileElement element, int newX, int newY) {
         return isValidMovePositionWithinMap(tileMap, element.getX(), element.getY(), newX, newY);
     }
 

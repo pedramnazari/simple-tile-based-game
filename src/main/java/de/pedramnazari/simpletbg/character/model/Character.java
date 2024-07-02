@@ -1,23 +1,24 @@
 package de.pedramnazari.simpletbg.character.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 
 import java.util.Optional;
 
-public abstract class Character implements IMoveableTileElement {
+public abstract class Character implements IMovableTileElement {
 
+    private final int type;
     private int x;
     private int y;
     private MoveDirection moveDirection;
+    private IMovementStrategy movementStrategy;
 
 
-    protected Character(int x, int y) {
+    protected Character(int type, int x, int y) {
+        this.type = type;
         this.x = x;
         this.y = y;
-    }
-
-    protected Character() {
     }
 
     public int getX() {
@@ -45,8 +46,18 @@ public abstract class Character implements IMoveableTileElement {
         return Optional.ofNullable(moveDirection);
     }
 
+    @Override
+    public void setMovementStrategy(IMovementStrategy movementStrategy) {
+        this.movementStrategy = movementStrategy;
+    }
 
+    @Override
+    public IMovementStrategy getMovementStrategy() {
+        return movementStrategy;
+    }
 
-
-
+    @Override
+    public int getType() {
+        return type;
+    }
 }

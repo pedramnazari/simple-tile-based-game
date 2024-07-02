@@ -7,6 +7,6 @@ public interface ITileMapElementFactory<T extends ITileMapElement> {
     // TODO: change return type to Optional<T>?
     T createElement(int type, int x, int y);
 
-    // TODO: input should be Tile[][]
+    // TODO: Move this method to Parsers. Here, only Tile[][] should be used.
     Collection<T> createElementsUsingTileMapConfig(int[][] config);
 }

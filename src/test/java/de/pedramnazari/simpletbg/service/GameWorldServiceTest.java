@@ -42,10 +42,14 @@ public class GameWorldServiceTest {
 
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+        final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
+        enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
+
+
         gameWorldService = new GameWorldService(tileFactory,
                 new DefaultItemFactory(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
-                new EnemyService(new DefaultEnemyFactory(), new EnemyMovementService(new RandomMovementStrategy(collisionDetectionService), collisionDetectionService)));
+                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
 
         hero = gameWorldService.getHero();
     }
@@ -217,7 +221,7 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(
                 new TileConfigParser().parse(mapConfig, tileFactory),
                 new ItemConfigParser().parse(itemsConfig, new DefaultItemFactory()),
-                new EnemyConfigParser().parse(enemiesConfig, new DefaultEnemyFactory()),
+                new EnemyConfigParser().parse(enemiesConfig, new DefaultEnemyFactory(new CollisionDetectionService())),
                 1, 0);
         assertNotNull(tileMap);
 

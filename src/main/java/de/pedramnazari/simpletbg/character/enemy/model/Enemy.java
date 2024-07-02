@@ -5,7 +5,7 @@ import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 
 public class Enemy extends Character implements IItemCollector {
 
-    public Enemy(int x, int y) {
-        super(x, y);
+    public Enemy(int type, int x, int y) {
+        super(type, x, y);
     }
 }

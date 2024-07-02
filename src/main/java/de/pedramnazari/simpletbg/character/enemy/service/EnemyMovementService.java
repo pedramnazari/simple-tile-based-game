@@ -7,14 +7,16 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.model.IMoveableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
-import de.pedramnazari.simpletbg.tilemap.service.navigation.IMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementService;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +26,22 @@ public class EnemyMovementService extends MovementService {
     final static Logger logger = Logger.getLogger(EnemyMovementService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
-    private final IMovementStrategy movementStrategy;
     private final CollisionDetectionService collisionDetectionService;
 
-    public EnemyMovementService(IMovementStrategy movementStrategy, CollisionDetectionService collisionDetectionService) {
-        this.movementStrategy = movementStrategy;
+    private final Collection<IMovementStrategy> movementStrategies;
+
+    public EnemyMovementService(CollisionDetectionService collisionDetectionService) {
         this.collisionDetectionService = collisionDetectionService;
+
+        this.movementStrategies = new ArrayList<>();
+    }
+
+    public boolean addMovementStrategy(IMovementStrategy strategy) {
+        return movementStrategies.add(strategy);
+    }
+
+    public boolean removeMovementStrategy(IMovementStrategy strategy) {
+        return movementStrategies.remove(strategy);
     }
 
     public void addItemPickupListener(IItemPickUpListener listener) {
@@ -37,12 +49,12 @@ public class EnemyMovementService extends MovementService {
     }
 
     @Override
-    protected void handleElementHasMoved(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    protected void handleElementHasMoved(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
         handleItems(gameContext.getItemService(), element, newX, newY, result);
         handleCollisionsWithHero(gameContext, element, newX, newY, result);
     }
 
-    private void handleCollisionsWithHero(GameContext gameContext, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    private void handleCollisionsWithHero(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
         final Hero hero = gameContext.getHero();
         if (collisionDetectionService.isCollision(element, hero)) {
             logger.log(Level.INFO, "Collision with hero detected at position: " + newX + ", " + newY);
@@ -50,7 +62,7 @@ public class EnemyMovementService extends MovementService {
         }
     }
 
-    private void handleItems(IItemService itemService, IMoveableTileElement element, int newX, int newY, MovementResult result) {
+    private void handleItems(IItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof Enemy enemy)) {
             final Optional<Item> optItem = itemService.getItem(newX, newY);
@@ -69,7 +81,8 @@ public class EnemyMovementService extends MovementService {
         }
     }
 
-    public Point calcNextMove(TileMap tileMap, IMoveableTileElement element) {
-        return movementStrategy.calcNextMove(tileMap, element);
+    public Point calcNextMove(TileMap tileMap, IMovableTileElement element) {
+        final IMovementStrategy strategy = element.getMovementStrategy();
+        return strategy.calcNextMove(tileMap, element);
     }
 }

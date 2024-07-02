@@ -7,7 +7,7 @@ public enum TileType {
     WALL(20),
     HERO(1000),
     ENEMY_LR(500), // left-right
-    ENEMY_UD(510), // up-down
+    ENEMY_TD(510), // top-down
     ITEM(200),
     EXIT(400);
 

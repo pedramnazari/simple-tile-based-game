@@ -1,5 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
+import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
+
 public abstract class AbstractMovementStrategy implements IMovementStrategy {
 
     private final CollisionDetectionService collisionDetectionService;
@@ -8,9 +10,9 @@ public abstract class AbstractMovementStrategy implements IMovementStrategy {
         this.collisionDetectionService = collisionDetectionService;
     }
 
-
     @Override
     public CollisionDetectionService getCollisionDetectionService() {
         return collisionDetectionService;
     }
+
 }
