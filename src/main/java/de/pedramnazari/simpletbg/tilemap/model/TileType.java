@@ -8,6 +8,7 @@ public enum TileType {
     HERO(1000),
     ENEMY_LR(500), // left-right
     ENEMY_TD(510), // top-down
+    ENEMY_2D(520), // two-dimensional
     ITEM(200),
     EXIT(400);
 

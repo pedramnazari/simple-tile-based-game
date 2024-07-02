@@ -4,6 +4,7 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.CircularMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.LeftToRightMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.TopToBottomMovementStrategy;
@@ -27,6 +28,11 @@ public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> im
         else if (type == TileType.ENEMY_TD.getType()) {
             enemy = new Enemy(TileType.ENEMY_TD.getType(), x, y);
             enemy.setMovementStrategy(new TopToBottomMovementStrategy(collisionDetectionService));
+            System.out.println("Created enemy at " + x + ", " + y);
+        }
+        else if (type == TileType.ENEMY_2D.getType()) {
+            enemy = new Enemy(TileType.ENEMY_2D.getType(), x, y);
+            enemy.setMovementStrategy(new CircularMovementStrategy(collisionDetectionService));
             System.out.println("Created enemy at " + x + ", " + y);
         }
         else {

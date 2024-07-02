@@ -111,8 +111,6 @@ public class GameWorldService implements IItemService {
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, 3000, 750, TimeUnit.MILLISECONDS);
     }
 
-
-
     // TODO: Move all moveHero* methods to HeroService?
     public MovementResult moveHeroToLeft() {
         return moveHero(MoveDirection.LEFT);

@@ -27,6 +27,7 @@ public class GameInitializer {
     private static final int O = TileType.EMPTY.getType();
     private static final int E = TileType.ENEMY_LR.getType();
     private static final int E2 = TileType.ENEMY_TD.getType();
+    private static final int E3 = TileType.ENEMY_2D.getType();
 
     public static GameWorldController initAndStartGame() {
 
@@ -50,7 +51,7 @@ public class GameInitializer {
         };
 
         final int[][] enemyConfig = new int[][]{
-                {O, O, O, E2, O, O, O, O, E, O},
+                {E3, O, O, E2, O, O, O, O, E, O},
                 {O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O},
