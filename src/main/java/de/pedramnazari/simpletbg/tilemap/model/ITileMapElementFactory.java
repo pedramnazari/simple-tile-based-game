@@ -8,5 +8,6 @@ public interface ITileMapElementFactory<T extends ITileMapElement> {
     T createElement(int type, int x, int y);
 
     // TODO: Move this method to Parsers. Here, only Tile[][] should be used.
+    @Deprecated
     Collection<T> createElementsUsingTileMapConfig(int[][] config);
 }

@@ -101,19 +101,17 @@ public class GameWorldVisualizer extends Application {
 
                 String imagePath = "";
 
-                switch (tile.getType()) {
-                    case 1:
-                        imagePath = "/tiles/floor/wood.png";
-                        break;
-                    case 2:
+                if (tile.getType() == TileType.WOOD.getType()) {
+                    imagePath = "/tiles/floor/wood.png";
+                }
+                else if (tile.getType() == TileType.STONE.getType()) {
                         imagePath = "/tiles/floor/stone.png";
-                        break;
-                    case 11:
-                        imagePath = "/tiles/obstacles/wall.png";
-                        break;
-                    default:
+                }
+                else if (tile.getType() == TileType.WALL.getType()) {
+                    imagePath = "/tiles/obstacles/wall.png";
+                }
+                else if (tile.getType() == TileType.EMPTY.getType()) {
                         imagePath = "/tiles/floor/empty.png";
-                        break;
                 }
 
                 Image tileImage = new Image(getClass().getResourceAsStream(imagePath));
