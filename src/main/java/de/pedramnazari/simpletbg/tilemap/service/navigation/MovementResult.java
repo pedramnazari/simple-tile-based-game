@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class MovementResult {
@@ -61,8 +62,8 @@ public class MovementResult {
         this.newY = newY;
     }
 
-    public Item getCollectedItem() {
-        return collectedItem;
+    public Optional<Item> getCollectedItem() {
+        return Optional.ofNullable(collectedItem);
     }
 
     public void setCollectedItem(Item collectedItem) {

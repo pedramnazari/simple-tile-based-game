@@ -2,9 +2,7 @@ package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.inventory.service.IItemService;
-import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
@@ -20,15 +18,11 @@ public class HeroMovementService extends MovementService {
 
     private static final Logger logger = Logger.getLogger(HeroMovementService.class.getName());
 
-    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
+
     private final CollisionDetectionService collisionDetectionService;
 
     public HeroMovementService(CollisionDetectionService collisionDetectionService) {
         this.collisionDetectionService = collisionDetectionService;
-    }
-
-    public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
-        itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
     }
 
     @Override
@@ -46,7 +40,7 @@ public class HeroMovementService extends MovementService {
         }
     }
 
-    private void handleItems(IItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
+    private void handleItems(ItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof Hero hero)) {
             final Optional<Item> optItem = itemService.getItem(newX, newY);
@@ -54,12 +48,6 @@ public class HeroMovementService extends MovementService {
                 final Item item = optItem.get();
 
                 logger.log(Level.INFO, "Found item: " + item.getName());
-                hero.getInventory().addItem(item);
-
-                // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
-                itemService.removeItem(item);
-
-                itemPickUpNotifier.notifyItemPickedUp(hero, item, newX, newY);
 
                 result.setCollectedItem(item);
             }

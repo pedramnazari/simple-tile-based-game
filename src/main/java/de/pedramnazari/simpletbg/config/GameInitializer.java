@@ -12,6 +12,7 @@ import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -72,6 +73,7 @@ public class GameInitializer {
         final GameWorldService gameWorldService = new GameWorldService(
                 tileFactory,
                 itemFactory,
+                new ItemService(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
                 enemyService);
         final GameWorldController controller = new GameWorldController(gameWorldService);

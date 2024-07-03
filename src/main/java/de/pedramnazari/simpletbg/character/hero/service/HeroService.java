@@ -2,12 +2,19 @@ package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
+import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
-public class HeroService {
+public class HeroService implements IItemPickUpNotifier {
+
+    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
     private final IHeroFactory heroFactory;
     private final HeroMovementService heroMovementService;
@@ -19,8 +26,28 @@ public class HeroService {
     }
 
     public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
-        return heroMovementService.moveElement(hero, moveDirection, gameContext);
+        final MovementResult result =  heroMovementService.moveElement(hero, moveDirection, gameContext);
+
+        // handle item
+        if (result.getCollectedItem().isPresent()) {
+            final Item item = result.getCollectedItem().get();
+            hero.getInventory().addItem(item);
+
+            itemPickUpNotifier.notifyItemPickedUp(hero, item);
+        }
+
+        return result;
     }
+
+    public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
+        itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
+    }
+
+    @Override
+    public void notifyItemPickedUp(IItemCollector element, Item item) {
+        itemPickUpNotifier.notifyItemPickedUp(element, item);
+    }
+
 
     public void init(int heroStartX, int heroStartY) {
         if (hero != null) {
@@ -34,9 +61,5 @@ public class HeroService {
 
     public Hero getHero() {
         return hero;
-    }
-
-    public HeroMovementService getHeroMovementService() {
-        return heroMovementService;
     }
 }

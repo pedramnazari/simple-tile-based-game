@@ -1,13 +1,13 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.inventory.service.IItemService;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemServiceMock implements IItemService {
+public class ItemServiceMock extends ItemService {
 
     @Override
     public boolean removeItem(Item item) {

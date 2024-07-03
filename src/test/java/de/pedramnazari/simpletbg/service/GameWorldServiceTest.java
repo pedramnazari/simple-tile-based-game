@@ -13,6 +13,7 @@ import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -46,9 +47,14 @@ public class GameWorldServiceTest {
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
 
+        final ItemService itemService = new ItemService();
+        final HeroService heroService = new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService));
+        heroService.addItemPickupListener(itemService);
+
         gameWorldService = new GameWorldService(tileFactory,
                 new DefaultItemFactory(),
-                new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
+                itemService,
+                heroService,
                 new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
 
         hero = gameWorldService.getHero();
@@ -225,7 +231,7 @@ public class GameWorldServiceTest {
                 1, 0);
         assertNotNull(tileMap);
 
-        final Collection<Item> items = gameWorldService.getItems();
+        final Collection<Item> items = gameWorldService.getItemService().getItems();
         assertNotNull(items);
         assertEquals(1, items.size());
 
@@ -254,7 +260,7 @@ public class GameWorldServiceTest {
         assertEquals(1, inventory.getItems().size());
 
         // ...removed from map/tile
-        final Collection<Item> itemsAfterMove = gameWorldService.getItems();
+        final Collection<Item> itemsAfterMove = gameWorldService.getItemService().getItems();
         assertEquals(0, itemsAfterMove.size());
     }
 }

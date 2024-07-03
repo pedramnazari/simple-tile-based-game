@@ -4,11 +4,10 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.inventory.service.IItemService;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -17,17 +16,17 @@ import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldService implements IItemService {
+public class GameWorldService {
 
     private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
 
+    private final ItemService itemService;
     private final HeroService heroService;
     private final EnemyService enemyService;
     private final ITileFactory tileFactory;
@@ -41,13 +40,14 @@ public class GameWorldService implements IItemService {
     // TODO: Introduce GameWorld class to hold all maps, items, enemies, hero etc.
     // Maps
     private TileMap tileMap;
-    private Collection<Item> items = new ArrayList<>();
 
 
 
-    public GameWorldService(ITileFactory tileFactory, IItemFactory itemFactory, HeroService heroService, EnemyService enemyService) {
+
+    public GameWorldService(ITileFactory tileFactory, IItemFactory itemFactory, ItemService itemService, HeroService heroService, EnemyService enemyService) {
         this.tileFactory = tileFactory;
         this.itemFactory = itemFactory;
+        this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
         // TODO: inject GameContextBuilder
@@ -60,7 +60,7 @@ public class GameWorldService implements IItemService {
         }
 
         // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
-        this.items = items;
+        itemService.addItems(items);
 
         this.createAndInitMap(tiles, heroX, heroY);
 
@@ -142,7 +142,7 @@ public class GameWorldService implements IItemService {
     private GameContext buildGameContext() {
         return gameContextBuilder
                 .setTileMap(tileMap)
-                .setItemService(this)
+                .setItemService(itemService)
                 .setHero(heroService.getHero())
                 .setEnemies(enemyService.getEnemies())
                 .setCurrentMapIndex(currentMapIndex)
@@ -153,25 +153,7 @@ public class GameWorldService implements IItemService {
         return currentMapIndex;
     }
 
-    @Override
-    public Collection<Item> getItems() {
-        return List.copyOf(items);
-    }
 
-    @Override
-    public Optional<Item> getItem(final int x, final int y) {
-        for (Item item : items) {
-            if ((item.getX() == x) && (item.getY() == y)) {
-                return Optional.of(item);
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean removeItem(Item item) {
-        return items.remove(item);
-    }
 
     public TileMap getTileMap() {
         return tileMap;
@@ -190,8 +172,10 @@ public class GameWorldService implements IItemService {
         return enemyService.getEnemies();
     }
 
-    public HeroMovementService getHeroMovementService() {
-        return heroService.getHeroMovementService();
+
+
+    public HeroService getHeroService() {
+        return heroService;
     }
 
     public EnemyMovementService getEnemyMovementService() {
@@ -253,5 +237,9 @@ public class GameWorldService implements IItemService {
 
     public EnemyService getEnemyService() {
         return enemyService;
+    }
+
+    public ItemService getItemService() {
+        return itemService;
     }
 }

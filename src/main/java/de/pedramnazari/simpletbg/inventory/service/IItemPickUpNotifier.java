@@ -3,8 +3,9 @@ package de.pedramnazari.simpletbg.inventory.service;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 
-public interface IItemPickUpListener {
+public interface IItemPickUpNotifier {
 
-    void onItemPickedUp(IItemCollector element, Item item);
+    void addItemPickupListener(IItemPickUpListener listener);
 
+    void notifyItemPickedUp(IItemCollector element, Item item);
 }

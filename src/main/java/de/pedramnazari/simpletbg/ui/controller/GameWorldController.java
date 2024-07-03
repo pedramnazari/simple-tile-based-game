@@ -37,7 +37,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
 
     public void startGameUsingMap(final Tile[][] tiles, Collection<Item> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
         gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
-        gameWorldService.getHeroMovementService().addItemPickupListener(this);
+        gameWorldService.getHeroService().addItemPickupListener(this);
         gameWorldService.getEnemyMovementService().addItemPickupListener(this);
         gameWorldService.getEnemyService().addEnemyHitListener(this);
 
@@ -61,7 +61,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     public Collection<Item> getItems() {
-        return gameWorldService.getItems();
+        return gameWorldService.getItemService().getItems();
     }
 
 
@@ -84,9 +84,9 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     @Override
-    public void onItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
+    public void onItemPickedUp(IItemCollector element, Item item) {
         // GUI operations must be executed on the JavaFX application thread
-        Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(element, item, itemX, itemY));
+        Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(element, item));
     }
 
     public void heroAttacks() {

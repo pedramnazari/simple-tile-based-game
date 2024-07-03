@@ -9,6 +9,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.ITileFactory;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
@@ -47,6 +48,7 @@ public class MovementServiceTest {
 
         gameWorldService = new GameWorldService(tileFactory,
                 new DefaultItemFactory(),
+                new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService),
                 new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
     }
@@ -112,7 +114,7 @@ public class MovementServiceTest {
         final GameContext gameContext = new GameContextBuilder()
                 .setTileMap(tileMap)
                 .setHero(hero)
-                .setItemService(gameWorldService)
+                .setItemService(gameWorldService.getItemService())
                 .build();
 
         MovementResult result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);

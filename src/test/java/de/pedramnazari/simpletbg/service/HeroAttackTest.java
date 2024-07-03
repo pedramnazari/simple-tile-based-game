@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
@@ -37,7 +38,7 @@ public class HeroAttackTest {
         final HeroServiceMock heroService = new HeroServiceMock(hero, tileMap);
 
         final EnemyService enemyService = new EnemyService(new DefaultEnemyFactory(new CollisionDetectionService()), new EnemyMovementService(new CollisionDetectionService()));
-        final GameWorldService gameWorldService = new GameWorldService(null, null, heroService, enemyService);
+        final GameWorldService gameWorldService = new GameWorldService(null, null, new ItemService(), heroService, enemyService);
 
         assertFalse(hero.getMoveDirection().isPresent());
 

@@ -184,8 +184,9 @@ public class GameWorldVisualizer extends Application {
         launch(args);
     }
 
-    public void handleItemPickedUp(IItemCollector element, Item item, int itemX, int itemY) {
-        Point point = new Point(itemX, itemY);
+
+    public void handleItemPickedUp(IItemCollector element, Item item) {
+        Point point = new Point(item.getX(), item.getY());
         ItemView itemView = itemViews.remove(point);
 
         if (itemView == null) {

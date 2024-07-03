@@ -4,8 +4,8 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.inventory.service.IItemService;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
@@ -62,7 +62,7 @@ public class EnemyMovementService extends MovementService {
         }
     }
 
-    private void handleItems(IItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
+    private void handleItems(ItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof Enemy enemy)) {
             final Optional<Item> optItem = itemService.getItem(newX, newY);
@@ -74,7 +74,7 @@ public class EnemyMovementService extends MovementService {
                 // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
                 itemService.removeItem(item);
 
-                itemPickUpNotifier.notifyItemPickedUp(enemy, item, newX, newY);
+                itemPickUpNotifier.notifyItemPickedUp(enemy, item);
 
                 result.setCollectedItem(item);
             }
