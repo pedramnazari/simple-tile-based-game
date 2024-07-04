@@ -46,7 +46,7 @@ public class GameInitializer {
         final int[][] itemConfig = new int[][]{
                 {O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, 100, O, O, O, O, O, O},
-                {O, O, O, O, O, 100, O, O, O, 0},
+                {O, O, O, O, O, 200, O, O, O, 0},
                 {O, 101, O, O, O, O, O, O, O, O},
                 {O, O, O, 101, O, O, 101, O, O, O},
 

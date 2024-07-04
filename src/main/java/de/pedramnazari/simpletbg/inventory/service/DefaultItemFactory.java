@@ -2,6 +2,7 @@ package de.pedramnazari.simpletbg.inventory.service;
 
 import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
 
@@ -15,21 +16,29 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
 
     @Override
     protected Item createNonEmptyElement(int type, int x, int y) {
+        Item item;
         String itemName;
         String itemDescription;
 
         if (type == TileType.ITEM_YELLOW_KEY.getType()) {
             itemName = ITEM_MAGIC_YELLOW_KEY_NAME;
             itemDescription = ITEM_MAGIC_YELLOW_KEY_DESC;
+            item = new Item(x, y, itemName, itemDescription, type);
         }
         else if (type == TileType.ITEM_YELLOW_KEY2.getType()) {
-                itemName = ITEM_MAGIC_YELLOW_KEY2_NAME;
-                itemDescription = ITEM_MAGIC_YELLOW_KEY2_DESC;
+            itemName = ITEM_MAGIC_YELLOW_KEY2_NAME;
+            itemDescription = ITEM_MAGIC_YELLOW_KEY2_DESC;
+            item = new Item(x, y, itemName, itemDescription, type);
+        }
+        else if (type == TileType.WEAPON_SWORD.getType()) {
+            itemName = "Sword";
+            itemDescription = "A sword that can be used to fight enemies.";
+            item = new Weapon(x, y, itemName, itemDescription, type);
         }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
 
-        return new Item(x, y, itemName, itemDescription, type);
+        return item;
     }
 }

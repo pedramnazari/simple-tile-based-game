@@ -7,14 +7,18 @@ public enum TileType {
     STONE(2),
     FLOOR(3),
     WALL(11),
-    HERO(1000),
-    ENEMY_LR(500), // left-right
-    ENEMY_TD(510), // top-down
-    ENEMY_2D(520), // two-dimensional
+
     ITEM_YELLOW_KEY(100),
     ITEM_YELLOW_KEY2(101),
 
-    EXIT(400);
+    WEAPON_SWORD(200),
+
+    ENEMY_LR(500), // left-right,
+    ENEMY_TD(510), // top-down
+    ENEMY_2D(520), // two-dimensional
+
+    HERO(1000);
+
 
     private final int type;
 

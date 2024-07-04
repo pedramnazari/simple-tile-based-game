@@ -135,6 +135,9 @@ public class GameWorldVisualizer extends Application {
                 case 101:
                     imagePath = "/tiles/items/yellow_key_stone.png";
                     break;
+                case 200:
+                    imagePath = "/tiles/items/weapons/sword.png";
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown item type: " + item.getType());
             }
