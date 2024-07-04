@@ -50,6 +50,7 @@ public class HeroMovementService extends MovementService {
                 logger.log(Level.INFO, "Found item: " + item.getName());
 
                 result.setCollectedItem(item);
+                result.setItemCollector(hero);
             }
         }
     }

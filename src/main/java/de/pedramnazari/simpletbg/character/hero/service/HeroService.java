@@ -28,17 +28,21 @@ public class HeroService implements IItemPickUpNotifier {
     public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
         final MovementResult result =  heroMovementService.moveElement(hero, moveDirection, gameContext);
 
-        // handle item
+        handleItemIfCollected(result);
+
+        return result;
+    }
+
+    private void handleItemIfCollected(MovementResult result) {
         if (result.getCollectedItem().isPresent()) {
             final Item item = result.getCollectedItem().get();
             hero.getInventory().addItem(item);
 
             itemPickUpNotifier.notifyItemPickedUp(hero, item);
         }
-
-        return result;
     }
 
+    @Override
     public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
         itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
     }

@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
@@ -178,8 +177,12 @@ public class GameWorldService {
         return heroService;
     }
 
-    public EnemyMovementService getEnemyMovementService() {
-        return enemyService.getEnemyMovementService();
+    public EnemyService getEnemyService() {
+        return enemyService;
+    }
+
+    public ItemService getItemService() {
+        return itemService;
     }
 
 
@@ -234,12 +237,4 @@ public class GameWorldService {
         return attackPoints;
     }
 
-
-    public EnemyService getEnemyService() {
-        return enemyService;
-    }
-
-    public ItemService getItemService() {
-        return itemService;
-    }
 }

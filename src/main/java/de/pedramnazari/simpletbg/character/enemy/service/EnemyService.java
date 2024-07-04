@@ -2,6 +2,11 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
@@ -12,8 +17,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EnemyService implements IEnemySubject {
+public class EnemyService implements IEnemySubject, IItemPickUpNotifier {
     private final Logger logger = Logger.getLogger(EnemyService.class.getName());
+
+    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
     private final IEnemyFactory enemyFactory;
     private final EnemyMovementService enemyMovementService;
@@ -47,6 +54,8 @@ public class EnemyService implements IEnemySubject {
             final MovementResult result = enemyMovementService
                     .moveElementToPositionWithinMap(gameContext, enemy, newPosition.getX(), newPosition.getY());
 
+            handleItemIfCollected(result);
+
             movementResults.add(result);
         }
 
@@ -58,6 +67,14 @@ public class EnemyService implements IEnemySubject {
         }
 
         return movementResults;
+    }
+
+    private void handleItemIfCollected(MovementResult result) {
+        if (result.getCollectedItem().isPresent()) {
+            final Item item = result.getCollectedItem().get();
+
+            itemPickUpNotifier.notifyItemPickedUp(result.getItemCollector().get(), item);
+        }
     }
 
     public Collection<Enemy> getEnemies() {
@@ -109,5 +126,15 @@ public class EnemyService implements IEnemySubject {
 
     public void notifyEnemyHit(Enemy enemy, int damage) {
         enemyHitNotifier.notifyEnemyHit(enemy, damage);
+    }
+
+    @Override
+    public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
+        itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
+    }
+
+    @Override
+    public void notifyItemPickedUp(IItemCollector element, Item item) {
+        itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 }

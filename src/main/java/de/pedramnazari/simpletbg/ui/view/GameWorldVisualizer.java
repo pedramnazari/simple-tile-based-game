@@ -180,10 +180,18 @@ public class GameWorldVisualizer extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 
+    public void updateEnemy(Enemy enemy, int damage) {
+        Point point = new Point(enemy.getX(), enemy.getY());
+        EnemyView enemyView = enemyViews.get(point);
+
+        if (enemyView == null) {
+            throw new IllegalArgumentException("No enemy rectangle found for point: " + point);
+        }
+
+        grid.getChildren().remove(enemyView.getImageView());
+        enemyViews.remove(point);
+    }
 
     public void handleItemPickedUp(IItemCollector element, Item item) {
         Point point = new Point(item.getX(), item.getY());
@@ -196,15 +204,7 @@ public class GameWorldVisualizer extends Application {
         grid.getChildren().remove(itemView.getImageView());
     }
 
-    public void updateEnemy(Enemy enemy, int damage) {
-        Point point = new Point(enemy.getX(), enemy.getY());
-        EnemyView enemyView = enemyViews.get(point);
-
-        if (enemyView == null) {
-            throw new IllegalArgumentException("No enemy rectangle found for point: " + point);
-        }
-
-        grid.getChildren().remove(enemyView.getImageView());
-        enemyViews.remove(point);
+    public static void main(String[] args) {
+        launch(args);
     }
 }

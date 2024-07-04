@@ -63,21 +63,27 @@ public class GameInitializer {
         // TODO: Improve
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
-        enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
 
         final EnemyService enemyService =
                 new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService);
 
-        DefaultItemFactory itemFactory = new DefaultItemFactory();
-        DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
+        final DefaultItemFactory itemFactory = new DefaultItemFactory();
+        final DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
+        final ItemService itemService = new ItemService();
+        final HeroService heroService = new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService));
+
         final GameWorldService gameWorldService = new GameWorldService(
                 tileFactory,
                 itemFactory,
-                new ItemService(),
-                new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService)),
+                itemService,
+                heroService,
                 enemyService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
+
+        enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
         enemyService.registerObserver(controller);
+        enemyService.addItemPickupListener(itemService);
+        heroService.addItemPickupListener(itemService);
 
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);

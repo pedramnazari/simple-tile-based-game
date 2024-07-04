@@ -3,8 +3,6 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
@@ -25,7 +23,6 @@ public class EnemyMovementService extends MovementService {
 
     final static Logger logger = Logger.getLogger(EnemyMovementService.class.getName());
 
-    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
     private final CollisionDetectionService collisionDetectionService;
 
     private final Collection<IMovementStrategy> movementStrategies;
@@ -44,9 +41,6 @@ public class EnemyMovementService extends MovementService {
         return movementStrategies.remove(strategy);
     }
 
-    public void addItemPickupListener(IItemPickUpListener listener) {
-        itemPickUpNotifier.addItemPickupListener(listener);
-    }
 
     @Override
     protected void handleElementHasMoved(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
@@ -69,14 +63,10 @@ public class EnemyMovementService extends MovementService {
             if (optItem.isPresent()) {
                 final Item item = optItem.get();
 
-                logger.log(Level.INFO, "Enemy collected item: " + item.getName());
-
-                // TODO: MovementService should not remove the item from the list of items directly (but via method call of the "owner").
-                itemService.removeItem(item);
-
-                itemPickUpNotifier.notifyItemPickedUp(enemy, item);
+                logger.log(Level.INFO, "Enemy collected item: " + item.getName() + " at position: " + newX + ", " + newY);
 
                 result.setCollectedItem(item);
+                result.setItemCollector(enemy);
             }
         }
     }
