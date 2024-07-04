@@ -17,4 +17,16 @@ public class EnemyHitNotifier {
             listener.onEnemyHit(enemy, damage);
         }
     }
+
+    public void notifyEnemyDefeated(Enemy enemy) {
+        for (IEnemyHitListener listener : enemyHitListener) {
+            listener.onEnemyDefeated(enemy);
+        }
+    }
+
+    public void notifyAllEnemiesDefeated() {
+        for (IEnemyHitListener listener : enemyHitListener) {
+            listener.onAllEnemiesDefeated();
+        }
+    }
 }

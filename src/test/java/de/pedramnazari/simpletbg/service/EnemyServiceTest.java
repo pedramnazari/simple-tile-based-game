@@ -112,7 +112,7 @@ public class EnemyServiceTest {
                 .build();
 
         for (int i = 0; i < 20; i++) {
-            final List<MovementResult> results = enemyService.moveEnemiesRandomlyWithinMap(gameContext);
+            final List<MovementResult> results = enemyService.moveEnemies(gameContext);
             assertEquals(enemies.size(), results.size());
 
             // Since the enemies move randomly (so we do not know the target position),

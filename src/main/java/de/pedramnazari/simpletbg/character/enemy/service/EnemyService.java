@@ -47,7 +47,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         initialized = true;
     }
 
-    public List<MovementResult> moveEnemiesRandomlyWithinMap(final GameContext gameContext) {
+    public List<MovementResult> moveEnemies(final GameContext gameContext) {
         final List<MovementResult> movementResults = new ArrayList<>();
 
         for (Enemy enemy : enemies) {
@@ -63,9 +63,6 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
 
         if (!movementResults.isEmpty()) {
             notifyObservers();
-        }
-        else {
-            logger.log(Level.INFO, "No enemies moved");
         }
 
         return movementResults;
@@ -146,8 +143,14 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         enemyHitNotifier.notifyEnemyHit(enemy, damage);
 
         if (newHealth == 0) {
-            enemies.remove(enemy);
             logger.log(Level.INFO, "Enemy defeated. Remaining enemies: {0}", enemies.size());
+            enemyHitNotifier.notifyEnemyDefeated(enemy);
+
+            enemies.remove(enemy);
+
+            if (enemies.isEmpty()) {
+                enemyHitNotifier.notifyAllEnemiesDefeated();
+            }
         }
 
     }

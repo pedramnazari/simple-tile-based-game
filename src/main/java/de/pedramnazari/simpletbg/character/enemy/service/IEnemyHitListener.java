@@ -6,4 +6,7 @@ public interface IEnemyHitListener {
 
     void onEnemyHit(Enemy enemy, int damage);
 
+    void onEnemyDefeated(Enemy enemy);
+
+    void onAllEnemiesDefeated();
 }

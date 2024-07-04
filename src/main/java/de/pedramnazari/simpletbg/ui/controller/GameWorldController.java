@@ -97,4 +97,14 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void onEnemyHit(Enemy enemy, int damage) {
         gameWorldVisualizer.updateEnemy(enemy, damage);
     }
+
+    @Override
+    public void onEnemyDefeated(Enemy enemy) {
+        // already handled in onEnemyHit
+    }
+
+    @Override
+    public void onAllEnemiesDefeated() {
+        gameWorldVisualizer.handleAllEnemiesDefeated();
+    }
 }

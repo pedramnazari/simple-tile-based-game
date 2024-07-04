@@ -92,7 +92,7 @@ public class GameWorldService {
             @Override
             public void run() {
                 try {
-                    enemyService.moveEnemiesRandomlyWithinMap(buildGameContext());
+                    enemyService.moveEnemies(buildGameContext());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

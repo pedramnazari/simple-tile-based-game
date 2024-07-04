@@ -32,6 +32,7 @@ public class GameWorldVisualizer extends Application {
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<Point, EnemyView> enemyViews = new HashMap<>();
     private GridPane grid;
+    private Scene scene;
 
     @Override
     public void start(Stage primaryStage) {
@@ -54,7 +55,7 @@ public class GameWorldVisualizer extends Application {
 
         grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
-        Scene scene = new Scene(grid, 800, 600);
+        scene = new Scene(grid, 800, 600);
         scene.setOnKeyPressed(event -> {
             MovementResult result = null;
 
@@ -196,6 +197,11 @@ public class GameWorldVisualizer extends Application {
             grid.getChildren().remove(enemyView.getImageView());
             enemyViews.remove(point);
         }
+    }
+
+    public void handleAllEnemiesDefeated() {
+        logger.log(Level.INFO, "All enemies defeated! -> Stop Game");
+        scene.setOnKeyPressed(null);
     }
 
     public void handleItemPickedUp(IItemCollector element, Item item) {
