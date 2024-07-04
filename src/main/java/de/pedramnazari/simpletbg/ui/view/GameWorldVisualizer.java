@@ -189,8 +189,13 @@ public class GameWorldVisualizer extends Application {
             throw new IllegalArgumentException("No enemy rectangle found for point: " + point);
         }
 
-        grid.getChildren().remove(enemyView.getImageView());
-        enemyViews.remove(point);
+        if (enemy.getHealth() > 0) {
+            enemyView.getImageView().setOpacity(0.5);
+        }
+        else {
+            grid.getChildren().remove(enemyView.getImageView());
+            enemyViews.remove(point);
+        }
     }
 
     public void handleItemPickedUp(IItemCollector element, Item item) {

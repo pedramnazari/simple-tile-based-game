@@ -2,6 +2,7 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
@@ -132,15 +133,22 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     }
 
     @Override
-    public void onHeroAttacksCharacter(Enemy enemy, int damage) {
+    public void onHeroAttacksCharacter(final Character character, int damage) {
+        if (!(character instanceof Enemy enemy)) {
+            return;
+        }
+
         int newHealth = Math.max(0, enemy.getHealth() - damage);
         enemy.setHealth(newHealth);
 
         logger.log(Level.INFO, "Hero attacks enemy. Health: {0}", enemy.getHealth());
 
+        enemyHitNotifier.notifyEnemyHit(enemy, damage);
+
         if (newHealth == 0) {
             enemies.remove(enemy);
-            enemyHitNotifier.notifyEnemyHit(enemy, damage);
+            logger.log(Level.INFO, "Enemy defeated. Remaining enemies: {0}", enemies.size());
         }
+
     }
 }
