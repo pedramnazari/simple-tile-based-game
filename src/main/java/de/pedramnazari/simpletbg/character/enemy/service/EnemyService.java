@@ -2,6 +2,7 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EnemyService implements IEnemySubject, IItemPickUpNotifier {
+public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAttackListener {
     private final Logger logger = Logger.getLogger(EnemyService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
@@ -109,15 +110,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier {
     }
 
     public void attackEnemy(Enemy enemy, int damage) {
-        int newHealth = Math.max(0, enemy.getHealth() - damage);
-        enemy.setHealth(newHealth);
-
-        logger.log(Level.INFO, "Hero attacks enemy. Health: {0}", enemy.getHealth());
-
-        if (newHealth == 0) {
-            enemies.remove(enemy);
-            enemyHitNotifier.notifyEnemyHit(enemy, damage);
-        }
+        onHeroAttacksCharacter(enemy, damage);
     }
 
     public void addEnemyHitListener(IEnemyHitListener listener) {
@@ -136,5 +129,18 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier {
     @Override
     public void notifyItemPickedUp(IItemCollector element, Item item) {
         itemPickUpNotifier.notifyItemPickedUp(element, item);
+    }
+
+    @Override
+    public void onHeroAttacksCharacter(Enemy enemy, int damage) {
+        int newHealth = Math.max(0, enemy.getHealth() - damage);
+        enemy.setHealth(newHealth);
+
+        logger.log(Level.INFO, "Hero attacks enemy. Health: {0}", enemy.getHealth());
+
+        if (newHealth == 0) {
+            enemies.remove(enemy);
+            enemyHitNotifier.notifyEnemyHit(enemy, damage);
+        }
     }
 }

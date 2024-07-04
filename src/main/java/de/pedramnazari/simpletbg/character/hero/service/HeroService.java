@@ -1,7 +1,10 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
+import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
+import de.pedramnazari.simpletbg.character.model.Character;
+import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
@@ -10,19 +13,25 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
+import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
-public class HeroService implements IItemPickUpNotifier {
+import java.util.Collection;
+import java.util.List;
+
+public class HeroService implements IItemPickUpNotifier, IHeroAttackNotifier {
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
     private final IHeroFactory heroFactory;
     private final HeroMovementService heroMovementService;
+    private final HeroAttackService heroAttackService;
     private Hero hero;
 
-    public HeroService(IHeroFactory heroFactory, HeroMovementService heroMovementService) {
+    public HeroService(IHeroFactory heroFactory, HeroMovementService heroMovementService, HeroAttackService heroAttackService) {
         this.heroFactory = heroFactory;
         this.heroMovementService = heroMovementService;
+        this.heroAttackService = heroAttackService;
     }
 
     public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
@@ -65,5 +74,19 @@ public class HeroService implements IItemPickUpNotifier {
 
     public Hero getHero() {
         return hero;
+    }
+
+    @Override
+    public void addHeroAttackListener(IHeroAttackListener listener) {
+        heroAttackService.addHeroAttackListener(listener);
+    }
+
+    @Override
+    public void notifyHeroAttacksCharacter(Character attackedCharacter, int damage) {
+        heroAttackService.notifyHeroAttacksCharacter(attackedCharacter, damage);
+    }
+
+    public List<Point> heroAttacks(Collection<Enemy> enemies) {
+        return heroAttackService.heroAttacks(hero, enemies);
     }
 }

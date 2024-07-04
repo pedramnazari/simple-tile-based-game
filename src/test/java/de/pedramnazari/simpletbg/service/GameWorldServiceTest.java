@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
+import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
@@ -48,11 +49,13 @@ public class GameWorldServiceTest {
 
 
         final ItemService itemService = new ItemService();
-        final HeroService heroService = new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService));
+        final HeroService heroService = new HeroService(
+                new DefaultHeroFactory(),
+                new HeroMovementService(collisionDetectionService),
+                new HeroAttackService());
         heroService.addItemPickupListener(itemService);
 
-        gameWorldService = new GameWorldService(tileFactory,
-                new DefaultItemFactory(),
+        gameWorldService = new GameWorldService(
                 itemService,
                 heroService,
                 new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));

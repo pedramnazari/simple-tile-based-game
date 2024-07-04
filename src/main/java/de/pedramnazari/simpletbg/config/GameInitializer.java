@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
+import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
@@ -70,11 +71,12 @@ public class GameInitializer {
         final DefaultItemFactory itemFactory = new DefaultItemFactory();
         final DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
         final ItemService itemService = new ItemService();
-        final HeroService heroService = new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService));
+        final HeroService heroService = new HeroService(
+                new DefaultHeroFactory(),
+                new HeroMovementService(collisionDetectionService),
+                new HeroAttackService());
 
         final GameWorldService gameWorldService = new GameWorldService(
-                tileFactory,
-                itemFactory,
                 itemService,
                 heroService,
                 enemyService);
@@ -84,6 +86,7 @@ public class GameInitializer {
         enemyService.registerObserver(controller);
         enemyService.addItemPickupListener(itemService);
         heroService.addItemPickupListener(itemService);
+        heroService.addHeroAttackListener(enemyService);
 
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);

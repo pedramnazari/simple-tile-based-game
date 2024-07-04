@@ -5,6 +5,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
+import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
@@ -46,10 +47,9 @@ public class MovementServiceTest {
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
-        gameWorldService = new GameWorldService(tileFactory,
-                new DefaultItemFactory(),
+        gameWorldService = new GameWorldService(
                 new ItemService(),
-                new HeroService(new DefaultHeroFactory(), heroMovementService),
+                new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
                 new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
     }
 
