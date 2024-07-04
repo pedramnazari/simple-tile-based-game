@@ -20,6 +20,8 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
         String itemName;
         String itemDescription;
 
+        // TODO: use weapon factory for weapon type
+
         if (type == TileType.ITEM_YELLOW_KEY.getType()) {
             itemName = ITEM_MAGIC_YELLOW_KEY_NAME;
             itemDescription = ITEM_MAGIC_YELLOW_KEY_DESC;
@@ -33,7 +35,18 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
         else if (type == TileType.WEAPON_SWORD.getType()) {
             itemName = "Sword";
             itemDescription = "A sword that can be used to fight enemies.";
-            item = new Weapon(x, y, itemName, itemDescription, type);
+            final Weapon weapon = new Weapon(x, y, itemName, itemDescription, type);
+            weapon.setDamage(20);
+
+            item = weapon;
+        }
+        else if (type == TileType.WEAPON_SWORD2.getType()) {
+            itemName = "Black Sword";
+            itemDescription = "A strong black sword that can be used to fight enemies.";
+            final Weapon weapon = new Weapon(x, y, itemName, itemDescription, type);
+            weapon.setDamage(100);
+
+            item = weapon;
         }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);

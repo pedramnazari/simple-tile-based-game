@@ -6,12 +6,14 @@ public enum TileType {
     WOOD(1),
     STONE(2),
     FLOOR(3),
+    GRASS(4),
     WALL(11),
 
     ITEM_YELLOW_KEY(100),
     ITEM_YELLOW_KEY2(101),
 
     WEAPON_SWORD(200),
+    WEAPON_SWORD2(201),
 
     ENEMY_LR(500), // left-right,
     ENEMY_TD(510), // top-down

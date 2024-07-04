@@ -11,14 +11,18 @@ import de.pedramnazari.simpletbg.tilemap.model.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class HeroAttackService implements IHeroAttackNotifier {
+
+    private static final Logger logger = Logger.getLogger(HeroAttackService.class.getName());
 
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
 
     public List<Point> heroAttacks(final Hero hero, final Collection<Enemy> enemies) {
         // Hero can only make damage if he has a weapon
         if (hero.getWeapon().isEmpty()) {
+            logger.info("Hero tries to attack without weapon.");
             return List.of();
         }
 

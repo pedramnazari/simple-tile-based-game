@@ -55,7 +55,7 @@ public class GameWorldVisualizer extends Application {
 
         grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
-        scene = new Scene(grid, 800, 600);
+        scene = new Scene(grid, 1200, 700);
         scene.setOnKeyPressed(event -> {
             MovementResult result = null;
 
@@ -121,6 +121,12 @@ public class GameWorldVisualizer extends Application {
         else if (tile.getType() == TileType.WALL.getType()) {
             imagePath = "/tiles/obstacles/wall.png";
         }
+        else if (tile.getType() == TileType.GRASS.getType()) {
+            imagePath = "/tiles/floor/grass.png";
+        }
+        else if (tile.getType() == TileType.FLOOR.getType()) {
+            imagePath = "/tiles/floor/floor.png";
+        }
         else if (tile.getType() == TileType.EMPTY.getType()) {
                 imagePath = "/tiles/floor/empty.png";
         }
@@ -134,6 +140,7 @@ public class GameWorldVisualizer extends Application {
                 case 100 -> "/tiles/items/yellow_key.png";
                 case 101 -> "/tiles/items/yellow_key_stone.png";
                 case 200 -> "/tiles/items/weapons/sword.png";
+                case 201 -> "/tiles/items/weapons/sword2.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };
 

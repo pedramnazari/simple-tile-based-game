@@ -35,30 +35,39 @@ public class GameInitializer {
 
         // TODO: move to AllTileMapConfigData
         final int[][] mapConfig = new int[][]{
-                {1, 1, 11, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 11, 11, 11, 11},
-                {11, 2, 11, 1, 1, 1, 11, 2, 2, 2},
-                {11, 2, 11, 11, 11, 11, 11, 2, 2, 2},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-
+                {1,  1, 11, 1,  1,  1,  1,  1,  1,  1, 1, 1, 1, 1, 1},
+                {1,  1, 1,  1,  1,  1,  11, 11, 11, 11, 1, 1, 1, 1, 1},
+                {11, 2, 11, 1,  1,  1,  11, 2,  2,  2, 1, 1, 1, 1, 1},
+                {11, 2, 11, 11, 11, 11, 11, 2,  2,  2, 1, 1, 1, 1, 1},
+                {2,  2, 2,  2,  2,  2,  2,  2,  2,  2, 1, 1, 1, 1, 1},
+                {2,  2, 2,  2,  2,  2,  2,  2,  2,  2, 1, 11, 11, 11, 11},
+                {2,  2, 2,  2,  2,  2,  2,  2,  2,  2, 11, 11, 4, 4, 11},
+                {2,  2, 2,  2,  2,  2,  2,  2,  2,  2, 4, 4, 4, 4, 11},
+                {2,  2, 2,  2,  2,  2,  2,  2,  2,  2, 11, 11, 4, 4, 11},
         };
 
         final int[][] itemConfig = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, 100, O, O, O, O, O, O},
-                {O, O, O, O, O, 200, O, O, O, 0},
-                {O, 101, O, O, O, O, O, O, O, O},
-                {O, O, O, 101, O, O, 101, O, O, O},
-
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, 100, O, 200, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, 101, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, 101, O, O, 101, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, 201, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
         };
 
         final int[][] enemyConfig = new int[][]{
-                {E3, O, O, E2, O, O, O, O, E, O},
-                {O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O},
-                {O, E, O, O, O, O, O, O, O, E2},
-
+                {E3, O, O, E2, O, O, O, O, E, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, E, O, O, O, O, O, O, O, E2, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
         };
 
         // TODO: Improve

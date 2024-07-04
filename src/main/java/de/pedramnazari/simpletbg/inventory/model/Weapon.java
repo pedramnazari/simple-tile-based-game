@@ -2,7 +2,7 @@ package de.pedramnazari.simpletbg.inventory.model;
 
 public class Weapon extends Item {
 
-    private int damage = 30;
+    private int damage = 10;
 
     public Weapon(int x, int y, String name, String description, int type) {
         super(x, y, name, description, type);
