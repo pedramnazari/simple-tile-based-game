@@ -6,6 +6,8 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
+import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
@@ -49,6 +51,13 @@ public class HeroAttackTest {
         final Collection<Enemy> enemies = List.of();
 
         List<Point> attackPoints = heroService.heroAttacks(enemies);
+        // Hero does not have a weapon, so he can't attack
+        assertEquals(0, attackPoints.size());
+
+        // Give hero a weapon
+        hero.setWeapon(createWeapon(TileType.WEAPON_SWORD));
+
+        attackPoints = heroService.heroAttacks(enemies);
         assertEquals(1, attackPoints.size());
         assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
 
@@ -75,5 +84,9 @@ public class HeroAttackTest {
         assertEquals(2, attackPoints.size());
         assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
         assertEquals(attackPoints.get(1), new Point(hero.getX(), hero.getY() + 1));
+    }
+
+    private Weapon createWeapon(TileType weaponType) {
+        return (Weapon) new DefaultItemFactory().createElement(weaponType.getType(), 0, 0);
     }
 }

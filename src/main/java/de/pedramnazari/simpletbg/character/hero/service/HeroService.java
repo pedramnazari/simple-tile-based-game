@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
@@ -45,7 +46,13 @@ public class HeroService implements IItemPickUpNotifier, IHeroAttackNotifier {
     private void handleItemIfCollected(MovementResult result) {
         if (result.getCollectedItem().isPresent()) {
             final Item item = result.getCollectedItem().get();
-            hero.getInventory().addItem(item);
+
+            if (item instanceof Weapon weapon) {
+                hero.setWeapon(weapon);
+            }
+            else {
+                hero.getInventory().addItem(item);
+            }
 
             itemPickUpNotifier.notifyItemPickedUp(hero, item);
         }

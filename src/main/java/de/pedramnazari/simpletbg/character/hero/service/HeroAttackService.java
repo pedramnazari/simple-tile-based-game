@@ -4,6 +4,7 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 
@@ -16,7 +17,14 @@ public class HeroAttackService implements IHeroAttackNotifier {
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
 
     public List<Point> heroAttacks(final Hero hero, final Collection<Enemy> enemies) {
-        final int damage = 40;
+        // Hero can only make damage if he has a weapon
+        if (hero.getWeapon().isEmpty()) {
+            return List.of();
+        }
+
+        final Weapon weapon = hero.getWeapon().get();
+
+        final int damage = weapon.getDamage();
 
         final List<Point> attackPoints = new ArrayList<>();
         // Attack also enemies in same position as hero

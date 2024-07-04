@@ -220,7 +220,7 @@ public class GameWorldServiceTest {
         final int[][] itemsConfig = new int[][]{
                 {O, O, O},
                 {O, O, 100},
-                {O, O, O}};
+                {O, O, TileType.WEAPON_SWORD.getType()}};
 
         final int[][] enemiesConfig = new int[][]{
                 {O, O, O},
@@ -234,11 +234,11 @@ public class GameWorldServiceTest {
                 1, 0);
         assertNotNull(tileMap);
 
-        final Collection<Item> items = gameWorldService.getItemService().getItems();
+        Collection<Item> items = gameWorldService.getItemService().getItems();
         assertNotNull(items);
-        assertEquals(1, items.size());
+        assertEquals(2, items.size());
 
-        final Item item = items.iterator().next();
+        Item item = items.iterator().next();
 
         assertNotNull(item);
         assertEquals(DefaultItemFactory.ITEM_MAGIC_YELLOW_KEY_NAME, item.getName());
@@ -263,7 +263,20 @@ public class GameWorldServiceTest {
         assertEquals(1, inventory.getItems().size());
 
         // ...removed from map/tile
-        final Collection<Item> itemsAfterMove = gameWorldService.getItemService().getItems();
-        assertEquals(0, itemsAfterMove.size());
+        items = gameWorldService.getItemService().getItems();
+        assertEquals(1, items.size());
+
+        gameWorldService.moveHeroDown();
+        assertEquals(2, hero.getX());
+        assertEquals(2, hero.getY());
+
+        // Weapon collected
+        // ...but was placed in the hero's hand, not in the inventory.
+        assertTrue(hero.getWeapon().isPresent());
+        assertEquals(1, inventory.getItems().size());
+
+        // ...removed from map/tile
+        items = gameWorldService.getItemService().getItems();
+        assertEquals(0, items.size());
     }
 }
