@@ -33,6 +33,7 @@ public class GameWorldVisualizer extends Application {
     private final Map<Point, EnemyView> enemyViews = new HashMap<>();
     private GridPane grid;
     private Scene scene;
+    private HeroView heroView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -51,7 +52,7 @@ public class GameWorldVisualizer extends Application {
 
         // add hero to grid
         final Image heroImage = new Image(getClass().getResourceAsStream("/tiles/hero/hero.png"));
-        final HeroView heroView = new HeroView(hero, heroImage, TILE_SIZE);
+        heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
         grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
@@ -227,5 +228,11 @@ public class GameWorldVisualizer extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void handleHeroDefeated() {
+        logger.log(Level.INFO, "Hero defeated! -> Stop Game");
+        heroView.getImageView().setOpacity(0.5);
+        scene.setOnKeyPressed(null);
     }
 }

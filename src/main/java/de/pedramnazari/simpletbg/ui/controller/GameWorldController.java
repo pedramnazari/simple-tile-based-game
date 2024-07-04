@@ -4,6 +4,8 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.character.model.Character;
+import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
@@ -17,7 +19,7 @@ import javafx.application.Platform;
 import java.util.Collection;
 import java.util.List;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener {
 
     private final GameWorldService gameWorldService;
     // TODO: remove this dependency
@@ -39,6 +41,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
         gameWorldService.getHeroService().addItemPickupListener(this);
         gameWorldService.getEnemyService().addItemPickupListener(this);
+        gameWorldService.getEnemyService().addHeroHitListener(this);
         gameWorldService.getEnemyService().addEnemyHitListener(this);
 
         gameWorldService.start();
@@ -106,5 +109,10 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     @Override
     public void onAllEnemiesDefeated() {
         gameWorldVisualizer.handleAllEnemiesDefeated();
+    }
+
+    @Override
+    public void onHeroHit(Hero hero, Character attackingCharacter, int damage) {
+        gameWorldVisualizer.handleHeroDefeated();
     }
 }

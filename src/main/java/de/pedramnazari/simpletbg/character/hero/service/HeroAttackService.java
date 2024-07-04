@@ -28,7 +28,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
         final Weapon weapon = hero.getWeapon().get();
 
-        final int damage = weapon.getDamage();
+        final int damage = weapon.getAttackingDamage();
 
         final List<Point> attackPoints = new ArrayList<>();
         // Attack also enemies in same position as hero

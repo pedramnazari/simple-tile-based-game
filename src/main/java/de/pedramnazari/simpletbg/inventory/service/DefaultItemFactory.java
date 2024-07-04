@@ -36,7 +36,7 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
             itemName = "Sword";
             itemDescription = "A sword that can be used to fight enemies.";
             final Weapon weapon = new Weapon(x, y, itemName, itemDescription, type);
-            weapon.setDamage(20);
+            weapon.setAttackingDamage(20);
 
             item = weapon;
         }
@@ -44,7 +44,7 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<Item> impl
             itemName = "Black Sword";
             itemDescription = "A strong black sword that can be used to fight enemies.";
             final Weapon weapon = new Weapon(x, y, itemName, itemDescription, type);
-            weapon.setDamage(100);
+            weapon.setAttackingDamage(100);
 
             item = weapon;
         }

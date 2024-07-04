@@ -2,8 +2,11 @@ package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.model.Character;
+import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
+import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
@@ -23,6 +26,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     private final Logger logger = Logger.getLogger(EnemyService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
+    private final HeroHitNotifier heroHitNotifier = new HeroHitNotifier();
 
     private final IEnemyFactory enemyFactory;
     private final EnemyMovementService enemyMovementService;
@@ -57,6 +61,18 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
                     .moveElementToPositionWithinMap(gameContext, enemy, newPosition.getX(), newPosition.getY());
 
             handleItemIfCollected(result);
+
+            if (!result.getCollidingElements().isEmpty()) {
+                // TODO: Move to HeroService (or CollisionService)
+                // Assumption for now:
+                // Enemies do not collide with each other.
+                // Enemies can only collide with the hero.
+                // So the colliding element is always the hero.
+                final Hero hero = (Hero) result.getCollidingElements().iterator().next();
+
+                notifyHeroHit(hero, enemy, 0);
+
+            }
 
             movementResults.add(result);
         }
@@ -153,5 +169,13 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
             }
         }
 
+    }
+
+    public void addHeroHitListener(IHeroHitListener listener) {
+        heroHitNotifier.addListener(listener);
+    }
+
+    public void notifyHeroHit(Hero hero, Character attackingCharacter, int damage) {
+        heroHitNotifier.notifyHeroHit(hero, attackingCharacter, damage);
     }
 }
