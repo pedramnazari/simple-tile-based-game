@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
+import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class ItemService implements IItemPickUpListener {
     }
 
     @Override
-    public void onItemPickedUp(IItemCollector element, Item item) {
+    public void onItemPickedUp(Character element, Item item) {
         if (!items.contains(item)) {
             throw new IllegalArgumentException("Item not in list");
         }

@@ -5,7 +5,6 @@ import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
 import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
@@ -64,7 +63,7 @@ public class HeroService implements IItemPickUpNotifier, IHeroAttackNotifier {
     }
 
     @Override
-    public void notifyItemPickedUp(IItemCollector element, Item item) {
+    public void notifyItemPickedUp(Character element, Item item) {
         itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 

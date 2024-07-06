@@ -12,12 +12,14 @@ public class QuestTest {
         assertEquals("Test Quest", quest.getName());
         assertEquals("Test Description", quest.getDescription());
 
-        final QuestObjective objective1 = new QuestObjective("Defeat all enemies");
+        final QuestObjective objective1 = new QuestObjective("Defeat all enemies") {
+            @Override
+            public void registerAsListener(Quest quest) {
+
+            }
+        };
         assertEquals("Defeat all enemies", objective1.getDescription());
         assertFalse(objective1.isCompleted());
-        assertFalse(objective1.isGoalDefeatAllEnemies());
-
-        objective1.setGoalDefeatAllEnemies(true);
 
         quest.addObjective(objective1);
         assertEquals(1, quest.getObjectives().size());

@@ -7,7 +7,6 @@ import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
-import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
@@ -141,7 +140,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     }
 
     @Override
-    public void notifyItemPickedUp(IItemCollector element, Item item) {
+    public void notifyItemPickedUp(Character element, Item item) {
         itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 

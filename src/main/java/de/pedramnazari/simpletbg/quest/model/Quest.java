@@ -2,12 +2,20 @@ package de.pedramnazari.simpletbg.quest.model;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
+import de.pedramnazari.simpletbg.character.model.Character;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestEvent;
+import de.pedramnazari.simpletbg.quest.service.IQuestEventListener;
+import de.pedramnazari.simpletbg.quest.service.ItemPickUpQuestEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
-public class Quest implements IEnemyHitListener {
+public class Quest implements IEnemyHitListener, IItemPickUpListener {
 
     private static final Logger logger = Logger.getLogger(Quest.class.getName());
 
@@ -15,9 +23,13 @@ public class Quest implements IEnemyHitListener {
     private final String description;
     private final List<QuestObjective> objectives = new ArrayList<>();
 
+    private final Map<Class<? extends IQuestEvent>, List<IQuestEventListener<? extends IQuestEvent>>> listeners;
+
     public Quest(String name, String description) {
         this.name = name;
         this.description = description;
+
+        listeners = new HashMap<>();
     }
 
     public String getName() {
@@ -30,6 +42,7 @@ public class Quest implements IEnemyHitListener {
 
     public void addObjective(QuestObjective objective) {
         this.objectives.add(objective);
+        objective.registerAsListener(this);
     }
 
     public List<Object> getObjectives() {
@@ -58,12 +71,28 @@ public class Quest implements IEnemyHitListener {
 
     @Override
     public void onAllEnemiesDefeated() {
-        for (QuestObjective objective : objectives) {
-            if (objective.isGoalDefeatAllEnemies()) {
-                objective.complete();
-            }
-        }
+        logger.info("Quest: All enemies defeated");
+        dispatch(new AllEnemiesDefeatedQuestEvent());
+    }
 
-        checkIfQuestIsCompleted();
+    public <T extends IQuestEvent> void registerListener(Class<T> eventType, IQuestEventListener<T> listener) {
+        this.listeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
+    }
+
+    public <T extends IQuestEvent> void dispatch(T event) {
+        final List<IQuestEventListener<? extends IQuestEvent>> eventListeners = this.listeners.get(event.getClass());
+        if (eventListeners != null) {
+            for (IQuestEventListener<? extends IQuestEvent> listener : eventListeners) {
+                ((IQuestEventListener<T>) listener).onEvent(event);
+            }
+
+            checkIfQuestIsCompleted();
+        }
+    }
+
+    @Override
+    public void onItemPickedUp(Character element, Item item) {
+        logger.info("Quest: Item picked up");
+        dispatch(new ItemPickUpQuestEvent(element, item));
     }
 }

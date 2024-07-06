@@ -16,6 +16,8 @@ import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.model.QuestObjective;
+import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestObjective;
+import de.pedramnazari.simpletbg.quest.service.ItemPickUpQuestObjective;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -93,10 +95,13 @@ public class GameInitializer {
                 enemyService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
 
-        final Quest quest = new Quest("Deafeat all enemies", "You have to defeat all enemies to win the game");
-        final QuestObjective questObjective = new QuestObjective("Defeat all enemies");
-        questObjective.setGoalDefeatAllEnemies(true);
-        quest.addObjective(questObjective);
+        final Quest quest = new Quest("Defeat all enemies and collect black sword.", "You have to defeat all enemies and collect the black sword to win the game");
+        final QuestObjective questObjective1 = new AllEnemiesDefeatedQuestObjective("Defeat all enemies");
+        quest.addObjective(questObjective1);
+
+        final QuestObjective questObjective2 = new ItemPickUpQuestObjective("Collect black sword");
+        quest.addObjective(questObjective2);
+
         gameWorldService.setQuest(quest);
 
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
@@ -111,6 +116,7 @@ public class GameInitializer {
         enemyService.addEnemyHitListener(controller);
 
         enemyService.addEnemyHitListener(quest);
+        heroService.addItemPickupListener(quest);
 
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);

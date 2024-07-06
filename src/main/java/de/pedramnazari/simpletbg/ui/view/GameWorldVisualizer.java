@@ -2,8 +2,8 @@ package de.pedramnazari.simpletbg.ui.view;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.config.GameInitializer;
-import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -215,7 +215,7 @@ public class GameWorldVisualizer extends Application {
         scene.setOnKeyPressed(null);
     }
 
-    public void handleItemPickedUp(IItemCollector element, Item item) {
+    public void handleItemPickedUp(Character element, Item item) {
         Point point = new Point(item.getX(), item.getY());
         ItemView itemView = itemViews.remove(point);
 

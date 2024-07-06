@@ -7,7 +7,6 @@ import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
-import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -83,7 +82,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     @Override
-    public void onItemPickedUp(IItemCollector element, Item item) {
+    public void onItemPickedUp(Character element, Item item) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(element, item));
     }

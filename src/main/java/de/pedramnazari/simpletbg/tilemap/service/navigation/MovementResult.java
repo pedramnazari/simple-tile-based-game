@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
 
-import de.pedramnazari.simpletbg.inventory.model.IItemCollector;
+import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
 
@@ -17,7 +17,7 @@ public class MovementResult {
     private int newY;
     private boolean hasElementMoved;
     private Item collectedItem;
-    private IItemCollector itemCollector;
+    private Character itemCollector;
     private final Set<ITileMapElement> collidingElements = new HashSet<>();
 
     // TODO: move outside this class?
@@ -100,11 +100,11 @@ public class MovementResult {
         collidingElements.addAll(elements);
     }
 
-    public void setItemCollector(IItemCollector itemCollector) {
+    public void setItemCollector(Character itemCollector) {
         this.itemCollector = itemCollector;
     }
 
-    public Optional<IItemCollector> getItemCollector() {
+    public Optional<Character> getItemCollector() {
         return Optional.ofNullable(itemCollector);
     }
 }

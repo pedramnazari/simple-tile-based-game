@@ -1,14 +1,19 @@
 package de.pedramnazari.simpletbg.quest.model;
 
-public class QuestObjective {
+import java.util.logging.Logger;
+
+public abstract class QuestObjective {
+    private static final Logger logger = Logger.getLogger(QuestObjective.class.getName());
+
     private final String description;
 
     private boolean isCompleted = false;
-    private boolean goalDefeatAllEnemies = false;
 
     public QuestObjective(String description) {
         this.description = description;
     }
+
+    public abstract void registerAsListener(Quest quest);
 
     public String getDescription() {
         return description;
@@ -18,16 +23,8 @@ public class QuestObjective {
         return isCompleted;
     }
 
-    public void setGoalDefeatAllEnemies(boolean goalDefeatAllEnemies) {
-        this.goalDefeatAllEnemies = goalDefeatAllEnemies;
-    }
-
-    public boolean isGoalDefeatAllEnemies() {
-        return goalDefeatAllEnemies;
-    }
-
     public void complete() {
+        logger.info("QuestObjective: " + description + " completed");
         isCompleted = true;
     }
-
 }
