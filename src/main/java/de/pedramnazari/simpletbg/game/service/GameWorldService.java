@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
@@ -38,6 +39,7 @@ public class GameWorldService {
     // TODO: Introduce GameWorld class to hold all maps, items, enemies, hero etc.
     // Maps
     private TileMap tileMap;
+    private Quest quest;
 
 
     public GameWorldService(ItemService itemService, HeroService heroService, EnemyService enemyService) {
@@ -185,4 +187,7 @@ public class GameWorldService {
         return heroService.heroAttacks(enemyService.getEnemies());
     }
 
+    public void setQuest(Quest quest) {
+        this.quest = quest;
+    }
 }

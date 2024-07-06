@@ -14,6 +14,8 @@ import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.quest.model.Quest;
+import de.pedramnazari.simpletbg.quest.model.QuestObjective;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -91,11 +93,24 @@ public class GameInitializer {
                 enemyService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
 
+        final Quest quest = new Quest("Deafeat all enemies", "You have to defeat all enemies to win the game");
+        final QuestObjective questObjective = new QuestObjective("Defeat all enemies");
+        questObjective.setGoalDefeatAllEnemies(true);
+        quest.addObjective(questObjective);
+        gameWorldService.setQuest(quest);
+
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
         enemyService.registerObserver(controller);
         enemyService.addItemPickupListener(itemService);
         heroService.addItemPickupListener(itemService);
         heroService.addHeroAttackListener(enemyService);
+
+        heroService.addItemPickupListener(controller);
+        enemyService.addItemPickupListener(controller);
+        enemyService.addHeroHitListener(controller);
+        enemyService.addEnemyHitListener(controller);
+
+        enemyService.addEnemyHitListener(quest);
 
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);
