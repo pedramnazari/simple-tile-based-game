@@ -44,7 +44,7 @@ public class EnemyMovementService extends MovementService {
 
     @Override
     protected void handleElementHasMoved(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
-        handleItems(gameContext.getItemService(), element, newX, newY, result);
+        //handleItems(gameContext.getItemService(), element, newX, newY, result);
         handleCollisionsWithHero(gameContext, element, newX, newY, result);
     }
 

@@ -74,6 +74,42 @@ public class GameInitializer {
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
         };
 
+        final int[][] mapConfig2 = new int[][]{
+                {11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11},
+                {11,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4, 11},
+                {11,  4,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  4, 11},
+                {11,  4,  2, 11, 11, 11,  2,  2,  2, 11, 11, 11,  2,  4, 11},
+                {11,  4,  2, 11,  1, 11,  2,  2,  2, 11,  1, 11,  2,  4, 11},
+                {11,  4,  2, 11,  1, 11,  2,  2,  2, 11,  1, 11,  2,  4, 11},
+                {11,  4,  2, 11,  1, 11,  2,  2,  2, 11,  1, 11,  2,  4, 11},
+                {11,  4,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  4, 11},
+                {11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11}
+        };
+
+        final int[][] itemConfig2 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, 100, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, 101, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, 101, O, 101, O, O, O, 201, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+        };
+
+        final int[][] enemyConfig2 = new int[][]{
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  E3, O,  O,  O,  O,  O,  E2, O,  O,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  O,  O,  E2,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  E2, O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  E,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+        };
+
         // TODO: Improve
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
@@ -95,12 +131,7 @@ public class GameInitializer {
                 enemyService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
 
-        final Quest quest = new Quest("Defeat all enemies and collect black sword.", "You have to defeat all enemies and collect the black sword to win the game");
-        final QuestObjective questObjective1 = new AllEnemiesDefeatedQuestObjective("Defeat all enemies");
-        quest.addObjective(questObjective1);
-
-        final QuestObjective questObjective2 = new ItemPickUpQuestObjective("Collect black sword");
-        quest.addObjective(questObjective2);
+        final Quest quest = initializeQuest();
 
         gameWorldService.setQuest(quest);
 
@@ -119,12 +150,22 @@ public class GameInitializer {
         heroService.addItemPickupListener(quest);
 
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig, tileFactory);
-        final Collection<Item> items = new ItemConfigParser().parse(itemConfig, itemFactory);
-        final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig, new DefaultEnemyFactory(collisionDetectionService));
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig2, tileFactory);
+        final Collection<Item> items = new ItemConfigParser().parse(itemConfig2, itemFactory);
+        final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService));
 
-        controller.startGameUsingMap(tiles, items, enemies, 1, 0);
+        controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 
         return controller;
+    }
+
+    private static Quest initializeQuest() {
+        final Quest quest = new Quest("Defeat all enemies and collect black sword.", "You have to defeat all enemies and collect the black sword to win the game");
+        final QuestObjective questObjective1 = new AllEnemiesDefeatedQuestObjective("Defeat all enemies");
+        quest.addObjective(questObjective1);
+
+        final QuestObjective questObjective2 = new ItemPickUpQuestObjective("Collect black sword");
+        quest.addObjective(questObjective2);
+        return quest;
     }
 }
