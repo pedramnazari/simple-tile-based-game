@@ -34,6 +34,7 @@ public class GameInitializer {
     private static final int E = TileType.ENEMY_LR.getType();
     private static final int E2 = TileType.ENEMY_TD.getType();
     private static final int E3 = TileType.ENEMY_2D.getType();
+    private static final int E4 = TileType.ENEMY_FH.getType();
 
     public static GameWorldController initAndStartGame() {
 
@@ -100,13 +101,13 @@ public class GameInitializer {
 
         final int[][] enemyConfig2 = new int[][]{
                 {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
-                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  E4,  O},
                 {O,  O,  E3, O,  O,  O,  O,  O,  E2, O,  O,  O,  O,  O,  O},
                 {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
                 {O,  O,  O,  O,  E2,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
                 {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
                 {O,  O,  E2, O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
-                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  E,  O,  O,  O,  O},
+                {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  E,  O,  O,  E4,  O},
                 {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
         };
 
@@ -115,7 +116,7 @@ public class GameInitializer {
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
 
         final EnemyService enemyService =
-                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService);
+                new EnemyService(enemyMovementService);
 
         final DefaultItemFactory itemFactory = new DefaultItemFactory();
         final DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
@@ -152,7 +153,7 @@ public class GameInitializer {
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig2, tileFactory);
         final Collection<Item> items = new ItemConfigParser().parse(itemConfig2, itemFactory);
-        final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService));
+        final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 

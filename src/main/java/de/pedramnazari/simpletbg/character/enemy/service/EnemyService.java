@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
@@ -27,7 +26,6 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
     private final HeroHitNotifier heroHitNotifier = new HeroHitNotifier();
 
-    private final IEnemyFactory enemyFactory;
     private final EnemyMovementService enemyMovementService;
 
     private final Collection<Enemy> enemies = new ArrayList<>();
@@ -36,8 +34,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     private final List<IEnemyObserver> observers = new ArrayList<>();
     final EnemyHitNotifier enemyHitNotifier = new EnemyHitNotifier();
 
-    public EnemyService(IEnemyFactory enemyFactory, EnemyMovementService enemyMovementService) {
-        this.enemyFactory = enemyFactory;
+    public EnemyService(EnemyMovementService enemyMovementService) {
         this.enemyMovementService = enemyMovementService;
     }
 

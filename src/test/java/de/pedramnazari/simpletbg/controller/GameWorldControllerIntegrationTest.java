@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.controller;
 
-import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
@@ -38,7 +37,7 @@ public class GameWorldControllerIntegrationTest {
         GameWorldService gameWorldService = new GameWorldService(
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService), new HeroAttackService()),
-                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
+                new EnemyService(enemyMovementService));
 
 
         controller = new GameWorldController(gameWorldService);

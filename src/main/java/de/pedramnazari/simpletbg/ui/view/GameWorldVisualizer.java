@@ -186,6 +186,9 @@ public class GameWorldVisualizer extends Application {
         } else if (enemy.getType() == TileType.ENEMY_2D.getType()) {
             imagePath = "/tiles/enemies/enemy3.png";
         }
+        else if (enemy.getType() == TileType.ENEMY_FH.getType()) {
+            imagePath = "/tiles/enemies/enemy4.png";
+        }
         else {
             throw new IllegalArgumentException("Unknown enemy type: " + enemy.getType());
         }

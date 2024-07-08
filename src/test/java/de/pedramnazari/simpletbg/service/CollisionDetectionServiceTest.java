@@ -60,7 +60,7 @@ public class CollisionDetectionServiceTest {
 
         final Hero hero = new Hero(0, 0);
 
-        final Collection<Enemy> enemies = new DefaultEnemyFactory(collisionDetectionService).createElementsUsingTileMapConfig(enemiesConfig);
+        final Collection<Enemy> enemies = new DefaultEnemyFactory(collisionDetectionService, new IHeroProviderMock()).createElementsUsingTileMapConfig(enemiesConfig);
         assertEquals(2, enemies.size());
 
         final Enemy enemy1 = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);

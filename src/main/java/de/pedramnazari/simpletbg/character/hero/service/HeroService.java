@@ -19,7 +19,7 @@ import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import java.util.Collection;
 import java.util.List;
 
-public class HeroService implements IItemPickUpNotifier, IHeroAttackNotifier {
+public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier {
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
@@ -78,8 +78,14 @@ public class HeroService implements IItemPickUpNotifier, IHeroAttackNotifier {
         hero.setInventory(new Inventory());
     }
 
+    @Override
     public Hero getHero() {
         return hero;
+    }
+
+    @Override
+    public Hero getCharacter() {
+        return getHero();
     }
 
     @Override

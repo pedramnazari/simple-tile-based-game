@@ -18,6 +18,7 @@ public enum TileType {
     ENEMY_LR(500), // left-right,
     ENEMY_TD(510), // top-down
     ENEMY_2D(520), // two-dimensional
+    ENEMY_FH(530), // follow hero
 
     HERO(1000);
 

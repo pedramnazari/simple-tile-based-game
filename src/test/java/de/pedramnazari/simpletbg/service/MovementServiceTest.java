@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
@@ -50,7 +49,7 @@ public class MovementServiceTest {
         gameWorldService = new GameWorldService(
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
-                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
+                new EnemyService(enemyMovementService));
     }
 
     @Test

@@ -58,7 +58,7 @@ public class GameWorldServiceTest {
         gameWorldService = new GameWorldService(
                 itemService,
                 heroService,
-                new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService));
+                new EnemyService(enemyMovementService));
 
         hero = gameWorldService.getHero();
     }
@@ -230,7 +230,7 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(
                 new TileConfigParser().parse(mapConfig, tileFactory),
                 new ItemConfigParser().parse(itemsConfig, new DefaultItemFactory()),
-                new EnemyConfigParser().parse(enemiesConfig, new DefaultEnemyFactory(new CollisionDetectionService())),
+                new EnemyConfigParser().parse(enemiesConfig, new DefaultEnemyFactory(new CollisionDetectionService(), new IHeroProviderMock())),
                 1, 0);
         assertNotNull(tileMap);
 

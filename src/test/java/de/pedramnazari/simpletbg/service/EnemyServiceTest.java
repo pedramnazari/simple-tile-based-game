@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.character.hero.service.IHeroProvider;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -46,9 +47,10 @@ public class EnemyServiceTest {
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
+        final IHeroProvider heroProvider = new IHeroProviderMock();
 
-        final DefaultEnemyFactory enemyFactory = new DefaultEnemyFactory(collisionDetectionService);
-        enemyService = new EnemyService(enemyFactory, enemyMovementService);
+        final DefaultEnemyFactory enemyFactory = new DefaultEnemyFactory(collisionDetectionService, heroProvider);
+        enemyService = new EnemyService(enemyMovementService);
 
         assertFalse(enemyService.isInitialized());
         enemyService.init(new EnemyConfigParser().parse(map, enemyFactory));
@@ -79,7 +81,7 @@ public class EnemyServiceTest {
         RandomMovementStrategy randomMovementStrategy = new RandomMovementStrategy(collisionDetectionService);
         enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(randomMovementStrategy);
-        enemyService = new EnemyService(new DefaultEnemyFactory(collisionDetectionService), enemyMovementService);
+        enemyService = new EnemyService(enemyMovementService);
 
         final int[][] enemyMapArray = new int[][]{
                 {O, E, O},
@@ -95,7 +97,7 @@ public class EnemyServiceTest {
 
         final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults("map", tileMapArray);
 
-        enemyService.init(new EnemyConfigParser().parse(enemyMapArray, new DefaultEnemyFactory(collisionDetectionService)));
+        enemyService.init(new EnemyConfigParser().parse(enemyMapArray, new DefaultEnemyFactory(collisionDetectionService, new IHeroProviderMock())));
         final Collection<Enemy> enemies = enemyService.getEnemies();
 
         assertNotNull(enemies);
