@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
@@ -8,10 +7,7 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
-import de.pedramnazari.simpletbg.tilemap.model.IHero;
-import de.pedramnazari.simpletbg.tilemap.model.IItem;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
 
     private final EnemyMovementService enemyMovementService;
 
-    private final Collection<Enemy> enemies = new ArrayList<>();
+    private final Collection<IEnemy> enemies = new ArrayList<>();
     private boolean initialized = false;
 
     private final List<IEnemyObserver> observers = new ArrayList<>();
@@ -38,7 +34,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         this.enemyMovementService = enemyMovementService;
     }
 
-    public void init(Collection<Enemy> enemies) {
+    public void init(Collection<IEnemy> enemies) {
         if (initialized) {
             throw new IllegalStateException("Enemies already initialized");
         }
@@ -50,7 +46,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     public List<MovementResult> moveEnemies(final GameContext gameContext) {
         final List<MovementResult> movementResults = new ArrayList<>();
 
-        for (Enemy enemy : enemies) {
+        for (IEnemy enemy : enemies) {
             final Point newPosition = enemyMovementService.calcNextMove(gameContext.getTileMap(), enemy);
 
             final MovementResult result = enemyMovementService
@@ -88,7 +84,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         }
     }
 
-    public Collection<Enemy> getEnemies() {
+    public Collection<IEnemy> getEnemies() {
         return List.copyOf(enemies);
     }
 
@@ -119,7 +115,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         return enemyMovementService;
     }
 
-    public void attackEnemy(Enemy enemy, int damage) {
+    public void attackEnemy(IEnemy enemy, int damage) {
         onHeroAttacksCharacter(enemy, damage);
     }
 
@@ -127,7 +123,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         enemyHitNotifier.addListener(listener);
     }
 
-    public void notifyEnemyHit(Enemy enemy, int damage) {
+    public void notifyEnemyHit(IEnemy enemy, int damage) {
         enemyHitNotifier.notifyEnemyHit(enemy, damage);
     }
 
@@ -143,7 +139,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
 
     @Override
     public void onHeroAttacksCharacter(final ICharacter character, int damage) {
-        if (!(character instanceof Enemy enemy)) {
+        if (!(character instanceof IEnemy enemy)) {
             return;
         }
 

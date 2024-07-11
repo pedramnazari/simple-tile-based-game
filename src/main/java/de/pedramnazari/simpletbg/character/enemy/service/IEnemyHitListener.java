@@ -1,12 +1,12 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 
 public interface IEnemyHitListener {
 
-    void onEnemyHit(Enemy enemy, int damage);
+    void onEnemyHit(IEnemy enemy, int damage);
 
-    void onEnemyDefeated(Enemy enemy);
+    void onEnemyDefeated(IEnemy enemy);
 
     void onAllEnemiesDefeated();
 }

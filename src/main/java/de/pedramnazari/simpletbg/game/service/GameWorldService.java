@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.game.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
@@ -45,7 +44,7 @@ public class GameWorldService {
         this.gameContextBuilder = new GameContextBuilder();
     }
 
-    public TileMap createAndInitMap(final Tile[][] tiles, final Collection<IItem> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
+    public TileMap createAndInitMap(final Tile[][] tiles, final Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
         if (initialized) {
             throw new IllegalStateException("TileMapService already initialized");
         }
@@ -159,7 +158,7 @@ public class GameWorldService {
         return initialized;
     }
 
-    public Collection<Enemy> getEnemies() {
+    public Collection<IEnemy> getEnemies() {
         return enemyService.getEnemies();
     }
 

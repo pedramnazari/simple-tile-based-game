@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
@@ -43,7 +42,7 @@ public class HeroAttackTest {
 
         assertFalse(hero.getMoveDirection().isPresent());
 
-        final Collection<Enemy> enemies = List.of();
+        final Collection<IEnemy> enemies = List.of();
 
         List<Point> attackPoints = heroService.heroAttacks(enemies);
         // Hero does not have a weapon, so he can't attack

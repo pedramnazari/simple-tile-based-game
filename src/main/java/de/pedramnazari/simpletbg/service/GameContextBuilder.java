@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
@@ -12,7 +12,7 @@ public class GameContextBuilder {
     private TileMap tileMap;
     private ItemService itemService;
     private IHero hero;
-    private Collection<Enemy> enemies = new ArrayList<>();
+    private Collection<IEnemy> enemies = new ArrayList<>();
     private String currentMapIndex;
 
     public GameContextBuilder setTileMap(TileMap tileMap) {
@@ -30,7 +30,7 @@ public class GameContextBuilder {
         return this;
     }
 
-    public GameContextBuilder setEnemies(Collection<Enemy> enemies) {
+    public GameContextBuilder setEnemies(Collection<IEnemy> enemies) {
         this.enemies = new ArrayList<>(enemies);
         return this;
     }

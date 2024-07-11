@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 
@@ -15,7 +14,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
 
-    public List<Point> heroAttacks(final IHero hero, final Collection<Enemy> enemies) {
+    public List<Point> heroAttacks(final IHero hero, final Collection<IEnemy> enemies) {
         // Hero can only make damage if he has a weapon
         if (hero.getWeapon().isEmpty()) {
             logger.info("Hero tries to attack without weapon.");
@@ -61,7 +60,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
         }
 
         for (Point attackPoint : attackPoints) {
-            for (Enemy enemy : enemies) {
+            for (IEnemy enemy : enemies) {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
                     notifyHeroAttacksCharacter(enemy, damage);
                 }

@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +12,13 @@ public class EnemyHitNotifier {
         enemyHitListener.add(listener);
     }
 
-    public void notifyEnemyHit(Enemy enemy, int damage) {
+    public void notifyEnemyHit(IEnemy enemy, int damage) {
         for (IEnemyHitListener listener : enemyHitListener) {
             listener.onEnemyHit(enemy, damage);
         }
     }
 
-    public void notifyEnemyDefeated(Enemy enemy) {
+    public void notifyEnemyDefeated(IEnemy enemy) {
         for (IEnemyHitListener listener : enemyHitListener) {
             listener.onEnemyDefeated(enemy);
         }

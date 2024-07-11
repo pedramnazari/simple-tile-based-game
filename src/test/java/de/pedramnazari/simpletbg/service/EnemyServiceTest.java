@@ -1,13 +1,13 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.IHeroProvider;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
@@ -56,22 +56,22 @@ public class EnemyServiceTest {
         enemyService.init(new EnemyConfigParser().parse(map, enemyFactory));
         assertTrue(enemyService.isInitialized());
 
-        final Collection<Enemy> enemies = enemyService.getEnemies();
+        final Collection<IEnemy> enemies = enemyService.getEnemies();
 
         assertNotNull(enemies);
         assertEquals(3, enemies.size());
 
-        for (Enemy enemy : enemies) {
+        for (IEnemy enemy : enemies) {
             assertNotNull(enemy);
         }
 
-        final Enemy aEnemy = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 0).findFirst().orElse(null);
+        final IEnemy aEnemy = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(aEnemy);
 
-        final Enemy bEnemy = enemies.stream().filter(e -> e.getX() == 0 && e.getY() == 1).findFirst().orElse(null);
+        final IEnemy bEnemy = enemies.stream().filter(e -> e.getX() == 0 && e.getY() == 1).findFirst().orElse(null);
         assertNotNull(bEnemy);
 
-        final Enemy cEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 2).findFirst().orElse(null);
+        final IEnemy cEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 2).findFirst().orElse(null);
         assertNotNull(cEnemy);
     }
 
@@ -98,12 +98,12 @@ public class EnemyServiceTest {
         final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults("map", tileMapArray);
 
         enemyService.init(new EnemyConfigParser().parse(enemyMapArray, new DefaultEnemyFactory(collisionDetectionService, new IHeroProviderMock())));
-        final Collection<Enemy> enemies = enemyService.getEnemies();
+        final Collection<IEnemy> enemies = enemyService.getEnemies();
 
         assertNotNull(enemies);
         assertEquals(1, enemies.size());
 
-        final Enemy aEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
+        final IEnemy aEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(aEnemy);
 
         final GameContext gameContext = new GameContextBuilder()

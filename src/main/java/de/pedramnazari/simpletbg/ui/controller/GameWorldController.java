@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.ui.controller;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
@@ -32,7 +31,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         return gameWorldService.createAndInitMap(tiles, List.of(), List.of(), heroX, heroY);
     }
 
-    public void startGameUsingMap(final Tile[][] tiles, Collection<IItem> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
+    public void startGameUsingMap(final Tile[][] tiles, Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
         gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
 
         gameWorldService.start();
@@ -67,12 +66,12 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         return gameWorldService.getHero();
     }
 
-    public Collection<Enemy> getEnemies() {
+    public Collection<IEnemy> getEnemies() {
         return gameWorldService.getEnemies();
     }
 
     @Override
-    public void update(Collection<Enemy> enemies) {
+    public void update(Collection<IEnemy> enemies) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.updateEnemies(enemies));
     }
@@ -88,12 +87,12 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     @Override
-    public void onEnemyHit(Enemy enemy, int damage) {
+    public void onEnemyHit(IEnemy enemy, int damage) {
         gameWorldVisualizer.updateEnemy(enemy, damage);
     }
 
     @Override
-    public void onEnemyDefeated(Enemy enemy) {
+    public void onEnemyDefeated(IEnemy enemy) {
         // already handled in onEnemyHit
     }
 

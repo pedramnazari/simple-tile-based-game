@@ -1,13 +1,9 @@
 package de.pedramnazari.simpletbg.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
-import de.pedramnazari.simpletbg.tilemap.model.IHero;
-import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
-import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,13 +57,13 @@ public class CollisionDetectionServiceTest {
 
         final IHero hero = new Hero(0, 0);
 
-        final Collection<Enemy> enemies = new DefaultEnemyFactory(collisionDetectionService, new IHeroProviderMock()).createElementsUsingTileMapConfig(enemiesConfig);
+        final Collection<IEnemy> enemies = new DefaultEnemyFactory(collisionDetectionService, new IHeroProviderMock()).createElementsUsingTileMapConfig(enemiesConfig);
         assertEquals(2, enemies.size());
 
-        final Enemy enemy1 = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
+        final IEnemy enemy1 = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(enemy1);
 
-        final Enemy enemy2 = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 2).findFirst().orElse(null);
+        final IEnemy enemy2 = enemies.stream().filter(e -> e.getX() == 2 && e.getY() == 2).findFirst().orElse(null);
         assertNotNull(enemy2);
 
         // Elements cannot have collision with themselves

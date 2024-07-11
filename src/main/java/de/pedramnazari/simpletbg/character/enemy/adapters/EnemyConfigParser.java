@@ -1,13 +1,13 @@
 package de.pedramnazari.simpletbg.character.enemy.adapters;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 
 import java.util.Collection;
 
 public class EnemyConfigParser {
 
-    public Collection<Enemy> parse(int[][] enemyConfig, IEnemyFactory factory) {
+    public Collection<IEnemy> parse(int[][] enemyConfig, IEnemyFactory factory) {
         return factory.createElementsUsingTileMapConfig(enemyConfig);
     }
 }

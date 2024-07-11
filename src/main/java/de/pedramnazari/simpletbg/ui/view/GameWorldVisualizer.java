@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.ui.view;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.config.GameInitializer;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
@@ -40,7 +39,7 @@ public class GameWorldVisualizer extends Application {
 
         initFloorAndObstacleTiles(controller.getTileMap());
         initItems(controller.getItems());
-        Collection<Enemy> enemies = controller.getEnemies();
+        Collection<IEnemy> enemies = controller.getEnemies();
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
         updateEnemies(enemies);
 
@@ -150,14 +149,14 @@ public class GameWorldVisualizer extends Application {
 
     }
 
-    public void updateEnemies(Collection<Enemy> enemies) {
+    public void updateEnemies(Collection<IEnemy> enemies) {
         // TODO: do not delete views, instead update them
         for (Point point : enemyViews.keySet()) {
             EnemyView enemyView = enemyViews.get(point);
             grid.getChildren().remove(enemyView.getImageView());
         }
 
-        for (Enemy enemy : enemies) {
+        for (IEnemy enemy : enemies) {
             String imagePath = getImagePath(enemy);
 
             final Image enemyImage = new Image(getClass().getResourceAsStream(imagePath));
@@ -170,7 +169,7 @@ public class GameWorldVisualizer extends Application {
         }
     }
 
-    private String getImagePath(Enemy enemy) {
+    private String getImagePath(IEnemy enemy) {
         String imagePath;
 
         if (enemy.getType() == TileType.ENEMY_LR.getType()) {
@@ -190,7 +189,7 @@ public class GameWorldVisualizer extends Application {
     }
 
 
-    public void updateEnemy(Enemy enemy, int damage) {
+    public void updateEnemy(IEnemy enemy, int damage) {
         Point point = new Point(enemy.getX(), enemy.getY());
         EnemyView enemyView = enemyViews.get(point);
 

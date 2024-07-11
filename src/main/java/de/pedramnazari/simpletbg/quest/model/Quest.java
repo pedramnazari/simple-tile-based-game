@@ -1,12 +1,12 @@
 package de.pedramnazari.simpletbg.quest.model;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestEvent;
 import de.pedramnazari.simpletbg.quest.service.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.service.ItemPickUpQuestEvent;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.ArrayList;
@@ -54,12 +54,12 @@ public class Quest implements IEnemyHitListener, IItemPickUpListener {
     }
 
     @Override
-    public void onEnemyHit(Enemy enemy, int damage) {
+    public void onEnemyHit(IEnemy enemy, int damage) {
 
     }
 
     @Override
-    public void onEnemyDefeated(Enemy enemy) {
+    public void onEnemyDefeated(IEnemy enemy) {
 
     }
 

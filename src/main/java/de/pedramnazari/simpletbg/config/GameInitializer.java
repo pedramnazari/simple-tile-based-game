@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.config;
 
 import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
@@ -18,6 +17,7 @@ import de.pedramnazari.simpletbg.quest.model.QuestObjective;
 import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestObjective;
 import de.pedramnazari.simpletbg.quest.service.ItemPickUpQuestObjective;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -153,7 +153,7 @@ public class GameInitializer {
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig2, tileFactory);
         final Collection<IItem> items = new ItemConfigParser().parse(itemConfig2, itemFactory);
-        final Collection<Enemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 

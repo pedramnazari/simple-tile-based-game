@@ -4,11 +4,12 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacterProvider;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.*;
 
-public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> implements IEnemyFactory {
+public class DefaultEnemyFactory extends AbstractTileMapElementFactory<IEnemy> implements IEnemyFactory {
 
     private final CollisionDetectionService collisionDetectionService;
     private final ICharacterProvider<? extends ICharacter> characterProvider;
@@ -19,8 +20,8 @@ public class DefaultEnemyFactory extends AbstractTileMapElementFactory<Enemy> im
     }
 
     @Override
-    protected Enemy createNonEmptyElement(int type, int x, int y) {
-        final Enemy enemy;
+    protected IEnemy createNonEmptyElement(int type, int x, int y) {
+        final IEnemy enemy;
         if (type == TileType.ENEMY_LR.getType()) {
             enemy = new Enemy(TileType.ENEMY_LR.getType(), x, y);
             enemy.setMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));

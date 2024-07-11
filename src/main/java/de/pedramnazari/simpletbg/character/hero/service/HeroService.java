@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
-import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
@@ -93,7 +92,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
         heroAttackService.notifyHeroAttacksCharacter(attackedCharacter, damage);
     }
 
-    public List<Point> heroAttacks(Collection<Enemy> enemies) {
+    public List<Point> heroAttacks(Collection<IEnemy> enemies) {
         return heroAttackService.heroAttacks(hero, enemies);
     }
 }
