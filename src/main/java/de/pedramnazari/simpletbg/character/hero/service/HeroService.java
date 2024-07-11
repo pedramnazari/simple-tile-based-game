@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
-import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;

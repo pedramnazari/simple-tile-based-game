@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.character.enemy.adapters;
 
-import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
+import de.pedramnazari.simpletbg.character.enemy.service.IEnemyFactory;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 
 import java.util.Collection;

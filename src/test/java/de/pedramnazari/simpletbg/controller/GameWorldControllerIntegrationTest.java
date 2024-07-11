@@ -7,7 +7,6 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
-import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -30,7 +29,7 @@ public class GameWorldControllerIntegrationTest {
     @BeforeEach
     public void setUp() {
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
-        tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        tileFactory = new DefaultTileFactory();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 

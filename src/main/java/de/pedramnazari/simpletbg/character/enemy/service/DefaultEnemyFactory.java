@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.enemy.model.IEnemyFactory;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacterProvider;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;

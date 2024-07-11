@@ -1,5 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.model;
 
+import de.pedramnazari.simpletbg.tilemap.service.ITileFactory;
+
 import java.util.Arrays;
 
 public class TileMap {

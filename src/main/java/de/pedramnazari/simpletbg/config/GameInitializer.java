@@ -119,7 +119,7 @@ public class GameInitializer {
                 new EnemyService(enemyMovementService);
 
         final DefaultItemFactory itemFactory = new DefaultItemFactory();
-        final DefaultTileFactory tileFactory = new DefaultTileFactory(itemFactory);
+        final DefaultTileFactory tileFactory = new DefaultTileFactory();
         final ItemService itemService = new ItemService();
         final HeroService heroService = new HeroService(
                 new DefaultHeroFactory(),

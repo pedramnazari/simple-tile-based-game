@@ -7,11 +7,11 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
-import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tilemap.service.ITileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CircularMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ public class CircularMovementStrategyTest {
 
     @BeforeEach
     public void setUp() {
-        tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        tileFactory = new DefaultTileFactory();
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         heroMovementService = new HeroMovementService(collisionDetectionService);

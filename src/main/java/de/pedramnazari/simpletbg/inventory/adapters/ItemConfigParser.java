@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.inventory.adapters;
 
+import de.pedramnazari.simpletbg.inventory.service.IItemFactory;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
-import de.pedramnazari.simpletbg.tilemap.model.IItemFactory;
 
 import java.util.Collection;
 

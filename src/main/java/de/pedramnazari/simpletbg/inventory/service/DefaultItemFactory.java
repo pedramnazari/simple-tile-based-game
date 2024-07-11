@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.inventory.service;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
-import de.pedramnazari.simpletbg.tilemap.model.IItemFactory;
 import de.pedramnazari.simpletbg.tilemap.model.IWeapon;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;

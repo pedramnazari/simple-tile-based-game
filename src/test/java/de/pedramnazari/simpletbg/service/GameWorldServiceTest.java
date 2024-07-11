@@ -34,7 +34,7 @@ public class GameWorldServiceTest {
 
     @BeforeEach
     public void setUp() {
-        tileFactory = new DefaultTileFactory(new DefaultItemFactory());
+        tileFactory = new DefaultTileFactory();
 
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
