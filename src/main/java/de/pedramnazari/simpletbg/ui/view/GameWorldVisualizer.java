@@ -208,7 +208,7 @@ public class GameWorldVisualizer extends Application {
 
     public void handleAllEnemiesDefeated() {
         logger.log(Level.INFO, "All enemies defeated! -> Stop Game");
-        scene.setOnKeyPressed(null);
+//        scene.setOnKeyPressed(null);
     }
 
     public void handleItemPickedUp(ICharacter element, IItem item) {

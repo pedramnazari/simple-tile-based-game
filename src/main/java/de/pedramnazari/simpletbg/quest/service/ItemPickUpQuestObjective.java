@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.quest.service;
 
-import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.model.QuestObjective;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
@@ -14,11 +13,6 @@ public class ItemPickUpQuestObjective extends QuestObjective implements IItemPic
 
     public ItemPickUpQuestObjective(String description) {
         super(description);
-    }
-
-    @Override
-    public void registerAsListener(Quest quest) {
-        quest.registerListener(ItemPickUpQuestEvent.class, this);
     }
 
 

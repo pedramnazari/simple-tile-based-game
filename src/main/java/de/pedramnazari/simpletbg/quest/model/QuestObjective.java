@@ -13,8 +13,6 @@ public abstract class QuestObjective {
         this.description = description;
     }
 
-    public abstract void registerAsListener(Quest quest);
-
     public String getDescription() {
         return description;
     }

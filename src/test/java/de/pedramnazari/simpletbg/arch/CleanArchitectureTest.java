@@ -16,6 +16,7 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 public class CleanArchitectureTest {
 
 
+
     @ArchTest
     static final ArchRule models_should_only_depend_on_other_models =
             classes().that().resideInAPackage("..model..")
