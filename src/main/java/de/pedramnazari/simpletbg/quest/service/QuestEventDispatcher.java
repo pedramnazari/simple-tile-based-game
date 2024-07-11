@@ -3,6 +3,7 @@ package de.pedramnazari.simpletbg.quest.service;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.quest.model.IQuestEvent;
+import de.pedramnazari.simpletbg.quest.model.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;

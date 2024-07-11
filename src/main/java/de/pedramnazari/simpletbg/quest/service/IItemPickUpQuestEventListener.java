@@ -1,6 +1,8 @@
 package de.pedramnazari.simpletbg.quest.service;
 
-public interface IItemPickUpQuestEventListener extends IQuestEventListener<ItemPickUpQuestEvent>{
+import de.pedramnazari.simpletbg.quest.model.IQuestEventListener;
+
+public interface IItemPickUpQuestEventListener extends IQuestEventListener<ItemPickUpQuestEvent> {
 
     @Override
     void onEvent(ItemPickUpQuestEvent event);

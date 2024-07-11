@@ -1,7 +1,5 @@
 package de.pedramnazari.simpletbg.quest.model;
 
-import de.pedramnazari.simpletbg.quest.service.IQuestEventListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
