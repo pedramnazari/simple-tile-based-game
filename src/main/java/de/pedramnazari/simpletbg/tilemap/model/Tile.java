@@ -1,13 +1,11 @@
 package de.pedramnazari.simpletbg.tilemap.model;
 
-import de.pedramnazari.simpletbg.inventory.model.Item;
-
 public class Tile implements ITileMapElement {
     private final int type;
     private final int x;
     private final int y;
     private boolean isObstacle;
-    private Item item;
+    private IItem item;
 
     public Tile(int type, int x, int y) {
         this.type = type;
@@ -41,11 +39,11 @@ public class Tile implements ITileMapElement {
         return this.item != null;
     }
 
-    public void setItem(Item item) {
+    public void setItem(IItem item) {
         this.item = item;
     }
 
-    public Item getItem() {
+    public IItem getItem() {
         return this.item;
     }
 }

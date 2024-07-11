@@ -1,10 +1,10 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 public interface IItemPickUpListener {
 
-    void onItemPickedUp(Character element, Item item);
+    void onItemPickedUp(ICharacter element, IItem item);
 
 }

@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class ItemPickUpNotifier implements IItemPickUpNotifier {
     }
 
     @Override
-    public void notifyItemPickedUp(Character element, Item item) {
+    public void notifyItemPickedUp(ICharacter element, IItem item) {
         for (IItemPickUpListener listener : itemPickUpListeners) {
             listener.onItemPickedUp(element, item);
         }

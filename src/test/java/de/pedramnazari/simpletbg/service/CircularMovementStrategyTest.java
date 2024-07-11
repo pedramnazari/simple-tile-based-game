@@ -2,7 +2,6 @@ package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
@@ -28,7 +27,7 @@ public class CircularMovementStrategyTest {
 
     private HeroMovementService heroMovementService;
     private GameWorldService gameWorldService;
-    private Hero hero;
+    private IHero hero;
     private ITileFactory tileFactory;
     private CircularMovementStrategy movementStrategy;
 
@@ -59,7 +58,7 @@ public class CircularMovementStrategyTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 0, 0);
         assertNotNull(tileMap);
 
-        final Hero hero = gameWorldService.getHero();
+        final IHero hero = gameWorldService.getHero();
 
         Point nextMove = movementStrategy.calcNextMove(tileMap, hero);
         assertEquals(1, nextMove.getX());

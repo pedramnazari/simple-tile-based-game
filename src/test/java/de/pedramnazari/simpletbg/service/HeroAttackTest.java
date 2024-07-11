@@ -1,18 +1,13 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
-import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
-import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +38,7 @@ public class HeroAttackTest {
         );
 
         heroService.init(2, 2);
-        final Hero hero = heroService.getHero(); // place hero in the middle of the map
+        final IHero hero = heroService.getHero(); // place hero in the middle of the map
 
 
         assertFalse(hero.getMoveDirection().isPresent());
@@ -86,7 +81,7 @@ public class HeroAttackTest {
         assertEquals(attackPoints.get(1), new Point(hero.getX(), hero.getY() + 1));
     }
 
-    private Weapon createWeapon(TileType weaponType) {
-        return (Weapon) new DefaultItemFactory().createElement(weaponType.getType(), 0, 0);
+    private IWeapon createWeapon(TileType weaponType) {
+        return (IWeapon) new DefaultItemFactory().createElement(weaponType.getType(), 0, 0);
     }
 }

@@ -1,9 +1,9 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.service.ICharacterProvider;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacterProvider;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
 
-public interface IHeroProvider extends ICharacterProvider<Hero> {
+public interface IHeroProvider extends ICharacterProvider<IHero> {
 
-    Hero getHero();
+    IHero getHero();
 }

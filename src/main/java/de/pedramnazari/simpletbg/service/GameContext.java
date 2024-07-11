@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
 import java.util.Collection;
@@ -12,13 +12,13 @@ public class GameContext {
 
     private final TileMap tileMap;
     private final ItemService itemService;
-    private final Hero hero;
+    private final IHero hero;
     private final Collection<Enemy> enemies;
     private final String currentMapIndex;
 
 
     // TODO: move to appropriate package
-    public GameContext(TileMap tileMap, ItemService itemService, Hero hero, Collection<Enemy> enemies, String currentMapIndex) {
+    public GameContext(TileMap tileMap, ItemService itemService, IHero hero, Collection<Enemy> enemies, String currentMapIndex) {
         this.tileMap = tileMap;
         this.itemService = itemService;
         this.hero = hero;
@@ -35,7 +35,7 @@ public class GameContext {
         return itemService;
     }
 
-    public Hero getHero() {
+    public IHero getHero() {
         return hero;
     }
 

@@ -1,12 +1,11 @@
 package de.pedramnazari.simpletbg.character.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 
 import java.util.Optional;
 
-public abstract class Character implements IMovableTileElement {
+public abstract class Character implements de.pedramnazari.simpletbg.tilemap.model.ICharacter {
 
     private final int type;
     private int x;
@@ -22,18 +21,22 @@ public abstract class Character implements IMovableTileElement {
         this.y = y;
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public void setX(int x) {
         this.x = x;
     }
 
+    @Override
     public int getY() {
         return y;
     }
 
+    @Override
     public void setY(int y) {
         this.y = y;
     }
@@ -43,6 +46,7 @@ public abstract class Character implements IMovableTileElement {
         this.moveDirection = moveDirection;
     }
 
+    @Override
     public Optional<MoveDirection> getMoveDirection() {
         return Optional.ofNullable(moveDirection);
     }
@@ -62,10 +66,12 @@ public abstract class Character implements IMovableTileElement {
         return type;
     }
 
+    @Override
     public int getHealth() {
         return health;
     }
 
+    @Override
     public void setHealth(int health) {
         this.health = health;
     }

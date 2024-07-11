@@ -2,12 +2,12 @@ package de.pedramnazari.simpletbg.quest.model;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestEvent;
 import de.pedramnazari.simpletbg.quest.service.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.service.ItemPickUpQuestEvent;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,7 +91,7 @@ public class Quest implements IEnemyHitListener, IItemPickUpListener {
     }
 
     @Override
-    public void onItemPickedUp(Character element, Item item) {
+    public void onItemPickedUp(ICharacter element, IItem item) {
         logger.info("Quest: Item picked up");
         dispatch(new ItemPickUpQuestEvent(element, item));
     }

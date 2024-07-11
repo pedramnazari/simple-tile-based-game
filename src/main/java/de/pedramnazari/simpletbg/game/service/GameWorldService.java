@@ -2,17 +2,12 @@ package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.service.GameContextBuilder;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.Tile;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
@@ -50,7 +45,7 @@ public class GameWorldService {
         this.gameContextBuilder = new GameContextBuilder();
     }
 
-    public TileMap createAndInitMap(final Tile[][] tiles, final Collection<Item> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
+    public TileMap createAndInitMap(final Tile[][] tiles, final Collection<IItem> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
         if (initialized) {
             throw new IllegalStateException("TileMapService already initialized");
         }
@@ -155,7 +150,7 @@ public class GameWorldService {
         return tileMap;
     }
 
-    public Hero getHero() {
+    public IHero getHero() {
         return heroService.getHero();
     }
 

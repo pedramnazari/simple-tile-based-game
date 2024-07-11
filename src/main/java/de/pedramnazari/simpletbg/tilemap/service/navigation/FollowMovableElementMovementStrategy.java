@@ -1,24 +1,19 @@
 package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.character.service.ICharacterProvider;
-import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 
 public class FollowMovableElementMovementStrategy extends AbstractMovementStrategy{
 
-    private final ICharacterProvider<? extends Character> characterProvider;
+    private final ICharacterProvider<? extends ICharacter> characterProvider;
 
-    public FollowMovableElementMovementStrategy(CollisionDetectionService collisionDetectionService, ICharacterProvider<? extends Character> characterProvider) {
+    public FollowMovableElementMovementStrategy(CollisionDetectionService collisionDetectionService, ICharacterProvider<? extends ICharacter> characterProvider) {
         super(collisionDetectionService);
         this.characterProvider = characterProvider;
     }
 
     @Override
     public Point calcNextMove(TileMap tileMap, IMovableTileElement element) {
-        final Character targetCharacter = characterProvider.getCharacter();
+        final ICharacter targetCharacter = characterProvider.getCharacter();
 
         if (targetCharacter == null) {
             throw new IllegalStateException("No target character found");

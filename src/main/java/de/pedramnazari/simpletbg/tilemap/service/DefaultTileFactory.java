@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.service;
 
-import de.pedramnazari.simpletbg.inventory.model.IItemFactory;
-import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
+import de.pedramnazari.simpletbg.tilemap.model.IItemFactory;
 import de.pedramnazari.simpletbg.tilemap.model.ITileFactory;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 
@@ -31,7 +31,7 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
 
     private Tile createItemAndAddToTile(int type, int x, int y) {
         final Tile tile = new Tile(type, x, y);
-        Item item = itemFactory.createElement(type, x, y);
+        IItem item = itemFactory.createElement(type, x, y);
         tile.setItem(item);
         return tile;
     }

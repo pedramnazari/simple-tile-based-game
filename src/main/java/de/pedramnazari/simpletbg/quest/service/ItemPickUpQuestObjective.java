@@ -1,10 +1,10 @@
 package de.pedramnazari.simpletbg.quest.service;
 
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.model.QuestObjective;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.logging.Logger;
 
@@ -24,11 +24,11 @@ public class ItemPickUpQuestObjective extends QuestObjective implements IItemPic
 
     @Override
     public void onEvent(ItemPickUpQuestEvent event) {
-        Item item = event.getCollectedItem();
+        IItem item = event.getCollectedItem();
 
-        Character character = event.getCollectingCharacter();
+        ICharacter character = event.getCollectingCharacter();
 
-        if (character instanceof Hero hero) {
+        if (character instanceof IHero hero) {
             // TODO: use constant for item name
             if (item.getName().equals("Black Sword")) {
                 logger.info("ItemPickUpQuestObjective: Black Sword picked up");

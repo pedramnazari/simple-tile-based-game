@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,14 +10,14 @@ import java.util.Optional;
 
 public class ItemService implements IItemPickUpListener {
 
-    private final Collection<Item> items = new ArrayList<>();
+    private final Collection<IItem> items = new ArrayList<>();
 
-    public Collection<Item> getItems() {
+    public Collection<IItem> getItems() {
         return List.copyOf(items);
     }
 
-    public Optional<Item> getItem(final int x, final int y) {
-        for (Item item : items) {
+    public Optional<IItem> getItem(final int x, final int y) {
+        for (IItem item : items) {
             if ((item.getX() == x) && (item.getY() == y)) {
                 return Optional.of(item);
             }
@@ -26,16 +26,16 @@ public class ItemService implements IItemPickUpListener {
     }
 
     @Deprecated
-    public boolean removeItem(Item item) {
+    public boolean removeItem(IItem item) {
         return items.remove(item);
     }
 
-    public void addItems(Collection<Item> items) {
+    public void addItems(Collection<IItem> items) {
         this.items.addAll(items);
     }
 
     @Override
-    public void onItemPickedUp(Character element, Item item) {
+    public void onItemPickedUp(ICharacter element, IItem item) {
         if (!items.contains(item)) {
             throw new IllegalArgumentException("Item not in list");
         }

@@ -4,22 +4,16 @@ import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
-import de.pedramnazari.simpletbg.inventory.model.Inventory;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Tile;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
-import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
@@ -35,7 +29,7 @@ public class GameWorldServiceTest {
     private static final int O = TileType.EMPTY.getType();
 
     private GameWorldService gameWorldService;
-    private Hero hero;
+    private IHero hero;
     private DefaultTileFactory tileFactory;
 
     @BeforeEach
@@ -110,7 +104,7 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
-        final Hero hero = gameWorldService.getHero();
+        final IHero hero = gameWorldService.getHero();
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
@@ -174,7 +168,7 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
-        final Hero hero = gameWorldService.getHero();
+        final IHero hero = gameWorldService.getHero();
 
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
@@ -234,22 +228,22 @@ public class GameWorldServiceTest {
                 1, 0);
         assertNotNull(tileMap);
 
-        Collection<Item> items = gameWorldService.getItemService().getItems();
+        Collection<IItem> items = gameWorldService.getItemService().getItems();
         assertNotNull(items);
         assertEquals(2, items.size());
 
-        Item item = items.iterator().next();
+        IItem item = items.iterator().next();
 
         assertNotNull(item);
         assertEquals(DefaultItemFactory.ITEM_MAGIC_YELLOW_KEY_NAME, item.getName());
         assertEquals(DefaultItemFactory.ITEM_MAGIC_YELLOW_KEY_DESC, item.getDescription());
 
-        final Hero hero = gameWorldService.getHero();
+        final IHero hero = gameWorldService.getHero();
         assertNotNull(hero);
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
 
-        final Inventory inventory = hero.getInventory();
+        final IInventory inventory = hero.getInventory();
         assertEquals(0, inventory.getItems().size());
 
         gameWorldService.moveHeroToRight();

@@ -1,14 +1,9 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
-import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementService;
@@ -49,7 +44,7 @@ public class EnemyMovementService extends MovementService {
     }
 
     private void handleCollisionsWithHero(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
-        final Hero hero = gameContext.getHero();
+        final IHero hero = gameContext.getHero();
         if (collisionDetectionService.isCollision(element, hero)) {
             logger.log(Level.INFO, "Collision with hero detected at position: " + newX + ", " + newY);
             result.addCollidingElement(hero);
@@ -59,9 +54,9 @@ public class EnemyMovementService extends MovementService {
     private void handleItems(ItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof Enemy enemy)) {
-            final Optional<Item> optItem = itemService.getItem(newX, newY);
+            final Optional<IItem> optItem = itemService.getItem(newX, newY);
             if (optItem.isPresent()) {
-                final Item item = optItem.get();
+                final IItem item = optItem.get();
 
                 logger.log(Level.INFO, "Enemy collected item: " + item.getName() + " at position: " + newX + ", " + newY);
 

@@ -1,9 +1,9 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
@@ -42,10 +42,10 @@ public class HeroMovementService extends MovementService {
 
     private void handleItems(ItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
-        if ((element instanceof Hero hero)) {
-            final Optional<Item> optItem = itemService.getItem(newX, newY);
+        if ((element instanceof IHero hero)) {
+            final Optional<IItem> optItem = itemService.getItem(newX, newY);
             if (optItem.isPresent()) {
-                final Item item = optItem.get();
+                final IItem item = optItem.get();
 
                 logger.log(Level.INFO, "Found item: " + item.getName());
 

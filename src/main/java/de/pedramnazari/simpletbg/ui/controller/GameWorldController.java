@@ -3,14 +3,10 @@ package de.pedramnazari.simpletbg.ui.controller;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.tilemap.model.Tile;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.view.GameWorldVisualizer;
 import javafx.application.Platform;
@@ -36,7 +32,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         return gameWorldService.createAndInitMap(tiles, List.of(), List.of(), heroX, heroY);
     }
 
-    public void startGameUsingMap(final Tile[][] tiles, Collection<Item> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
+    public void startGameUsingMap(final Tile[][] tiles, Collection<IItem> items, Collection<Enemy> enemiesConfig, int heroX, int heroY) {
         gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
 
         gameWorldService.start();
@@ -58,7 +54,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         return gameWorldService.moveHeroDown();
     }
 
-    public Collection<Item> getItems() {
+    public Collection<IItem> getItems() {
         return gameWorldService.getItemService().getItems();
     }
 
@@ -67,7 +63,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         return gameWorldService.getTileMap();
     }
 
-    public Hero getHero() {
+    public IHero getHero() {
         return gameWorldService.getHero();
     }
 
@@ -82,7 +78,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     @Override
-    public void onItemPickedUp(Character element, Item item) {
+    public void onItemPickedUp(ICharacter element, IItem item) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(element, item));
     }
@@ -107,7 +103,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     @Override
-    public void onHeroHit(Hero hero, Character attackingCharacter, int damage) {
+    public void onHeroHit(IHero hero, ICharacter attackingCharacter, int damage) {
         gameWorldVisualizer.handleHeroDefeated();
     }
 }

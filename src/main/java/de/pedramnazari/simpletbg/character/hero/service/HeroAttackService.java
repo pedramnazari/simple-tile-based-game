@@ -1,12 +1,8 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.inventory.model.Weapon;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,14 +15,14 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
 
-    public List<Point> heroAttacks(final Hero hero, final Collection<Enemy> enemies) {
+    public List<Point> heroAttacks(final IHero hero, final Collection<Enemy> enemies) {
         // Hero can only make damage if he has a weapon
         if (hero.getWeapon().isEmpty()) {
             logger.info("Hero tries to attack without weapon.");
             return List.of();
         }
 
-        final Weapon weapon = hero.getWeapon().get();
+        final IWeapon weapon = hero.getWeapon().get();
 
         final int damage = weapon.getAttackingDamage();
 
@@ -82,7 +78,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
     }
 
     @Override
-    public void notifyHeroAttacksCharacter(Character attackedCharacter, int damage) {
+    public void notifyHeroAttacksCharacter(ICharacter attackedCharacter, int damage) {
         heroAttackNotifier.notifyHeroAttacksCharacter(attackedCharacter, damage);
     }
 }

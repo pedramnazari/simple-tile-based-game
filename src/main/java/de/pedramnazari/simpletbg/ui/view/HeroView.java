@@ -1,11 +1,11 @@
 package de.pedramnazari.simpletbg.ui.view;
 
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import javafx.scene.image.Image;
 
-public class HeroView extends TileMapElementView<Hero> {
+public class HeroView extends TileMapElementView<IHero> {
 
-    public HeroView(Hero tileMapElement, Image tileImage, int tileSize) {
+    public HeroView(IHero tileMapElement, Image tileImage, int tileSize) {
         super(tileMapElement, tileImage, tileSize);
     }
 }

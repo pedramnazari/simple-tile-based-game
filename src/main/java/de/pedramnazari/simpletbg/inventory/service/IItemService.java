@@ -1,16 +1,16 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public interface IItemService {
 
-    boolean removeItem(Item item);
+    boolean removeItem(IItem item);
 
-    Collection<Item> getItems();
+    Collection<IItem> getItems();
 
-    Optional<Item> getItem(int x, int y);
+    Optional<IItem> getItem(int x, int y);
 
 }

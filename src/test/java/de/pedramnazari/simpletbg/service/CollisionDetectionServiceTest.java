@@ -4,6 +4,7 @@ import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -58,7 +59,7 @@ public class CollisionDetectionServiceTest {
                                 {O, O, E}};
 
 
-        final Hero hero = new Hero(0, 0);
+        final IHero hero = new Hero(0, 0);
 
         final Collection<Enemy> enemies = new DefaultEnemyFactory(collisionDetectionService, new IHeroProviderMock()).createElementsUsingTileMapConfig(enemiesConfig);
         assertEquals(2, enemies.size());

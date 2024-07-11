@@ -1,19 +1,14 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.model.IHeroFactory;
-import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
-import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
@@ -26,7 +21,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
     private final IHeroFactory heroFactory;
     private final HeroMovementService heroMovementService;
     private final HeroAttackService heroAttackService;
-    private Hero hero;
+    private IHero hero;
 
     public HeroService(IHeroFactory heroFactory, HeroMovementService heroMovementService, HeroAttackService heroAttackService) {
         this.heroFactory = heroFactory;
@@ -44,9 +39,9 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
 
     private void handleItemIfCollected(MovementResult result) {
         if (result.getCollectedItem().isPresent()) {
-            final Item item = result.getCollectedItem().get();
+            final IItem item = result.getCollectedItem().get();
 
-            if (item instanceof Weapon weapon) {
+            if (item instanceof IWeapon weapon) {
                 hero.setWeapon(weapon);
             }
             else {
@@ -63,7 +58,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
     }
 
     @Override
-    public void notifyItemPickedUp(Character element, Item item) {
+    public void notifyItemPickedUp(ICharacter element, IItem item) {
         itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 
@@ -73,18 +68,18 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
             throw new IllegalStateException("Hero already initialized");
         }
 
-        hero = heroFactory.createElement(Hero.HERO_TYPE, heroStartX, heroStartY);
+        hero = heroFactory.createElement(IHero.HERO_TYPE, heroStartX, heroStartY);
         // TODO: inject inventory or use factory
         hero.setInventory(new Inventory());
     }
 
     @Override
-    public Hero getHero() {
+    public IHero getHero() {
         return hero;
     }
 
     @Override
-    public Hero getCharacter() {
+    public IHero getCharacter() {
         return getHero();
     }
 
@@ -94,7 +89,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
     }
 
     @Override
-    public void notifyHeroAttacksCharacter(Character attackedCharacter, int damage) {
+    public void notifyHeroAttacksCharacter(ICharacter attackedCharacter, int damage) {
         heroAttackService.notifyHeroAttacksCharacter(attackedCharacter, damage);
     }
 

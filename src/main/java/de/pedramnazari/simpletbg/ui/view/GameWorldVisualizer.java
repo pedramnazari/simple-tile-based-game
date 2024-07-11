@@ -1,14 +1,8 @@
 package de.pedramnazari.simpletbg.ui.view;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.config.GameInitializer;
-import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.Tile;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
-import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
@@ -41,7 +35,7 @@ public class GameWorldVisualizer extends Application {
 
         final GameWorldController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
-        final Hero hero = controller.getHero();
+        final IHero hero = controller.getHero();
 
 
         initFloorAndObstacleTiles(controller.getTileMap());
@@ -134,8 +128,8 @@ public class GameWorldVisualizer extends Application {
         return imagePath;
     }
 
-    private void initItems(Collection<Item> itemMap) {
-        for (Item item : itemMap) {
+    private void initItems(Collection<IItem> itemMap) {
+        for (IItem item : itemMap) {
 
             String imagePath = switch (item.getType()) {
                 case 100 -> "/tiles/items/yellow_key.png";
@@ -218,7 +212,7 @@ public class GameWorldVisualizer extends Application {
         scene.setOnKeyPressed(null);
     }
 
-    public void handleItemPickedUp(Character element, Item item) {
+    public void handleItemPickedUp(ICharacter element, IItem item) {
         Point point = new Point(item.getX(), item.getY());
         ItemView itemView = itemViews.remove(point);
 

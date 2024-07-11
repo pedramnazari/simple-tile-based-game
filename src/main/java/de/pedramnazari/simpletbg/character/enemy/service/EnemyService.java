@@ -1,16 +1,16 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.model.Character;
 import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
@@ -64,7 +64,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
                 // Enemies do not collide with each other.
                 // Enemies can only collide with the hero.
                 // So the colliding element is always the hero.
-                final Hero hero = (Hero) result.getCollidingElements().iterator().next();
+                final IHero hero = (IHero) result.getCollidingElements().iterator().next();
 
                 notifyHeroHit(hero, enemy, 0);
 
@@ -82,7 +82,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
 
     private void handleItemIfCollected(MovementResult result) {
         if (result.getCollectedItem().isPresent()) {
-            final Item item = result.getCollectedItem().get();
+            final IItem item = result.getCollectedItem().get();
 
             itemPickUpNotifier.notifyItemPickedUp(result.getItemCollector().get(), item);
         }
@@ -137,12 +137,12 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
     }
 
     @Override
-    public void notifyItemPickedUp(Character element, Item item) {
+    public void notifyItemPickedUp(ICharacter element, IItem item) {
         itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 
     @Override
-    public void onHeroAttacksCharacter(final Character character, int damage) {
+    public void onHeroAttacksCharacter(final ICharacter character, int damage) {
         if (!(character instanceof Enemy enemy)) {
             return;
         }
@@ -171,7 +171,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         heroHitNotifier.addListener(listener);
     }
 
-    public void notifyHeroHit(Hero hero, Character attackingCharacter, int damage) {
+    public void notifyHeroHit(IHero hero, ICharacter attackingCharacter, int damage) {
         heroHitNotifier.notifyHeroHit(hero, attackingCharacter, damage);
     }
 }

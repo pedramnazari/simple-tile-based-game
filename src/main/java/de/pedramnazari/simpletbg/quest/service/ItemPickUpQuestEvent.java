@@ -1,23 +1,23 @@
 package de.pedramnazari.simpletbg.quest.service;
 
-import de.pedramnazari.simpletbg.character.model.Character;
-import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.quest.model.IQuestEvent;
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 public class ItemPickUpQuestEvent implements IQuestEvent {
-    private final Item collectedItem;
-    private final Character collectingCharacter;
+    private final IItem collectedItem;
+    private final ICharacter collectingCharacter;
 
-    public ItemPickUpQuestEvent(Character collectingCharacter, Item collectedItem) {
+    public ItemPickUpQuestEvent(ICharacter collectingCharacter, IItem collectedItem) {
         this.collectedItem = collectedItem;
         this.collectingCharacter = collectingCharacter;
     }
 
-    public Item getCollectedItem() {
+    public IItem getCollectedItem() {
         return collectedItem;
     }
 
-    public Character getCollectingCharacter() {
+    public ICharacter getCollectingCharacter() {
         return collectingCharacter;
     }
 }

@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
-public class Item implements ITileMapElement {
+public class Item implements IItem {
     private final int x;
     private final int y;
     private final String name;
@@ -18,10 +18,12 @@ public class Item implements ITileMapElement {
         this.type = type;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
@@ -36,6 +38,7 @@ public class Item implements ITileMapElement {
         return y;
     }
 
+    @Override
     public int getType() {
         return type;
     }

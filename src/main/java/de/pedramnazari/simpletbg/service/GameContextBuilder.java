@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Collection;
 public class GameContextBuilder {
     private TileMap tileMap;
     private ItemService itemService;
-    private Hero hero;
+    private IHero hero;
     private Collection<Enemy> enemies = new ArrayList<>();
     private String currentMapIndex;
 
@@ -25,7 +25,7 @@ public class GameContextBuilder {
         return this;
     }
 
-    public GameContextBuilder setHero(Hero hero) {
+    public GameContextBuilder setHero(IHero hero) {
         this.hero = hero;
         return this;
     }
