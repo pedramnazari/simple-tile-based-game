@@ -103,6 +103,11 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
 
     @Override
     public void onHeroHit(IHero hero, ICharacter attackingCharacter, int damage) {
-        gameWorldVisualizer.handleHeroDefeated();
+        if (hero.getHealth() > 0) {
+            gameWorldVisualizer.handleHeroHit();
+        }
+        else {
+            gameWorldVisualizer.handleHeroDefeated();
+        }
     }
 }

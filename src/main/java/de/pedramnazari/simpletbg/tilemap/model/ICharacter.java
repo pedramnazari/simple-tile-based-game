@@ -27,5 +27,10 @@ public interface ICharacter extends IMovableTileElement {
 
     int getHealth();
 
-    void setHealth(int health);
+    int increaseHealth(int health);
+    int decreaseHealth(int health);
+
+    void setAttackingPower(int attackingPower);
+
+    int getAttackingPower();
 }

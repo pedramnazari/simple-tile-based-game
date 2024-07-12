@@ -126,6 +126,34 @@ public class GameInitializer {
                 {11,11,11,11,11,11,4,4,4,4,4,4,4,4,4,4,4,4,11,11}
         };
 
+        final int[][] itemConfig3 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, 200, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, 201, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O}
+        };
+
+        final int[][] enemyConfig3 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, E3, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E, O, O, O}
+        };
+
         // TODO: Improve
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
@@ -176,8 +204,8 @@ public class GameInitializer {
 
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig3, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig2, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig3, itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig3, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 

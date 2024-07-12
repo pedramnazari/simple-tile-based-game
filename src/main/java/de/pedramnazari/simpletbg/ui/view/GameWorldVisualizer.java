@@ -20,7 +20,7 @@ public class GameWorldVisualizer extends Application {
 
     private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
 
-    public static final int TILE_SIZE = 64;
+    public static final int TILE_SIZE = 48;
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<Point, EnemyView> enemyViews = new HashMap<>();
@@ -82,6 +82,7 @@ public class GameWorldVisualizer extends Application {
             if ((result != null) && result.hasElementMoved()) {
                 grid.getChildren().remove(heroView.getImageView());
                 grid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
+                heroView.getImageView().setOpacity(1.0);
             }
         });
 
@@ -233,5 +234,9 @@ public class GameWorldVisualizer extends Application {
         logger.log(Level.INFO, "Hero defeated! -> Stop Game");
         heroView.getImageView().setOpacity(0.5);
         scene.setOnKeyPressed(null);
+    }
+
+    public void handleHeroHit() {
+        heroView.getImageView().setOpacity(0.5);
     }
 }
