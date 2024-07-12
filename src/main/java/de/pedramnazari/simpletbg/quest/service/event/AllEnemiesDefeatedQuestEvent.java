@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.quest.service;
+package de.pedramnazari.simpletbg.quest.service.event;
 
 import de.pedramnazari.simpletbg.quest.model.IQuestEvent;
 

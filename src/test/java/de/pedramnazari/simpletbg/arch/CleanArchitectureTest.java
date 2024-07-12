@@ -7,6 +7,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 @AnalyzeClasses(
@@ -74,6 +75,12 @@ public class CleanArchitectureTest {
                     .should().onlyDependOnClassesThat().resideInAnyPackage("de.pedramnazari.simpletbg.quest..", "de.pedramnazari.simpletbg.character.enemy..",
                             "de.pedramnazari.simpletbg.character.model", "de.pedramnazari.simpletbg.character.service",
                             "de.pedramnazari.simpletbg.inventory..", "de.pedramnazari.simpletbg.tilemap..", "java..");
+
+    @ArchTest
+    static final ArchRule package_quest_service_event_should_not_depend_on_quest_config =
+            noClasses().that().resideInAPackage("de.pedramnazari.simpletbg.quest.service.event..")
+                    .should().dependOnClassesThat().resideInAPackage("de.pedramnazari.simpletbg.quest.service.config..");
+
 
     @ArchTest
     static final ArchRule package_game_should_only_depend_on_tilemap_inventory_character_quest_and_game =

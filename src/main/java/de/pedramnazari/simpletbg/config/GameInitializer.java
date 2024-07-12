@@ -12,8 +12,11 @@ import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
-import de.pedramnazari.simpletbg.quest.model.Quest;
-import de.pedramnazari.simpletbg.quest.service.*;
+import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
+import de.pedramnazari.simpletbg.quest.service.config.DefaultQuestConfigFactory;
+import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
+import de.pedramnazari.simpletbg.quest.service.config.IQuestConfigFactory;
+import de.pedramnazari.simpletbg.quest.service.config.Quest1Config;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
@@ -130,9 +133,8 @@ public class GameInitializer {
                 enemyService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
 
-        final QuestEventDispatcher questEventDispatcher = initializeQuest();
 
-        gameWorldService.setQuest(questEventDispatcher.getQuest());
+
 
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
         enemyService.registerObserver(controller);
@@ -145,8 +147,18 @@ public class GameInitializer {
         enemyService.addHeroHitListener(controller);
         enemyService.addEnemyHitListener(controller);
 
+
+        /**
+         * **** Quests ****
+         */
+        final IQuestConfigFactory questConfigFactory = new DefaultQuestConfigFactory();
+        final IQuestConfig quest1Config = questConfigFactory.createQuestConfig(Quest1Config.QUEST_ID);
+        final QuestEventDispatcher questEventDispatcher = quest1Config.getQuestEventDispatcher();
         enemyService.addEnemyHitListener(questEventDispatcher);
         heroService.addItemPickupListener(questEventDispatcher);
+
+        gameWorldService.setQuest(quest1Config.getQuest());
+
 
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig2, tileFactory);
@@ -156,20 +168,5 @@ public class GameInitializer {
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 
         return controller;
-    }
-
-    private static QuestEventDispatcher initializeQuest() {
-        final Quest quest = new Quest("Defeat all enemies and collect black sword.", "You have to defeat all enemies and collect the black sword to win the game");
-        final AllEnemiesDefeatedQuestObjective questObjective1 = new AllEnemiesDefeatedQuestObjective("Defeat all enemies");
-        final ItemPickUpQuestObjective questObjective2 = new ItemPickUpQuestObjective("Collect black sword");
-
-        quest.addObjective(questObjective1);
-        quest.addObjective(questObjective2);
-
-        QuestEventDispatcher questEventDispatcher = new QuestEventDispatcher(quest);
-        questEventDispatcher.registerListener(AllEnemiesDefeatedQuestEvent.class, questObjective1);
-        questEventDispatcher.registerListener(ItemPickUpQuestEvent.class, questObjective2);
-
-        return questEventDispatcher;
     }
 }

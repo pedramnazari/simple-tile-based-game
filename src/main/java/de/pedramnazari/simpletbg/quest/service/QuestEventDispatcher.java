@@ -5,6 +5,8 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.quest.model.IQuestEvent;
 import de.pedramnazari.simpletbg.quest.model.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.model.Quest;
+import de.pedramnazari.simpletbg.quest.service.event.AllEnemiesDefeatedQuestEvent;
+import de.pedramnazari.simpletbg.quest.service.event.ItemPickUpQuestEvent;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
