@@ -20,7 +20,7 @@ public class GameWorldVisualizer extends Application {
 
     private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
 
-    public static final int TILE_SIZE = 80;
+    public static final int TILE_SIZE = 64;
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<Point, EnemyView> enemyViews = new HashMap<>();
@@ -49,7 +49,10 @@ public class GameWorldVisualizer extends Application {
 
         grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
-        scene = new Scene(grid, 1200, 700);
+        // HD (1280x720)
+        // Width: 1280 Pixel / 64 Pixel per Tile = 20 Tiles
+        // Height: 720 Pixel / 64 Pixel per Tile = 11 Tiles
+        scene = new Scene(grid, 1280, 720);
         scene.setOnKeyPressed(event -> {
             MovementResult result = null;
 

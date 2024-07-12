@@ -112,6 +112,20 @@ public class GameInitializer {
                 {O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O,  O},
         };
 
+        final int[][] mapConfig3 = new int[][]{
+                {11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11},
+                {11,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,11},
+                {11,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,11},
+                {11,4,4,4,4,4,4,4,4,4,4,11,11,11,11,4,4,4,4,11},
+                {11,4,4,4,4,4,11,11,4,4,4,11,1,1,11,4,4,4,4,11},
+                {11,4,4,4,11,11,4,11,11,4,4,11,1,1,11,4,4,4,4,11},
+                {11,4,4,11,11,4,4,4,4,11,4,11,1,1,11,4,4,4,11,11},
+                {11,4,11,11,4,4,4,4,4,4,11,11,1,1,11,11,11,4,11,11},
+                {11,11, 11,4,4,4,11,4,4,4,4,4,4,4,4,4,4,4,11,11},
+                {11,2,2,4,4,11,11,4,4,4,4,4,4,4,4,4,4,4,11,11},
+                {11,11,11,11,11,11,4,4,4,4,4,4,4,4,4,4,4,4,11,11}
+        };
+
         // TODO: Improve
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
@@ -161,7 +175,7 @@ public class GameInitializer {
 
 
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig2, tileFactory);
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig3, tileFactory);
         final Collection<IItem> items = new ItemConfigParser().parse(itemConfig2, itemFactory);
         final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig2, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
