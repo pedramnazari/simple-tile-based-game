@@ -24,18 +24,22 @@ public class DefaultEnemyFactory extends AbstractTileMapElementFactory<IEnemy> i
         if (type == TileType.ENEMY_LR.getType()) {
             enemy = new Enemy(TileType.ENEMY_LR.getType(), x, y);
             enemy.setMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
+            enemy.setAttackingPower(10);
         }
         else if (type == TileType.ENEMY_TD.getType()) {
             enemy = new Enemy(TileType.ENEMY_TD.getType(), x, y);
             enemy.setMovementStrategy(new TopToBottomMovementStrategy(collisionDetectionService));
+            enemy.setAttackingPower(10);
         }
         else if (type == TileType.ENEMY_2D.getType()) {
             enemy = new Enemy(TileType.ENEMY_2D.getType(), x, y);
             enemy.setMovementStrategy(new CircularMovementStrategy(collisionDetectionService));
+            enemy.setAttackingPower(20);
         }
         else if (type == TileType.ENEMY_FH.getType()) {
             enemy = new Enemy(TileType.ENEMY_FH.getType(), x, y);
             enemy.setMovementStrategy(new FollowMovableElementMovementStrategy(collisionDetectionService, characterProvider));
+            enemy.setAttackingPower(30);
         }
         else {
             throw new IllegalArgumentException("Unknown enemy type: " + type);

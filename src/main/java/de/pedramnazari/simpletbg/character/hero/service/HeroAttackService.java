@@ -23,8 +23,6 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
         final IWeapon weapon = hero.getWeapon().get();
 
-        final int damage = hero.getAttackingPower() + weapon.getAttackingDamage();
-
         final List<Point> attackPoints = new ArrayList<>();
         // Attack also enemies in same position as hero
         attackPoints.add(new Point(hero.getX(), hero.getY()));
@@ -57,6 +55,13 @@ public class HeroAttackService implements IHeroAttackNotifier {
             }
 
             attackPoints.add(new Point(targetX, targetY));
+        }
+
+        int damage = hero.getAttackingPower() + weapon.getAttackingDamage();
+
+        if (hero.getRing().isPresent()) {
+            IRing ring = hero.getRing().get();
+            damage += ring.getAttackingPower();
         }
 
         for (Point attackPoint : attackPoints) {

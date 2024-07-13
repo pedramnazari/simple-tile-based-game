@@ -1,8 +1,10 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
 import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.model.Ring;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
+import de.pedramnazari.simpletbg.tilemap.model.IRing;
 import de.pedramnazari.simpletbg.tilemap.model.IWeapon;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
@@ -48,6 +50,14 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             weapon.setAttackingDamage(100);
 
             item = weapon;
+        }
+        else if (type == TileType.RING_MAGIC1.getType()) {
+            itemName = "Attacking Power Ring";
+            itemDescription = "A magic ring that increases the attacking power of the hero.";
+            IRing ring = new Ring(x, y, itemName, itemDescription, type);
+            ring.setAttackingPower(20);
+
+            item = ring;
         }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);

@@ -29,6 +29,8 @@ import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.Collection;
 
+import static de.pedramnazari.simpletbg.tilemap.model.TileType.RING_MAGIC1;
+
 public class GameInitializer {
 
     private static final int O = TileType.EMPTY.getType();
@@ -132,7 +134,7 @@ public class GameInitializer {
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, 200, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, RING_MAGIC1.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},

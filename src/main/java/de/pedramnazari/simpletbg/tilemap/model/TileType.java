@@ -15,6 +15,8 @@ public enum TileType {
     WEAPON_SWORD(200),
     WEAPON_SWORD2(201),
 
+    RING_MAGIC1(300),
+
     ENEMY_LR(500), // left-right,
     ENEMY_TD(510), // top-down
     ENEMY_2D(520), // two-dimensional

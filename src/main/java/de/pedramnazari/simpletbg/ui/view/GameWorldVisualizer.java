@@ -49,10 +49,7 @@ public class GameWorldVisualizer extends Application {
 
         grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
-        // HD (1280x720)
-        // Width: 1280 Pixel / 64 Pixel per Tile = 20 Tiles
-        // Height: 720 Pixel / 64 Pixel per Tile = 11 Tiles
-        scene = new Scene(grid, 1280, 720);
+        scene = new Scene(grid, 1100, 600);
         scene.setOnKeyPressed(event -> {
             MovementResult result = null;
 
@@ -139,6 +136,7 @@ public class GameWorldVisualizer extends Application {
                 case 101 -> "/tiles/items/yellow_key_stone.png";
                 case 200 -> "/tiles/items/weapons/sword.png";
                 case 201 -> "/tiles/items/weapons/sword2.png";
+                case 300 -> "/tiles/items/rings/magic_ring1.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };
 

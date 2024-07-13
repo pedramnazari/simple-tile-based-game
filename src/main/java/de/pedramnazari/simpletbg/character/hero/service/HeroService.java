@@ -42,6 +42,9 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
             if (item instanceof IWeapon weapon) {
                 hero.setWeapon(weapon);
             }
+            else if (item instanceof IRing ring) {
+                hero.setRing(ring);
+            }
             else {
                 hero.getInventory().addItem(item);
             }

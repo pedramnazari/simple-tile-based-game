@@ -12,4 +12,8 @@ public interface IHero extends ICharacter, IItemCollector {
     void setWeapon(IWeapon weapon);
 
     Optional<IWeapon> getWeapon();
+
+    void setRing(IRing ring);
+
+    Optional<IRing> getRing();
 }
