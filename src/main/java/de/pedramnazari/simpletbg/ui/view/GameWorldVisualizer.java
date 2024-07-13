@@ -5,9 +5,12 @@ import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import java.util.Collection;
@@ -27,6 +30,7 @@ public class GameWorldVisualizer extends Application {
     private GridPane grid;
     private Scene scene;
     private HeroView heroView;
+    private TilePane tilePane;
 
     @Override
     public void start(Stage primaryStage) {
@@ -49,7 +53,17 @@ public class GameWorldVisualizer extends Application {
 
         grid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
-        scene = new Scene(grid, 1100, 600);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(grid);
+
+        tilePane = new TilePane();
+        tilePane.setPrefTileWidth(TILE_SIZE);
+        tilePane.setPrefTileHeight(TILE_SIZE);
+        tilePane.setAlignment(Pos.TOP_LEFT);
+        borderPane.setBottom(tilePane);
+
+
+        scene = new Scene(borderPane, 1100, 575);
         scene.setOnKeyPressed(event -> {
             MovementResult result = null;
 
@@ -222,6 +236,11 @@ public class GameWorldVisualizer extends Application {
         }
 
         grid.getChildren().remove(itemView.getImageView());
+
+        if (element instanceof IHero hero) {
+            tilePane.getChildren().add(itemView.getImageView());
+        }
+
     }
 
     public static void main(String[] args) {
