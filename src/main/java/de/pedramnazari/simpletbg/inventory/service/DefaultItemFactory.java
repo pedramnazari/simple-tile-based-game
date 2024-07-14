@@ -1,12 +1,12 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.inventory.model.Item;
-import de.pedramnazari.simpletbg.inventory.model.Ring;
-import de.pedramnazari.simpletbg.inventory.model.Weapon;
+import de.pedramnazari.simpletbg.inventory.model.*;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.IRing;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
+
+import java.util.Optional;
 
 public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> implements IItemFactory {
 
@@ -15,6 +15,9 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
     public static final String ITEM_MAGIC_YELLOW_KEY2_NAME = "Magic Yellow Key";
     public static final String ITEM_MAGIC_YELLOW_KEY2_DESC = "A yellow key that opens the door to the next level.";
+
+    private BombService bombService;
+    private BombFactory bombFactory;
 
     @Override
     protected IItem createNonEmptyElement(int type, int x, int y) {
@@ -87,10 +90,37 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
             item = ring;
         }
+        else if (type == TileType.WEAPON_BOMB_PLACER.getType()) {
+            itemName = "Bomb Placer";
+            itemDescription = "A bomb placer that can be used to place bombs.";
+            final BombPlacer bombPlacer = new BombPlacer(bombFactory, bombService, x, y);
+            bombPlacer.setAttackingDamage(50);
+            bombPlacer.setRange(1);
+            bombPlacer.setCanAttackInAllDirections(true);
+
+            item = bombPlacer;
+
+        }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
 
         return item;
+    }
+
+    public void setBombService(BombService bombService) {
+        this.bombService = bombService;
+    }
+
+    public Optional<BombService> getBombService() {
+        return Optional.ofNullable(bombService);
+    }
+
+    public void setBombFactory(BombFactory bombFactory) {
+        this.bombFactory = bombFactory;
+    }
+
+    public Optional<BombFactory> getBombFactory() {
+        return Optional.ofNullable(bombFactory);
     }
 }

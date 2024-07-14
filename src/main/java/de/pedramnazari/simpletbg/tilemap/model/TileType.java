@@ -18,6 +18,9 @@ public enum TileType {
     WEAPON_DOUBLE_ENDED_LANCE(221), // attacks foward and backward
     WEAPON_MULTI_SPIKE_LANCE(222), // attacks in all directions
 
+    WEAPON_BOMB_PLACER(230),
+    WEAPON_BOMB(231),
+
     RING_MAGIC1(300),
 
     ENEMY_LR(500), // left-right,

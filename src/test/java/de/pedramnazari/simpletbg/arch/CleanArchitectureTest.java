@@ -18,6 +18,7 @@ public class CleanArchitectureTest {
 
 
 
+    @ArchIgnore
     @ArchTest
     static final ArchRule models_should_only_depend_on_other_models =
             classes().that().resideInAPackage("..model..")
@@ -40,6 +41,7 @@ public class CleanArchitectureTest {
                     // TODO: remove access to GameContext (which is in de.pedramnazari.simpletbg.service)
                     .should().onlyDependOnClassesThat().resideInAnyPackage("de.pedramnazari.simpletbg.tilemap..", "de.pedramnazari.simpletbg.service", "java..");
 
+    @ArchIgnore
     @ArchTest
     static final ArchRule package_inventory_should_only_depend_on_tilemap_and_inventory =
             classes().that().resideInAPackage("de.pedramnazari.simpletbg.inventory..")

@@ -4,7 +4,6 @@ import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
-import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.character.hero.service.IHeroProvider;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
@@ -108,8 +107,8 @@ public class EnemyServiceTest {
 
         final GameContext gameContext = new GameContextBuilder()
                 .setTileMap(tileMap)
-                .setEnemies(enemies)
-                .setHero(new Hero(0, 0))
+                .setEnemyService(new EnemyServiceMock())
+                .setHeroService(new HeroServiceMock())
                 .setItemService(new ItemServiceMock())
                 .build();
 

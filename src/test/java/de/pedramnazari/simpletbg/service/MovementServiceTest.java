@@ -111,8 +111,9 @@ public class MovementServiceTest {
 
         final GameContext gameContext = new GameContextBuilder()
                 .setTileMap(tileMap)
-                .setHero(hero)
+                .setHeroService(new HeroServiceMock(hero))
                 .setItemService(gameWorldService.getItemService())
+                .setEnemyService(new EnemyServiceMock())
                 .build();
 
         MovementResult result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);

@@ -88,7 +88,8 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
 
     @Override
     public void onEnemyHit(IEnemy enemy, int damage) {
-        gameWorldVisualizer.updateEnemy(enemy, damage);
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.updateEnemy(enemy, damage));
     }
 
     @Override
@@ -109,5 +110,10 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         else {
             gameWorldVisualizer.handleHeroDefeated();
         }
+    }
+
+    public void updateItems() {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.updateItems(getItems()));
     }
 }

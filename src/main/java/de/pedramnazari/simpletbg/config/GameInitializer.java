@@ -10,6 +10,8 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
+import de.pedramnazari.simpletbg.inventory.model.BombFactory;
+import de.pedramnazari.simpletbg.inventory.model.BombService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
@@ -133,7 +135,7 @@ public class GameInitializer {
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, WEAPON_MULTI_SPIKE_LANCE.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, 200, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, WEAPON_LANCE.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_BOMB_PLACER.getType(), WEAPON_LANCE.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, RING_MAGIC1.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -188,6 +190,13 @@ public class GameInitializer {
         enemyService.addHeroHitListener(controller);
         enemyService.addEnemyHitListener(controller);
 
+        /**
+         * Bombs
+         */
+        itemFactory.setBombFactory(new BombFactory());
+        itemFactory.setBombService(new BombService(itemService, heroService, enemyService, controller));
+
+
 
         /**
          * **** Quests ****
@@ -199,8 +208,6 @@ public class GameInitializer {
         heroService.addItemPickupListener(questEventDispatcher);
 
         gameWorldService.setQuest(quest1Config.getQuest());
-
-
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig3, tileFactory);
         final Collection<IItem> items = new ItemConfigParser().parse(itemConfig3, itemFactory);

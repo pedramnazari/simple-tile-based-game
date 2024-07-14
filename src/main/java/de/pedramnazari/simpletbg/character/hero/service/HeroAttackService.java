@@ -1,6 +1,8 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
+import de.pedramnazari.simpletbg.inventory.model.Bomb;
+import de.pedramnazari.simpletbg.inventory.model.BombPlacer;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 
 import java.util.ArrayList;
@@ -15,34 +17,57 @@ public class HeroAttackService implements IHeroAttackNotifier {
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
 
     public List<Point> heroAttacks(final IHero hero, final Collection<IEnemy> enemies) {
+        return heroAttacksUsingWeapon(hero.getWeapon().orElse(null), hero, enemies);
+    }
+
+    public List<Point> heroAttacksUsingWeapon(final IWeapon weapon, final IHero hero, final Collection<IEnemy> enemies) {
         // Hero can only make damage if he has a weapon
-        if (hero.getWeapon().isEmpty()) {
+        if (weapon == null) {
             logger.info("Hero tries to attack without weapon.");
             return List.of();
         }
 
-        final IWeapon weapon = hero.getWeapon().get();
+        if (weapon instanceof BombPlacer bombPlacer) {
+            bombPlacer.placeBomb(hero.getX(), hero.getY());
+            return List.of();
+        }
+
+        int xPos = hero.getX();
+        int yPos = hero.getY();
+
+        if (weapon instanceof Bomb) {
+            xPos = weapon.getX();
+            yPos = weapon.getY();
+        }
+
+        logger.info("Hero attacks using weapon: " + weapon.getName() + " with range " + weapon.getRange());
+
+        // Enemy positions
+        for (IEnemy enemy : enemies) {
+            logger.info("Enemy at position: " + enemy.getX() + ", " + enemy.getY());
+        }
+
 
         final List<Point> attackPoints = new ArrayList<>();
         // Attack also enemies in same position as hero
-        attackPoints.add(new Point(hero.getX(), hero.getY()));
+        attackPoints.add(new Point(xPos, yPos));
 
         final MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
+        final int range = weapon.getRange();
 
         if (weapon.canAttackInAllDirections()) {
-            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.LEFT));
-            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.RIGHT));
-            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.UP));
-            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.DOWN));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, MoveDirection.LEFT));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, MoveDirection.RIGHT));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, MoveDirection.UP));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, MoveDirection.DOWN));
         }
         else if (weapon.canAttackBackward() && (moveDirection != null)) {
-            attackPoints.addAll(determineAttackPoints(hero, moveDirection));
-            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.getOppositeDirection(moveDirection)));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, moveDirection));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, MoveDirection.getOppositeDirection(moveDirection)));
         }
         else {
-            attackPoints.addAll(determineAttackPoints(hero, moveDirection));
+            attackPoints.addAll(determineAttackPoints(range, xPos, yPos, moveDirection));
         }
-
 
         int damage = hero.getAttackingPower() + weapon.getAttackingDamage();
 
@@ -54,6 +79,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
         for (Point attackPoint : attackPoints) {
             for (IEnemy enemy : enemies) {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
+                    logger.info("Hero attacks enemy at position: " + attackPoint);
                     notifyHeroAttacksCharacter(enemy, damage);
                 }
             }
@@ -62,36 +88,34 @@ public class HeroAttackService implements IHeroAttackNotifier {
         return attackPoints;
     }
 
-    private List<Point> determineAttackPoints(IHero hero, final MoveDirection moveDirection) {
+    private List<Point> determineAttackPoints(int weaponRange, int xPos, int yPos, final MoveDirection moveDirection) {
         final List<Point> attackPoints = new ArrayList<>();
         int targetY;
         int targetX;
         if (moveDirection != null) {
-            for (int i = 1; i <= hero.getWeapon().get().getRange(); i++) {
+            for (int i = 1; i <= weaponRange; i++) {
                 switch (moveDirection) {
                     case UP -> {
-                        targetX = hero.getX();
-                        targetY = hero.getY() - i;
+                        targetX = xPos;
+                        targetY = yPos - i;
                     }
                     case DOWN -> {
-                        targetX = hero.getX();
-                        targetY = hero.getY() + i;
+                        targetX = xPos;
+                        targetY = yPos + i;
                     }
                     case LEFT -> {
-                        targetX = hero.getX() - i;
-                        targetY = hero.getY();
+                        targetX = xPos - i;
+                        targetY = yPos;
                     }
                     case RIGHT -> {
-                        targetX = hero.getX() + i;
-                        targetY = hero.getY();
+                        targetX = xPos + i;
+                        targetY = yPos;
                     }
                     default -> {
-                        targetX = hero.getX();
-                        targetY = hero.getY();
+                        targetX = xPos;
+                        targetY = yPos;
                     }
                 }
-
-                System.out.println("targetX: " + targetX + " targetY: " + targetY);
 
                 attackPoints.add(new Point(targetX, targetY));
             }

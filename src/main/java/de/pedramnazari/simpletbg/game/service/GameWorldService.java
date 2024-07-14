@@ -133,8 +133,8 @@ public class GameWorldService {
         return gameContextBuilder
                 .setTileMap(tileMap)
                 .setItemService(itemService)
-                .setHero(heroService.getHero())
-                .setEnemies(enemyService.getEnemies())
+                .setHeroService(heroService)
+                .setEnemyService(enemyService)
                 .setCurrentMapIndex(currentMapIndex)
                 .build();
     }

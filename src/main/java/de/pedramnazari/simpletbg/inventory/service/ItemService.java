@@ -34,6 +34,10 @@ public class ItemService implements IItemPickUpListener {
         this.items.addAll(items);
     }
 
+    public void addItem(IItem item) {
+        items.add(item);
+    }
+
     @Override
     public void onItemPickedUp(ICharacter element, IItem item) {
         if (!items.contains(item)) {

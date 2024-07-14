@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
+import de.pedramnazari.simpletbg.inventory.model.Bomb;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
@@ -10,7 +11,6 @@ import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementService;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,12 +41,9 @@ public class HeroMovementService extends MovementService {
     }
 
     private void handleItems(ItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
-        // TODO: Refactor (do not use instanceof).
         if ((element instanceof IHero hero)) {
-            final Optional<IItem> optItem = itemService.getItem(newX, newY);
-            if (optItem.isPresent()) {
-                final IItem item = optItem.get();
-
+            final IItem item = itemService.getItem(newX, newY).orElse(null);
+            if ((item != null) && !(item instanceof Bomb)) {
                 logger.log(Level.INFO, "Found item: " + item.getName());
 
                 result.setCollectedItem(item);

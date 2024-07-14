@@ -42,7 +42,7 @@ public class GameWorldVisualizer extends Application {
 
 
         initFloorAndObstacleTiles(controller.getTileMap());
-        initItems(controller.getItems());
+        updateItems(controller.getItems());
         Collection<IEnemy> enemies = controller.getEnemies();
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
         updateEnemies(enemies);
@@ -142,7 +142,13 @@ public class GameWorldVisualizer extends Application {
         return imagePath;
     }
 
-    private void initItems(Collection<IItem> itemMap) {
+    public void updateItems(Collection<IItem> itemMap) {
+        // TODO: do not delete views, instead update them
+        for (Point point : itemViews.keySet()) {
+            ItemView itemView = itemViews.get(point);
+            grid.getChildren().remove(itemView.getImageView());
+        }
+
         for (IItem item : itemMap) {
 
             String imagePath = switch (item.getType()) {
@@ -153,6 +159,8 @@ public class GameWorldVisualizer extends Application {
                 case 220 -> "/tiles/items/weapons/lance.png";
                 case 221 -> "/tiles/items/weapons/double_ended_lance.png";
                 case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
+                case 230 -> "/tiles/items/weapons/bomb_placer.png";
+                case 231 -> "/tiles/items/weapons/bomb.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };
@@ -231,6 +239,15 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleItemPickedUp(ICharacter element, IItem item) {
+        ItemView itemView = removeItem(item);
+
+        if (element instanceof IHero hero) {
+            tilePane.getChildren().add(itemView.getImageView());
+        }
+
+    }
+
+    private ItemView removeItem(IItem item) {
         Point point = new Point(item.getX(), item.getY());
         ItemView itemView = itemViews.remove(point);
 
@@ -239,11 +256,7 @@ public class GameWorldVisualizer extends Application {
         }
 
         grid.getChildren().remove(itemView.getImageView());
-
-        if (element instanceof IHero hero) {
-            tilePane.getChildren().add(itemView.getImageView());
-        }
-
+        return itemView;
     }
 
     public static void main(String[] args) {

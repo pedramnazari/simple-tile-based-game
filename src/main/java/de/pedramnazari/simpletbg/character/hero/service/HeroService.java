@@ -84,6 +84,10 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
         return getHero();
     }
 
+    public HeroAttackService getHeroAttackService() {
+        return heroAttackService;
+    }
+
     @Override
     public void addHeroAttackListener(IHeroAttackListener listener) {
         heroAttackService.addHeroAttackListener(listener);
