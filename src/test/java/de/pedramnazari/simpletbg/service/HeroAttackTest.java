@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HeroAttackTest {
 
@@ -103,20 +102,18 @@ public class HeroAttackTest {
 
         final Collection<IEnemy> enemies = List.of();
 
-        List<Point> attackPoints = heroService.heroAttacks(enemies);
-
         // Give hero a long range weapon
         hero.setWeapon(createWeapon(TileType.WEAPON_LANCE));
 
         assertEquals(2, hero.getWeapon().get().getRange());
 
-        attackPoints = heroService.heroAttacks(enemies);
+        List<Point> attackPoints = heroService.heroAttacks(enemies);
         assertEquals(1, attackPoints.size());
         assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
 
         hero.setMoveDirection(MoveDirection.RIGHT);
         attackPoints = heroService.heroAttacks(enemies);
-        assertEquals(   3, attackPoints.size());
+        assertEquals(3, attackPoints.size());
         assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
         assertEquals(attackPoints.get(1), new Point(hero.getX() + 1, hero.getY()));
         assertEquals(attackPoints.get(2), new Point(hero.getX() + 2, hero.getY()));
@@ -141,6 +138,133 @@ public class HeroAttackTest {
         assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
         assertEquals(attackPoints.get(1), new Point(hero.getX(), hero.getY() - 1));
         assertEquals(attackPoints.get(2), new Point(hero.getX(), hero.getY() - 2));
+    }
+
+    @Test
+    public void testHeroAttacks_forwardAndBackward() {
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults(new int[][]{
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+        });
+
+        final HeroService heroService = new HeroService(
+                new DefaultHeroFactory(),
+                new HeroMovementService(new CollisionDetectionService()),
+                new HeroAttackService()
+        );
+
+        heroService.init(2, 2);
+        final IHero hero = heroService.getHero(); // place hero in the middle of the map
+
+        assertFalse(hero.getMoveDirection().isPresent());
+
+        final Collection<IEnemy> enemies = List.of();
+
+        // Give hero a long range weapon
+        hero.setWeapon(createWeapon(TileType.WEAPON_DOUBLE_ENDED_LANCE));
+
+        assertEquals(2, hero.getWeapon().get().getRange());
+
+        List<Point> attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(1, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+
+        hero.setMoveDirection(MoveDirection.RIGHT);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(5, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+        assertEquals(attackPoints.get(1), new Point(hero.getX() + 1, hero.getY()));
+        assertEquals(attackPoints.get(2), new Point(hero.getX() + 2, hero.getY()));
+        assertEquals(attackPoints.get(3), new Point(hero.getX() - 1, hero.getY()));
+        assertEquals(attackPoints.get(4), new Point(hero.getX() - 2, hero.getY()));
+
+        hero.setMoveDirection(MoveDirection.DOWN);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(5, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+        assertEquals(attackPoints.get(1), new Point(hero.getX(), hero.getY() + 1));
+        assertEquals(attackPoints.get(2), new Point(hero.getX(), hero.getY() + 2));
+        assertEquals(attackPoints.get(3), new Point(hero.getX(), hero.getY() - 1));
+        assertEquals(attackPoints.get(4), new Point(hero.getX(), hero.getY() - 2));
+
+        hero.setMoveDirection(MoveDirection.LEFT);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(5, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+        assertEquals(attackPoints.get(1), new Point(hero.getX() - 1, hero.getY()));
+        assertEquals(attackPoints.get(2), new Point(hero.getX() - 2, hero.getY()));
+        assertEquals(attackPoints.get(3), new Point(hero.getX() + 1, hero.getY()));
+        assertEquals(attackPoints.get(4), new Point(hero.getX() + 2, hero.getY()));
+
+        hero.setMoveDirection(MoveDirection.UP);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(5, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+        assertEquals(attackPoints.get(1), new Point(hero.getX(), hero.getY() - 1));
+        assertEquals(attackPoints.get(2), new Point(hero.getX(), hero.getY() - 2));
+        assertEquals(attackPoints.get(3), new Point(hero.getX(), hero.getY() + 1));
+        assertEquals(attackPoints.get(4), new Point(hero.getX(), hero.getY() + 2));
+    }
+
+    @Test
+    public void testHeroAttacks_inAllDirections() {
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults(new int[][]{
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+        });
+
+        final HeroService heroService = new HeroService(
+                new DefaultHeroFactory(),
+                new HeroMovementService(new CollisionDetectionService()),
+                new HeroAttackService()
+        );
+
+        heroService.init(2, 2);
+        final IHero hero = heroService.getHero(); // place hero in the middle of the map
+
+        assertFalse(hero.getMoveDirection().isPresent());
+
+        final Collection<IEnemy> enemies = List.of();
+
+        // Give hero a long range weapon
+        hero.setWeapon(createWeapon(TileType.WEAPON_MULTI_SPIKE_LANCE));
+
+        assertEquals(2, hero.getWeapon().get().getRange());
+
+        List<Point> attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(9, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+        assertTrue(attackPoints.contains(new Point(hero.getX() + 1, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX() - 1, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() + 1)));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() - 1)));
+        assertTrue(attackPoints.contains(new Point(hero.getX() + 2, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX() - 2, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() + 2)));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() - 2)));
+
+        hero.setMoveDirection(MoveDirection.RIGHT);
+
+        // The move direction does not have an impact on attackPoints
+        // (since all directions are already covered)
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(9, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+        assertTrue(attackPoints.contains(new Point(hero.getX() + 1, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX() - 1, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() + 1)));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() - 1)));
+        assertTrue(attackPoints.contains(new Point(hero.getX() + 2, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX() - 2, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() + 2)));
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY() - 2)));
+
     }
 
     private IWeapon createWeapon(TileType weaponType) {

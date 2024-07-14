@@ -23,4 +23,14 @@ public enum MoveDirection {
 
         return Optional.ofNullable(direction);
     }
+
+    public static MoveDirection getOppositeDirection(MoveDirection direction) {
+        return switch (direction) {
+            case UP -> DOWN;
+            case DOWN -> UP;
+            case LEFT -> RIGHT;
+            case RIGHT -> LEFT;
+            default -> throw new IllegalArgumentException("Unexpected value: " + direction);
+        };
+    }
 }

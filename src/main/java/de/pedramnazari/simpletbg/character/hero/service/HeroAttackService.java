@@ -27,7 +27,22 @@ public class HeroAttackService implements IHeroAttackNotifier {
         // Attack also enemies in same position as hero
         attackPoints.add(new Point(hero.getX(), hero.getY()));
 
-        attackPoints.addAll(determineAttackPoints(hero));
+        final MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
+
+        if (weapon.canAttackInAllDirections()) {
+            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.LEFT));
+            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.RIGHT));
+            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.UP));
+            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.DOWN));
+        }
+        else if (weapon.canAttackBackward() && (moveDirection != null)) {
+            attackPoints.addAll(determineAttackPoints(hero, moveDirection));
+            attackPoints.addAll(determineAttackPoints(hero, MoveDirection.getOppositeDirection(moveDirection)));
+        }
+        else {
+            attackPoints.addAll(determineAttackPoints(hero, moveDirection));
+        }
+
 
         int damage = hero.getAttackingPower() + weapon.getAttackingDamage();
 
@@ -47,9 +62,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
         return attackPoints;
     }
 
-    private List<Point> determineAttackPoints(IHero hero) {
-        final MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
-
+    private List<Point> determineAttackPoints(IHero hero, final MoveDirection moveDirection) {
         final List<Point> attackPoints = new ArrayList<>();
         int targetY;
         int targetX;

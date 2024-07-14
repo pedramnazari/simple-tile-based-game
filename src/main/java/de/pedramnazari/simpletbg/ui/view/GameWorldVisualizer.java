@@ -151,6 +151,8 @@ public class GameWorldVisualizer extends Application {
                 case 200 -> "/tiles/items/weapons/sword.png";
                 case 201 -> "/tiles/items/weapons/sword2.png";
                 case 220 -> "/tiles/items/weapons/lance.png";
+                case 221 -> "/tiles/items/weapons/double_ended_lance.png";
+                case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };

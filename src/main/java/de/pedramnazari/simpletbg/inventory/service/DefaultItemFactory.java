@@ -59,6 +59,26 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
             item = weapon;
         }
+        else if (type == TileType.WEAPON_DOUBLE_ENDED_LANCE.getType()) {
+            itemName = "Double-Ended Lance";
+            itemDescription = "A double-ended lance that can be used to fight enemies.";
+            final Weapon weapon = new Weapon(x, y, itemName, itemDescription, type);
+            weapon.setAttackingDamage(20);
+            weapon.setRange(2);
+            weapon.setCanAttackBackward(true);
+
+            item = weapon;
+        }
+        else if (type == TileType.WEAPON_MULTI_SPIKE_LANCE.getType()) {
+            itemName = "Multi-Spike Lance";
+            itemDescription = "A multi-spike lance that can be used to fight enemies in all directions.";
+            final Weapon weapon = new Weapon(x, y, itemName, itemDescription, type);
+            weapon.setAttackingDamage(15);
+            weapon.setRange(2);
+            weapon.setCanAttackInAllDirections(true);
+
+            item = weapon;
+        }
         else if (type == TileType.RING_MAGIC1.getType()) {
             itemName = "Attacking Power Ring";
             itemDescription = "A magic ring that increases the attacking power of the hero.";

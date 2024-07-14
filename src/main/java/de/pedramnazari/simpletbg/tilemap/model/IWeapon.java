@@ -6,4 +6,20 @@ public interface IWeapon extends IItem {
     void setAttackingDamage(int attackingDamage);
 
     int getRange();
+
+    /**
+     * Check, if the hero can also attack backward.
+     * Note: The hero can always attack in the direction he is facing (i.e., forward).
+     *
+     * @return true, if the hero can attack backward.
+     */
+    boolean canAttackBackward();
+
+    /**
+     * Check, if the hero can attack in all directions.
+     * Note: The hero can always attack in the direction he is facing (i.e., forward).
+     *
+     * @return true, if the hero can attack in all directions.
+     */
+    boolean canAttackInAllDirections();
 }
