@@ -27,35 +27,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
         // Attack also enemies in same position as hero
         attackPoints.add(new Point(hero.getX(), hero.getY()));
 
-        int targetX, targetY;
-
-        MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
-        if (moveDirection != null) {
-            switch (moveDirection) {
-                case UP -> {
-                    targetX = hero.getX();
-                    targetY = hero.getY() - 1;
-                }
-                case DOWN -> {
-                    targetX = hero.getX();
-                    targetY = hero.getY() + 1;
-                }
-                case LEFT -> {
-                    targetX = hero.getX() - 1;
-                    targetY = hero.getY();
-                }
-                case RIGHT -> {
-                    targetX = hero.getX() + 1;
-                    targetY = hero.getY();
-                }
-                default -> {
-                    targetX = hero.getX();
-                    targetY = hero.getY();
-                }
-            }
-
-            attackPoints.add(new Point(targetX, targetY));
-        }
+        attackPoints.addAll(determineAttackPoints(hero));
 
         int damage = hero.getAttackingPower() + weapon.getAttackingDamage();
 
@@ -73,7 +45,46 @@ public class HeroAttackService implements IHeroAttackNotifier {
         }
 
         return attackPoints;
+    }
 
+    private List<Point> determineAttackPoints(IHero hero) {
+        final MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
+
+        final List<Point> attackPoints = new ArrayList<>();
+        int targetY;
+        int targetX;
+        if (moveDirection != null) {
+            for (int i = 1; i <= hero.getWeapon().get().getRange(); i++) {
+                switch (moveDirection) {
+                    case UP -> {
+                        targetX = hero.getX();
+                        targetY = hero.getY() - i;
+                    }
+                    case DOWN -> {
+                        targetX = hero.getX();
+                        targetY = hero.getY() + i;
+                    }
+                    case LEFT -> {
+                        targetX = hero.getX() - i;
+                        targetY = hero.getY();
+                    }
+                    case RIGHT -> {
+                        targetX = hero.getX() + i;
+                        targetY = hero.getY();
+                    }
+                    default -> {
+                        targetX = hero.getX();
+                        targetY = hero.getY();
+                    }
+                }
+
+                System.out.println("targetX: " + targetX + " targetY: " + targetY);
+
+                attackPoints.add(new Point(targetX, targetY));
+            }
+        }
+
+        return attackPoints;
     }
 
     @Override

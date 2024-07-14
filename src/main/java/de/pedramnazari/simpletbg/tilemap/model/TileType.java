@@ -14,6 +14,7 @@ public enum TileType {
 
     WEAPON_SWORD(200),
     WEAPON_SWORD2(201),
+    WEAPON_LANCE(220),
 
     RING_MAGIC1(300),
 

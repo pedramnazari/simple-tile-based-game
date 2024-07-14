@@ -4,4 +4,6 @@ public interface IWeapon extends IItem {
     int getAttackingDamage();
 
     void setAttackingDamage(int attackingDamage);
+
+    int getRange();
 }
