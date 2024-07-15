@@ -82,7 +82,6 @@ public class GameWorldService {
 
         logger.log(Level.INFO, "Starting the game loop");
 
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable moveEnemiesRunner = new Runnable() {
             @Override
@@ -95,11 +94,12 @@ public class GameWorldService {
             }
         };
 
-        // Wait 3 seconds before starting the first move to ensure that game is fully initialize
+        // Wait 3 seconds before starting the first move to ensure that game is fully initialized
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, 3000, 750, TimeUnit.MILLISECONDS);
     }
 
-    // TODO: Move all moveHero* methods to HeroService?
+    // TODO: Move all moveHero* methods to HeroService
     public MovementResult moveHeroToLeft() {
         return moveHero(MoveDirection.LEFT);
     }

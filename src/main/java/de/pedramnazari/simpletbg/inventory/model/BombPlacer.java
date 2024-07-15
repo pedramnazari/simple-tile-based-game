@@ -18,8 +18,6 @@ public class BombPlacer extends Weapon {
         this.bombFactory = bombFactory;
 
         this.bombService = bombService;
-
-        setCanAttackInAllDirections(true);
     }
 
 

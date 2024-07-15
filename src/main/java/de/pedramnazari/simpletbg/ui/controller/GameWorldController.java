@@ -4,6 +4,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
+import de.pedramnazari.simpletbg.inventory.model.Bomb;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
@@ -115,5 +116,10 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void updateItems() {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.updateItems(getItems()));
+    }
+
+    public void bombExploded(Bomb bomb, List<Point> attackPoints) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.bombExploded(bomb, attackPoints));
     }
 }

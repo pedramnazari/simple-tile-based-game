@@ -42,12 +42,6 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
         logger.info("Hero attacks using weapon: " + weapon.getName() + " with range " + weapon.getRange());
 
-        // Enemy positions
-        for (IEnemy enemy : enemies) {
-            logger.info("Enemy at position: " + enemy.getX() + ", " + enemy.getY());
-        }
-
-
         final List<Point> attackPoints = new ArrayList<>();
         // Attack also enemies in same position as hero
         attackPoints.add(new Point(xPos, yPos));
@@ -116,6 +110,8 @@ public class HeroAttackService implements IHeroAttackNotifier {
                         targetY = yPos;
                     }
                 }
+
+                logger.info("Hero attacks at position: " + targetX + ", " + targetY);
 
                 attackPoints.add(new Point(targetX, targetY));
             }

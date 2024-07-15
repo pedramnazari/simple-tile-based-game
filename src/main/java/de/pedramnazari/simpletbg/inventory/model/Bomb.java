@@ -11,6 +11,7 @@ public class Bomb extends Weapon {
         this.placedAtTime = System.currentTimeMillis();
         this.explodeInMillis = explodeInMillis;
 
+        setCanAttackInAllDirections(true);
         setAttackingDamage(20);
     }
 

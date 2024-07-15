@@ -4,6 +4,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
+import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.ArrayList;
@@ -79,8 +80,10 @@ public class BombService implements Runnable {
     private void explodeBomb(Bomb bomb) {
         logger.info("Bomb exploded.");
         IHero hero = heroService.getHero();
-        heroService.getHeroAttackService().heroAttacksUsingWeapon(bomb, hero, enemyService.getEnemies());
+        List<Point> attackPoints = heroService.getHeroAttackService().heroAttacksUsingWeapon(bomb, hero, enemyService.getEnemies());
         itemService.removeItem(bomb);
-        gameWorldController.updateItems();
+
+        gameWorldController.bombExploded(bomb, attackPoints);
+
     }
 }

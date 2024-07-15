@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.ui.view;
 
 import de.pedramnazari.simpletbg.config.GameInitializer;
+import de.pedramnazari.simpletbg.inventory.model.Bomb;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +32,7 @@ public class GameWorldVisualizer extends Application {
     private GridPane grid;
     private Scene scene;
     private HeroView heroView;
-    private TilePane tilePane;
+    private TilePane inventory;
 
     @Override
     public void start(Stage primaryStage) {
@@ -56,11 +58,11 @@ public class GameWorldVisualizer extends Application {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(grid);
 
-        tilePane = new TilePane();
-        tilePane.setPrefTileWidth(TILE_SIZE);
-        tilePane.setPrefTileHeight(TILE_SIZE);
-        tilePane.setAlignment(Pos.TOP_LEFT);
-        borderPane.setBottom(tilePane);
+        inventory = new TilePane();
+        inventory.setPrefTileWidth(TILE_SIZE);
+        inventory.setPrefTileHeight(TILE_SIZE);
+        inventory.setAlignment(Pos.TOP_LEFT);
+        borderPane.setBottom(inventory);
 
 
         scene = new Scene(borderPane, 1100, 575);
@@ -184,10 +186,21 @@ public class GameWorldVisualizer extends Application {
         }
 
         for (IEnemy enemy : enemies) {
-            String imagePath = getImagePath(enemy);
+            EnemyView enemyView = null;
+            for (EnemyView oldView : enemyViews.values()) {
+                if(oldView.getTileMapElement().equals(enemy)) {
+                    enemyView = oldView;
+                    enemyView.getImageView().setOpacity(1.0);
+                    break;
+                }
+            }
 
-            final Image enemyImage = new Image(getClass().getResourceAsStream(imagePath));
-            final EnemyView enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
+            if(enemyView == null) {
+                String imagePath = getImagePath(enemy);
+                final Image enemyImage = new Image(getClass().getResourceAsStream(imagePath));
+                enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
+            }
+
 
             Point point = new Point(enemy.getX(), enemy.getY());
             enemyViews.put(point, enemyView);
@@ -235,14 +248,13 @@ public class GameWorldVisualizer extends Application {
 
     public void handleAllEnemiesDefeated() {
         logger.log(Level.INFO, "All enemies defeated! -> Stop Game");
-//        scene.setOnKeyPressed(null);
     }
 
     public void handleItemPickedUp(ICharacter element, IItem item) {
         ItemView itemView = removeItem(item);
 
         if (element instanceof IHero hero) {
-            tilePane.getChildren().add(itemView.getImageView());
+            inventory.getChildren().add(itemView.getImageView());
         }
 
     }
@@ -271,5 +283,17 @@ public class GameWorldVisualizer extends Application {
 
     public void handleHeroHit() {
         heroView.getImageView().setOpacity(0.5);
+    }
+
+    public void bombExploded(Bomb bomb, List<Point> explosionPoints) {
+        ItemView itemView = removeItem(bomb);
+        Point point = new Point(bomb.getX(), bomb.getY());
+
+        final Image attackImage = new Image(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png"));
+        for (Point explosionPoint : explosionPoints) {
+            final ItemView explosionView = new ItemView(null, attackImage, TILE_SIZE);
+            itemViews.put(explosionPoint, explosionView);
+            grid.add(explosionView.getImageView(), explosionPoint.getX(), explosionPoint.getY());
+        }
     }
 }
