@@ -5,6 +5,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.IHeroProvider;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
@@ -12,6 +13,7 @@ import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +34,7 @@ public class EnemyServiceTest {
 
     @BeforeEach
     public void setUp() {
-
+        GameContext.resetInstance();
     }
 
     @Test
@@ -105,12 +107,8 @@ public class EnemyServiceTest {
         final IEnemy aEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(aEnemy);
 
-        final GameContext gameContext = new GameContextBuilder()
-                .setTileMap(tileMap)
-                .setEnemyService(new EnemyServiceMock())
-                .setHeroService(new HeroServiceMock())
-                .setItemService(new ItemServiceMock())
-                .build();
+        GameContext.initialize(tileMap, new ItemServiceMock(), new HeroServiceMock(), enemyService, "map");
+        final GameContext gameContext = GameContext.getInstance();
 
         for (int i = 0; i < 20; i++) {
             final List<MovementResult> results = enemyService.moveEnemies(gameContext);
@@ -123,8 +121,11 @@ public class EnemyServiceTest {
                         .isValidMovePositionWithinMap(tileMap, result.getOldX(), result.getOldY(), result.getNewX(), result.getNewY());
             }
         }
+    }
 
-
+    @AfterEach
+    public void tearDown() {
+        GameContext.resetInstance();
     }
 
 }

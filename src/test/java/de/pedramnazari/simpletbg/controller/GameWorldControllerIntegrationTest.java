@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
@@ -15,6 +16,7 @@ import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -95,6 +97,13 @@ public class GameWorldControllerIntegrationTest {
         assertEquals(5, tileMap.getTile(0, 1).getType());
         assertEquals(4, tileMap.getTile(1, 1).getType());
         assertEquals(2, tileMap.getTile(2, 1).getType());
+    }
+
+    @AfterEach
+    public void tearDown() {
+        GameContext.resetInstance();
+        controller = null;
+        tileFactory = null;
     }
 
 

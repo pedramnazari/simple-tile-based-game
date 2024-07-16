@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
@@ -18,6 +19,7 @@ import de.pedramnazari.simpletbg.tilemap.service.ITileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +39,8 @@ public class MovementServiceTest {
 
     @BeforeEach
     public void setUp() {
+        GameContext.resetInstance();
+
         tileFactory = new DefaultTileFactory();
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
@@ -109,12 +113,8 @@ public class MovementServiceTest {
         hero = gameWorldService.getHero();
         assertNotNull(hero);
 
-        final GameContext gameContext = new GameContextBuilder()
-                .setTileMap(tileMap)
-                .setHeroService(new HeroServiceMock(hero))
-                .setItemService(gameWorldService.getItemService())
-                .setEnemyService(new EnemyServiceMock())
-                .build();
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), new HeroServiceMock(hero), new EnemyServiceMock(), "map");
+        final GameContext gameContext = GameContext.getInstance();
 
         MovementResult result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);
         assertTrue(result.hasElementMoved());
@@ -135,6 +135,15 @@ public class MovementServiceTest {
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
+    }
+
+    @AfterEach
+    public void tearDown() {
+        GameContext.resetInstance();
+        hero = null;
+        heroMovementService = null;
+        gameWorldService = null;
+        tileFactory = null;
     }
 
 

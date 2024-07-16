@@ -3,6 +3,7 @@ package de.pedramnazari.simpletbg.ui.controller;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.Bomb;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
@@ -34,6 +35,8 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
 
     public void startGameUsingMap(final Tile[][] tiles, Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
         gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
+
+        GameContext.initialize(gameWorldService.getTileMap(), gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "0");
 
         gameWorldService.start();
     }

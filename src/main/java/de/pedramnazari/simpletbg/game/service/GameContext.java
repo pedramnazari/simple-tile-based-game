@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.service;
+package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
@@ -9,7 +9,10 @@ import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 
 import java.util.Collection;
 
+// TODO: delete this class? at least it should not be a singleton.
 public class GameContext {
+
+    private static volatile GameContext instance;
 
     private final TileMap tileMap;
     private final ItemService itemService;
@@ -17,14 +20,31 @@ public class GameContext {
     private final EnemyService enemyService;
     private final String currentMapIndex;
 
-
-    // TODO: move to appropriate package
-    public GameContext(TileMap tileMap, ItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
+    private GameContext(TileMap tileMap, ItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
         this.tileMap = tileMap;
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
         this.currentMapIndex = currentMapIndex;
+    }
+
+    public static GameContext getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("GameContext is not initialized. Call initialize() first.");
+        }
+        return instance;
+    }
+
+    public static synchronized void initialize(TileMap tileMap, ItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
+        if (instance == null) {
+            instance = new GameContext(tileMap, itemService, heroService, enemyService, currentMapIndex);
+        } else {
+            throw new IllegalStateException("GameContext is already initialized.");
+        }
+    }
+
+    public static synchronized void resetInstance() {
+        instance = null;
     }
 
 

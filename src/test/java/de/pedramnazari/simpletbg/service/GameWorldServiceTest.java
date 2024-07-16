@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
@@ -17,6 +18,7 @@ import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +36,8 @@ public class GameWorldServiceTest {
 
     @BeforeEach
     public void setUp() {
+        GameContext.resetInstance();
+
         tileFactory = new DefaultTileFactory();
 
 
@@ -104,6 +108,8 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "map");
+
         final IHero hero = gameWorldService.getHero();
         assertEquals(1, hero.getX());
         assertEquals(0, hero.getY());
@@ -168,6 +174,8 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "map");
+
         final IHero hero = gameWorldService.getHero();
 
         assertEquals(1, hero.getX());
@@ -228,6 +236,8 @@ public class GameWorldServiceTest {
                 1, 0);
         assertNotNull(tileMap);
 
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "map");
+
         Collection<IItem> items = gameWorldService.getItemService().getItems();
         assertNotNull(items);
         assertEquals(2, items.size());
@@ -273,4 +283,10 @@ public class GameWorldServiceTest {
         items = gameWorldService.getItemService().getItems();
         assertEquals(0, items.size());
     }
+
+    @AfterEach
+    public void tearDown() {
+        GameContext.resetInstance();
+    }
+
 }

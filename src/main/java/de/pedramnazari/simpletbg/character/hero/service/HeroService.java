@@ -1,12 +1,13 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
-import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
     }
 
     public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
-        final MovementResult result =  heroMovementService.moveElement(hero, moveDirection, gameContext);
+        final MovementResult result = heroMovementService.moveElement(hero, moveDirection, gameContext);
 
         handleItemIfCollected(result);
 
@@ -101,4 +102,10 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
     public List<Point> heroAttacks(Collection<IEnemy> enemies) {
         return heroAttackService.heroAttacks(hero, enemies);
     }
+
+    // TODO: Remove this method
+    public CollisionDetectionService getCollisionDetectionService() {
+        return heroMovementService.getCollisionDetectionService();
+    }
+
 }

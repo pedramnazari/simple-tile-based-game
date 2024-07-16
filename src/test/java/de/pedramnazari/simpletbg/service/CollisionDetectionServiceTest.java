@@ -77,7 +77,7 @@ public class CollisionDetectionServiceTest {
         assertFalse(collisionDetectionService.isCollision(enemy1, hero));
         assertFalse(collisionDetectionService.isCollision(enemy2, hero));
 
-        Collection<? extends IMovableTileElement> collisionElements = collisionDetectionService.getCollidingElements(hero, enemies);
+        Collection<? extends ITileMapElement> collisionElements = collisionDetectionService.getCollidingElements(hero, enemies);
         assertEquals(0, collisionElements.size());
 
         hero.setX(1);

@@ -1,11 +1,12 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.inventory.model.Bomb;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
-import de.pedramnazari.simpletbg.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.IMovableTileElement;
+import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementService;
@@ -32,7 +33,7 @@ public class HeroMovementService extends MovementService {
     }
 
     private void handleCollisionsWithEnemies(GameContext gameContext, IMovableTileElement element, int newX, int newY, MovementResult result) {
-        Collection<? extends IMovableTileElement> collidingEnemies = collisionDetectionService.getCollidingElements(element, gameContext.getEnemies());
+        Collection<? extends ITileMapElement> collidingEnemies = collisionDetectionService.getCollidingElements(element, gameContext.getEnemies());
 
         if (!collidingEnemies.isEmpty()) {
             logger.log(Level.INFO, "Collision with enemy detected at position: " + newX + ", " + newY);
@@ -50,5 +51,10 @@ public class HeroMovementService extends MovementService {
                 result.setItemCollector(hero);
             }
         }
+    }
+
+    // TODO: remove this method
+    public CollisionDetectionService getCollisionDetectionService() {
+        return collisionDetectionService;
     }
 }

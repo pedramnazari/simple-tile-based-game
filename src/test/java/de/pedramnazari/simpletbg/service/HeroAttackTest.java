@@ -4,10 +4,13 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.game.service.GameContext;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -18,6 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HeroAttackTest {
 
     private static final int F = TileType.FLOOR.getType();
+    private static final int W = TileType.WALL.getType();
+
+    @BeforeEach
+    public void setUp() {
+        GameContext.resetInstance();
+    }
 
     @Test
     public void testHeroAttacks() {
@@ -34,6 +43,8 @@ public class HeroAttackTest {
                 new HeroMovementService(new CollisionDetectionService()),
                 new HeroAttackService()
         );
+
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
 
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
@@ -95,6 +106,8 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
 
@@ -155,6 +168,8 @@ public class HeroAttackTest {
                 new HeroMovementService(new CollisionDetectionService()),
                 new HeroAttackService()
         );
+
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
 
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
@@ -225,6 +240,8 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
 
@@ -267,7 +284,68 @@ public class HeroAttackTest {
 
     }
 
+    @Test
+    public void testHeroAttacks_withLongRangeAndObstacles() {
+        final TileMap tileMap = TileMapTestHelper.createMapUsingDefaults(new int[][]{
+                {F, F, F, F, F,},
+                {F, F, F, F, F,},
+                {W, F, F, F, F,},
+                {F, F, W, F, F,},
+                {F, F, F, F, F,},
+        });
+
+        final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+        final HeroService heroService = new HeroService(
+                new DefaultHeroFactory(),
+                new HeroMovementService(collisionDetectionService),
+                new HeroAttackService()
+        );
+
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+
+
+
+        final Collection<IEnemy> enemies = List.of();
+
+        heroService.init(2, 2);
+        final IHero hero = heroService.getHero(); // place hero in the middle of the map
+
+        assertFalse(hero.getMoveDirection().isPresent());
+
+        // Give hero a long range weapon
+        hero.setWeapon(createWeapon(TileType.WEAPON_LANCE));
+
+        assertEquals(2, hero.getWeapon().get().getRange());
+
+        List<Point> attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(1, attackPoints.size());
+        assertEquals(attackPoints.get(0), new Point(hero.getX(), hero.getY()));
+
+        hero.setMoveDirection(MoveDirection.RIGHT);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(3, attackPoints.size());
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX()+1, hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX()+2, hero.getY())));
+
+        hero.setMoveDirection(MoveDirection.DOWN);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(1, attackPoints.size());
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY())));
+
+        hero.setMoveDirection(MoveDirection.LEFT);
+        attackPoints = heroService.heroAttacks(enemies);
+        assertEquals(2, attackPoints.size());
+        assertTrue(attackPoints.contains(new Point(hero.getX(), hero.getY())));
+        assertTrue(attackPoints.contains(new Point(hero.getX()-1, hero.getY())));
+    }
+
     private IWeapon createWeapon(TileType weaponType) {
         return (IWeapon) new DefaultItemFactory().createElement(weaponType.getType(), 0, 0);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        GameContext.resetInstance();
     }
 }

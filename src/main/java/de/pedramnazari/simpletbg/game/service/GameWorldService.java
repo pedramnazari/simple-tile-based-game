@@ -4,8 +4,6 @@ import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
-import de.pedramnazari.simpletbg.service.GameContext;
-import de.pedramnazari.simpletbg.service.GameContextBuilder;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
@@ -25,8 +23,6 @@ public class GameWorldService {
     private final HeroService heroService;
     private final EnemyService enemyService;
 
-    private final GameContextBuilder gameContextBuilder;
-
     private String currentMapIndex;
     private boolean initialized = false;
 
@@ -40,8 +36,6 @@ public class GameWorldService {
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
-        // TODO: inject GameContextBuilder
-        this.gameContextBuilder = new GameContextBuilder();
     }
 
     public TileMap createAndInitMap(final Tile[][] tiles, final Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
@@ -87,7 +81,7 @@ public class GameWorldService {
             @Override
             public void run() {
                 try {
-                    enemyService.moveEnemies(buildGameContext());
+                    enemyService.moveEnemies(GameContext.getInstance());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -118,7 +112,7 @@ public class GameWorldService {
 
     protected MovementResult moveHero(MoveDirection moveDirection) {
 
-        final GameContext gameContext = buildGameContext();
+        final GameContext gameContext = GameContext.getInstance();
 
         final MovementResult result = heroService.moveHero(moveDirection, gameContext);
 
@@ -127,16 +121,6 @@ public class GameWorldService {
         }
 
         return result;
-    }
-
-    private GameContext buildGameContext() {
-        return gameContextBuilder
-                .setTileMap(tileMap)
-                .setItemService(itemService)
-                .setHeroService(heroService)
-                .setEnemyService(enemyService)
-                .setCurrentMapIndex(currentMapIndex)
-                .build();
     }
 
     public String getCurrentMapIndex() {
@@ -178,7 +162,7 @@ public class GameWorldService {
 
 
     public List<Point> heroAttacks() {
-        return heroService.heroAttacks(enemyService.getEnemies());
+        return heroService.heroAttacks(getEnemies());
     }
 
     public void setQuest(Quest quest) {
