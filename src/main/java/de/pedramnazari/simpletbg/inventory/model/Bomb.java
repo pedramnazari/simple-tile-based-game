@@ -24,13 +24,11 @@ public class Bomb extends Weapon {
         return !hasExploded && ((System.currentTimeMillis() - placedAtTime) >= explodeInMillis);
     }
 
-    public boolean triggerEffect() {
+    public void triggerEffect() {
         if (shouldTriggerEffect()) {
             hasExploded = true;
             explosionStartTime = System.currentTimeMillis();
-            return true;
         }
-        return false;
     }
 
     public boolean isExplosionOngoing() {
