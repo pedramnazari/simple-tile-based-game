@@ -14,6 +14,10 @@ public class CollisionDetectionService {
         return newTile.isObstacle();
     }
 
+    public boolean isCollisionWithObstacleOrOutOfBounds(final TileMap tileMap, final int x, final int y) {
+        return !tileMap.isWithinBounds(x, y) || isCollisionWithObstacle(tileMap, x, y);
+    }
+
     public boolean isCollision(ITileMapElement element1, ITileMapElement element2) {
         if (element1 == element2) {
             // Element cannot have a collision with itself

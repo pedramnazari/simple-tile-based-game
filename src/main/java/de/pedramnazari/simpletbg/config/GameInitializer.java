@@ -145,8 +145,8 @@ public class GameInitializer {
         };
 
         final int[][] enemyConfig3 = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, E3, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},

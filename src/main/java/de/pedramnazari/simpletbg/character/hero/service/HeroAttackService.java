@@ -19,11 +19,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
 
     public List<Point> heroAttacks(final IHero hero, final Collection<IEnemy> enemies) {
-        final List<Point> attackingPoints = heroAttacksUsingWeapon(hero.getWeapon().orElse(null), hero, enemies);
-
-        processAttacks(hero, enemies, attackingPoints);
-
-        return attackingPoints;
+        return heroAttacksUsingWeapon(hero.getWeapon().orElse(null), hero, enemies);
     }
 
     public List<Point> heroAttacksUsingWeapon(final IWeapon weapon, final IHero hero, final Collection<IEnemy> enemies) {
@@ -48,37 +44,20 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
         logger.info("Hero attacks using weapon: " + weapon.getName() + " with range " + weapon.getRange());
 
-        final List<Point> attackPoints = new ArrayList<>();
-        // Attack also enemies in same position as hero
-        attackPoints.add(new Point(xPos, yPos));
+        final List<Point> attackPoints = determineAttackPoints(weapon, hero, xPos, yPos);
 
-        final MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
-        final int range = weapon.getRange();
-
-        if (weapon.canAttackInAllDirections()) {
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, MoveDirection.LEFT));
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, MoveDirection.RIGHT));
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, MoveDirection.UP));
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, MoveDirection.DOWN));
-        }
-        else if (weapon.canAttackBackward() && (moveDirection != null)) {
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, moveDirection));
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, MoveDirection.getOppositeDirection(moveDirection)));
-        }
-        else {
-            attackPoints.addAll(determinePotentialAttackPoints(range, xPos, yPos, moveDirection));
-        }
-
-        return attackPoints;
-    }
-
-    private void processAttacks(IHero hero, Collection<IEnemy> enemies, List<Point> attackPoints) {
         if (attackPoints.isEmpty()) {
-            return;
+            return List.of();
         }
 
         int damage = calcDamage(hero);
 
+        notifyHeroAttacksCharacter(enemies, attackPoints, damage);
+
+        return attackPoints;
+    }
+
+    private void notifyHeroAttacksCharacter(Collection<IEnemy> enemies, List<Point> attackPoints, int damage) {
         for (Point attackPoint : attackPoints) {
             for (IEnemy enemy : enemies) {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
@@ -89,7 +68,33 @@ public class HeroAttackService implements IHeroAttackNotifier {
         }
     }
 
-    private static int calcDamage(IHero hero) {
+    private List<Point> determineAttackPoints(IWeapon weapon, IHero hero, int xPos, int yPos) {
+        final List<Point> attackPoints = new ArrayList<>();
+
+        // Attack also enemies in same position as hero
+        attackPoints.add(new Point(xPos, yPos));
+
+        final MoveDirection moveDirection = hero.getMoveDirection().orElse(null);
+        final int range = weapon.getRange();
+
+        if (weapon.canAttackInAllDirections()) {
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.LEFT));
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.RIGHT));
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.UP));
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.DOWN));
+        }
+        else if (weapon.canAttackBackward() && (moveDirection != null)) {
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, moveDirection));
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.getOppositeDirection(moveDirection)));
+        }
+        else {
+            attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, moveDirection));
+        }
+
+        return attackPoints;
+    }
+
+    private int calcDamage(IHero hero) {
         int damage = hero.getAttackingPower() + hero.getWeapon().get().getAttackingDamage();
 
         if (hero.getRing().isPresent()) {
@@ -99,7 +104,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
         return damage;
     }
 
-    private List<Point> determinePotentialAttackPoints(int weaponRange, int xPos, int yPos, final MoveDirection moveDirection) {
+    private List<Point> determineAttackPointsForDirection(int weaponRange, int xPos, int yPos, final MoveDirection moveDirection) {
         final List<Point> attackPoints = new ArrayList<>();
         int targetY;
         int targetX;
@@ -132,11 +137,9 @@ public class HeroAttackService implements IHeroAttackNotifier {
                 final CollisionDetectionService collisionDetectionService = GameContext.getInstance().getHeroService().getCollisionDetectionService();
                 final TileMap tileMap = GameContext.getInstance().getTileMap();
 
-                if (collisionDetectionService.isCollisionWithObstacle(tileMap, targetX, targetY)) {
+                if (collisionDetectionService.isCollisionWithObstacleOrOutOfBounds(tileMap, targetX, targetY)) {
                     break;
                 }
-
-                logger.info("Hero attacks at position: " + targetX + ", " + targetY);
 
                 attackPoints.add(new Point(targetX, targetY));
             }

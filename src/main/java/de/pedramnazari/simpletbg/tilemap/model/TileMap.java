@@ -25,6 +25,10 @@ public class TileMap {
         return tiles[y][x];
     }
 
+    public boolean isWithinBounds(int x, int y) {
+        return (x >= 0) && (x < getWidth()) && (y >= 0) && (y < getHeight());
+    }
+
     public Tile[][] getTiles() {
         return Arrays.copyOf(tiles, tiles.length);
     }

@@ -153,10 +153,11 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         enemyHitNotifier.notifyEnemyHit(enemy, damage);
 
         if (newHealth == 0) {
-            logger.log(Level.INFO, "Enemy defeated. Remaining enemies: {0}", enemies.size());
-            enemyHitNotifier.notifyEnemyDefeated(enemy);
-
             enemies.remove(enemy);
+
+            logger.log(Level.INFO, "Enemy defeated. Remaining enemies: {0}", enemies.size());
+
+            enemyHitNotifier.notifyEnemyDefeated(enemy);
 
             if (enemies.isEmpty()) {
                 enemyHitNotifier.notifyAllEnemiesDefeated();
