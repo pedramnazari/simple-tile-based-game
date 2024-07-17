@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.tilemap.service;
 
-import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
@@ -15,10 +14,10 @@ public class GameContext {
     private final TileMap tileMap;
     private final IItemService itemService;
     private final IHeroService heroService;
-    private final EnemyService enemyService;
+    private final IEnemyService enemyService;
     private final String currentMapIndex;
 
-    private GameContext(TileMap tileMap, IItemService itemService, IHeroService heroService, EnemyService enemyService, String currentMapIndex) {
+    private GameContext(TileMap tileMap, IItemService itemService, IHeroService heroService, IEnemyService enemyService, String currentMapIndex) {
         this.tileMap = tileMap;
         this.itemService = itemService;
         this.heroService = heroService;
@@ -33,7 +32,7 @@ public class GameContext {
         return instance;
     }
 
-    public static synchronized void initialize(TileMap tileMap, IItemService itemService, IHeroService heroService, EnemyService enemyService, String currentMapIndex) {
+    public static synchronized void initialize(TileMap tileMap, IItemService itemService, IHeroService heroService, IEnemyService enemyService, String currentMapIndex) {
         if (instance == null) {
             instance = new GameContext(tileMap, itemService, heroService, enemyService, currentMapIndex);
         } else {
@@ -62,7 +61,7 @@ public class GameContext {
         return heroService;
     }
 
-    public EnemyService getEnemyService() {
+    public IEnemyService getEnemyService() {
         return enemyService;
     }
 

@@ -1,11 +1,7 @@
 package de.pedramnazari.simpletbg.service;
 
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
-import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
-import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
-import de.pedramnazari.simpletbg.tilemap.model.IHero;
-import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
@@ -42,12 +38,12 @@ public class HeroServiceMock implements IHeroService {
     }
 
     @Override
-    public HeroAttackService getHeroAttackService() {
-        return null;
+    public List<Point> heroAttacks(Collection<IEnemy> enemies) {
+        return List.of();
     }
 
     @Override
-    public List<Point> heroAttacks(Collection<IEnemy> enemies) {
+    public List<Point> heroAttacksUsingWeapon(IWeapon weapon, IHero hero, Collection<IEnemy> enemies) {
         return List.of();
     }
 

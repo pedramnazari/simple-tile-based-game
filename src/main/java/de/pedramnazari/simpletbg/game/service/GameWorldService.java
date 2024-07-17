@@ -1,9 +1,9 @@
 package de.pedramnazari.simpletbg.game.service;
 
-import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
 import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
@@ -22,7 +22,7 @@ public class GameWorldService {
 
     private final IItemService itemService;
     private final IHeroService heroService;
-    private final EnemyService enemyService;
+    private final IEnemyService enemyService;
 
     private String currentMapIndex;
     private boolean initialized = false;
@@ -33,7 +33,7 @@ public class GameWorldService {
     private Quest quest;
 
 
-    public GameWorldService(IItemService itemService, IHeroService heroService, EnemyService enemyService) {
+    public GameWorldService(IItemService itemService, IHeroService heroService, IEnemyService enemyService) {
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
@@ -153,7 +153,7 @@ public class GameWorldService {
         return heroService;
     }
 
-    public EnemyService getEnemyService() {
+    public IEnemyService getEnemyService() {
         return enemyService;
     }
 

@@ -10,6 +10,7 @@ import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
@@ -29,7 +30,7 @@ public class EnemyServiceTest {
     private static final int W = TileType.WALL.getType();
     private static final int F = TileType.FLOOR.getType();
 
-    private EnemyService enemyService;
+    private IEnemyService enemyService;
     private EnemyMovementService enemyMovementService;
 
     @BeforeEach

@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAttackListener {
+public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNotifier, IHeroAttackListener {
     private final Logger logger = Logger.getLogger(EnemyService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
@@ -34,6 +35,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         this.enemyMovementService = enemyMovementService;
     }
 
+    @Override
     public void init(Collection<IEnemy> enemies) {
         if (initialized) {
             throw new IllegalStateException("Enemies already initialized");
@@ -43,6 +45,7 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         initialized = true;
     }
 
+    @Override
     public List<MovementResult> moveEnemies(final GameContext gameContext) {
         final List<MovementResult> movementResults = new ArrayList<>();
 
@@ -87,10 +90,12 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         }
     }
 
+    @Override
     public Collection<IEnemy> getEnemies() {
         return List.copyOf(enemies);
     }
 
+    @Override
     public boolean isInitialized() {
         return initialized;
     }
@@ -114,20 +119,8 @@ public class EnemyService implements IEnemySubject, IItemPickUpNotifier, IHeroAt
         }
     }
 
-    public EnemyMovementService getEnemyMovementService() {
-        return enemyMovementService;
-    }
-
-    public void attackEnemy(IEnemy enemy, int damage) {
-        onHeroAttacksCharacter(enemy, damage);
-    }
-
     public void addEnemyHitListener(IEnemyHitListener listener) {
         enemyHitNotifier.addListener(listener);
-    }
-
-    public void notifyEnemyHit(IEnemy enemy, int damage) {
-        enemyHitNotifier.notifyEnemyHit(enemy, damage);
     }
 
     @Override

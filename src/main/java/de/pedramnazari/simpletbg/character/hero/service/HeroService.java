@@ -89,11 +89,6 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
     }
 
     @Override
-    public HeroAttackService getHeroAttackService() {
-        return heroAttackService;
-    }
-
-    @Override
     public void addHeroAttackListener(IHeroAttackListener listener) {
         heroAttackService.addHeroAttackListener(listener);
     }
@@ -107,6 +102,12 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
     public List<Point> heroAttacks(Collection<IEnemy> enemies) {
         return heroAttackService.heroAttacks(hero, enemies);
     }
+
+    @Override
+    public List<Point> heroAttacksUsingWeapon(IWeapon weapon, IHero hero, Collection<IEnemy> enemies) {
+        return heroAttackService.heroAttacksUsingWeapon(weapon, hero, enemies);
+    }
+
 
     // TODO: Remove this method
     @Override
