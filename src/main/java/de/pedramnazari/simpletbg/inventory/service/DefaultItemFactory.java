@@ -94,8 +94,7 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             itemName = "Bomb Placer";
             itemDescription = "A bomb placer that can be used to place bombs.";
             final BombPlacer bombPlacer = new BombPlacer(bombFactory, bombService, x, y);
-            bombPlacer.setAttackingDamage(50);
-            bombPlacer.setRange(2);
+            bombPlacer.setRange(1);
 
             item = bombPlacer;
 

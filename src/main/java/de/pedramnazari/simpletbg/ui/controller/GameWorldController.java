@@ -125,4 +125,9 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.bombExploded(bomb, attackPoints));
     }
+
+    public void bombExplosionFinished(Bomb bomb) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.bombExplosionFinished(bomb));
+    }
 }

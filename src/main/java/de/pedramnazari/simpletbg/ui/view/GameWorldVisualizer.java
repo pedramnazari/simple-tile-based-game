@@ -287,13 +287,21 @@ public class GameWorldVisualizer extends Application {
 
     public void bombExploded(Bomb bomb, List<Point> explosionPoints) {
         ItemView itemView = removeItem(bomb);
-        Point point = new Point(bomb.getX(), bomb.getY());
 
         final Image attackImage = new Image(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png"));
         for (Point explosionPoint : explosionPoints) {
-            final ItemView explosionView = new ItemView(null, attackImage, TILE_SIZE);
+            final ItemView explosionView = new ItemView(bomb, attackImage, TILE_SIZE);
             itemViews.put(explosionPoint, explosionView);
             grid.add(explosionView.getImageView(), explosionPoint.getX(), explosionPoint.getY());
+        }
+    }
+
+    public void bombExplosionFinished(Bomb bomb) {
+        // Remove all explosions that belong to the bomb
+        for (ItemView itemView : itemViews.values()) {
+            if (itemView.getTileMapElement().equals(bomb)) {
+                grid.getChildren().remove(itemView.getImageView());
+            }
         }
     }
 }

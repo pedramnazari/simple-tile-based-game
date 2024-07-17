@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.inventory.model;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
-import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
@@ -55,16 +54,25 @@ public class BombService implements Runnable {
         while (running) {
             try {
                 Thread.sleep(100);
-                List<Bomb> triggeredItems = new ArrayList<>();
+                final List<Bomb> explodedBombs = new ArrayList<>();
 
                 synchronized (bombs) {
                     for (Bomb bomb : bombs) {
                         if (bomb.shouldTriggerEffect()) {
-                            triggeredItems.add(bomb);
                             explodeBomb(bomb);
                         }
+                        else if (bomb.isExplosionOngoing()) {
+                            logger.info("Bomb explosion ongoing.");
+                            executeBombAttack(bomb);
+                        }
+                        else if (bomb.isExplosionFinished()) {
+                            itemService.removeItem(bomb);
+                            gameWorldController.bombExplosionFinished(bomb);
+                            explodedBombs.add(bomb);
+                        }
+
                     }
-                    bombs.removeAll(triggeredItems);
+                    bombs.removeAll(explodedBombs);
                 }
             } catch (InterruptedException e) {
                 logger.severe("BombService interrupted: " + e.getMessage());
@@ -79,11 +87,14 @@ public class BombService implements Runnable {
 
     private void explodeBomb(Bomb bomb) {
         logger.info("Bomb exploded.");
-        IHero hero = heroService.getHero();
-        List<Point> attackPoints = heroService.getHeroAttackService().heroAttacksUsingWeapon(bomb, hero, enemyService.getEnemies());
-        itemService.removeItem(bomb);
+        bomb.triggerEffect();
+
+        List<Point> attackPoints = executeBombAttack(bomb);
 
         gameWorldController.bombExploded(bomb, attackPoints);
+    }
 
+    private List<Point> executeBombAttack(Bomb bomb) {
+        return heroService.getHeroAttackService().heroAttacksUsingWeapon(bomb, heroService.getHero(), enemyService.getEnemies());
     }
 }
