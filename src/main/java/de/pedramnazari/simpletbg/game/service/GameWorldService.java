@@ -2,9 +2,10 @@ package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
-import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
@@ -19,7 +20,7 @@ public class GameWorldService {
 
     private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
 
-    private final ItemService itemService;
+    private final IItemService itemService;
     private final HeroService heroService;
     private final EnemyService enemyService;
 
@@ -32,7 +33,7 @@ public class GameWorldService {
     private Quest quest;
 
 
-    public GameWorldService(ItemService itemService, HeroService heroService, EnemyService enemyService) {
+    public GameWorldService(IItemService itemService, HeroService heroService, EnemyService enemyService) {
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
@@ -156,7 +157,7 @@ public class GameWorldService {
         return enemyService;
     }
 
-    public ItemService getItemService() {
+    public IItemService getItemService() {
         return itemService;
     }
 

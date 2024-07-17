@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.tilemap.service.navigation;
 
-import de.pedramnazari.simpletbg.game.service.GameContext;
-import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class MovementService {
         Objects.requireNonNull(moveDirection);
 
         final TileMap tileMap = gameContext.getTileMap();
-        final ItemService itemService = gameContext.getItemService();
+        final IItemService itemService = gameContext.getItemService();
         final String currentMapIndex = gameContext.getCurrentMapIndex();
 
         final int oldX = element.getX();

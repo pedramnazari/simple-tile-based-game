@@ -1,8 +1,7 @@
-package de.pedramnazari.simpletbg.game.service;
+package de.pedramnazari.simpletbg.tilemap.service;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
-import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
@@ -15,12 +14,12 @@ public class GameContext {
     private static volatile GameContext instance;
 
     private final TileMap tileMap;
-    private final ItemService itemService;
+    private final IItemService itemService;
     private final HeroService heroService;
     private final EnemyService enemyService;
     private final String currentMapIndex;
 
-    private GameContext(TileMap tileMap, ItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
+    private GameContext(TileMap tileMap, IItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
         this.tileMap = tileMap;
         this.itemService = itemService;
         this.heroService = heroService;
@@ -35,7 +34,7 @@ public class GameContext {
         return instance;
     }
 
-    public static synchronized void initialize(TileMap tileMap, ItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
+    public static synchronized void initialize(TileMap tileMap, IItemService itemService, HeroService heroService, EnemyService enemyService, String currentMapIndex) {
         if (instance == null) {
             instance = new GameContext(tileMap, itemService, heroService, enemyService, currentMapIndex);
         } else {
@@ -52,7 +51,7 @@ public class GameContext {
         return tileMap;
     }
 
-    public ItemService getItemService() {
+    public IItemService getItemService() {
         return itemService;
     }
 

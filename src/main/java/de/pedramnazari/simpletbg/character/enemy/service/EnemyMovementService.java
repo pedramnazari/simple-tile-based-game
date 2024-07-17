@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
-import de.pedramnazari.simpletbg.game.service.GameContext;
-import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementService;
@@ -50,7 +50,7 @@ public class EnemyMovementService extends MovementService {
         }
     }
 
-    private void handleItems(ItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
+    private void handleItems(IItemService itemService, IMovableTileElement element, int newX, int newY, MovementResult result) {
         // TODO: Refactor (do not use instanceof).
         if ((element instanceof IEnemy enemy)) {
             final Optional<IItem> optItem = itemService.getItem(newX, newY);

@@ -2,8 +2,8 @@ package de.pedramnazari.simpletbg.inventory.model;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
-import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class BombService implements Runnable {
     private static final Logger logger = Logger.getLogger(BombService.class.getName());
 
     private final List<Bomb> bombs = new ArrayList<>();
-    private final ItemService itemService;
+    private final IItemService itemService;
     private final HeroService heroService;
     private final EnemyService enemyService;
     private final GameWorldController gameWorldController;
@@ -23,7 +23,7 @@ public class BombService implements Runnable {
     private boolean running = false;
 
     // TODO: remove GameWorldController and use events instead.
-    public BombService(ItemService itemService, HeroService heroService , EnemyService enemyService, GameWorldController gameWorldController) {
+    public BombService(IItemService itemService, HeroService heroService , EnemyService enemyService, GameWorldController gameWorldController) {
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;

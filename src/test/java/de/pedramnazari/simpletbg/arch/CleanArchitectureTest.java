@@ -11,7 +11,6 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 // TODO: Active arch tests once GameContext is removed
-@ArchIgnore
 @AnalyzeClasses(
         packages = "de.pedramnazari.simpletbg",
         importOptions = ImportOption.DoNotIncludeTests.class
@@ -43,7 +42,6 @@ public class CleanArchitectureTest {
                     // TODO: remove access to GameContext (which is in de.pedramnazari.simpletbg.service)
                     .should().onlyDependOnClassesThat().resideInAnyPackage("de.pedramnazari.simpletbg.tilemap..", "de.pedramnazari.simpletbg.service", "java..");
 
-    @ArchIgnore
     @ArchTest
     static final ArchRule package_inventory_should_only_depend_on_tilemap_and_inventory =
             classes().that().resideInAPackage("de.pedramnazari.simpletbg.inventory..")
