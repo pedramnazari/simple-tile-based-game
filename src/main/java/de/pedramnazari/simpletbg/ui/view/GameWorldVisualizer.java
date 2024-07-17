@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// TODO: One big class, split into smaller classes
 public class GameWorldVisualizer extends Application {
 
     private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
@@ -29,6 +30,7 @@ public class GameWorldVisualizer extends Application {
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<Point, EnemyView> enemyViews = new HashMap<>();
+    private final Map<Point, BombView> bombViews = new HashMap<>();
     private GridPane grid;
     private Scene scene;
     private HeroView heroView;
@@ -144,14 +146,14 @@ public class GameWorldVisualizer extends Application {
         return imagePath;
     }
 
-    public void updateItems(Collection<IItem> itemMap) {
+    public void updateItems(final Collection<IItem> items) {
         // TODO: do not delete views, instead update them
         for (Point point : itemViews.keySet()) {
             ItemView itemView = itemViews.get(point);
             grid.getChildren().remove(itemView.getImageView());
         }
 
-        for (IItem item : itemMap) {
+        for (IItem item : items) {
 
             String imagePath = switch (item.getType()) {
                 case 100 -> "/tiles/items/yellow_key.png";
@@ -162,7 +164,6 @@ public class GameWorldVisualizer extends Application {
                 case 221 -> "/tiles/items/weapons/double_ended_lance.png";
                 case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
                 case 230 -> "/tiles/items/weapons/bomb_placer.png";
-                case 231 -> "/tiles/items/weapons/bomb.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };
@@ -285,23 +286,59 @@ public class GameWorldVisualizer extends Application {
         heroView.getImageView().setOpacity(0.5);
     }
 
+    private void removeBomb(Bomb bomb) {
+        Point point = new Point(bomb.getX(), bomb.getY());
+        BombView bombView = bombViews.remove(point);
+
+        if (bombView == null) {
+            throw new IllegalArgumentException("No bomb rectangle found for point: " + point);
+        }
+
+        grid.getChildren().remove(bombView.getImageView());
+    }
+
     public void bombExploded(Bomb bomb, List<Point> explosionPoints) {
-        ItemView itemView = removeItem(bomb);
+        removeBomb(bomb);
 
         final Image attackImage = new Image(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png"));
         for (Point explosionPoint : explosionPoints) {
-            final ItemView explosionView = new ItemView(bomb, attackImage, TILE_SIZE);
-            itemViews.put(explosionPoint, explosionView);
+            final BombView explosionView = new BombView(bomb, attackImage, TILE_SIZE);
+            bombViews.put(explosionPoint, explosionView);
             grid.add(explosionView.getImageView(), explosionPoint.getX(), explosionPoint.getY());
         }
     }
 
     public void bombExplosionFinished(Bomb bomb) {
         // Remove all explosions that belong to the bomb
-        for (ItemView itemView : itemViews.values()) {
-            if (itemView.getTileMapElement().equals(bomb)) {
-                grid.getChildren().remove(itemView.getImageView());
+        for (BombView bombView : bombViews.values()) {
+            if (bombView.getTileMapElement().equals(bomb)) {
+                grid.getChildren().remove(bombView.getImageView());
             }
         }
+    }
+
+    public void updateBombs(Collection<Bomb> bombs) {
+        // TODO: do not delete views, instead update them
+        for (Point point : bombViews.keySet()) {
+            BombView bombView = bombViews.get(point);
+            grid.getChildren().remove(bombView.getImageView());
+        }
+
+        for (Bomb bomb : bombs) {
+
+            String imagePath = switch (bomb.getType()) {
+                case 231 -> "/tiles/items/weapons/bomb.png";
+                default -> throw new IllegalArgumentException("Unknown bomb type: " + bomb.getType());
+            };
+
+            final Image bombImage = new Image(getClass().getResourceAsStream(imagePath));
+            final BombView bombView = new BombView(bomb, bombImage, TILE_SIZE);
+
+            Point point = new Point(bomb.getX(), bomb.getY());
+            bombViews.put(point, bombView);
+
+            grid.add(bombView.getImageView(), bomb.getX(), bomb.getY());
+        }
+
     }
 }

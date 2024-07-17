@@ -2,6 +2,8 @@ package de.pedramnazari.simpletbg.inventory.model;
 
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 
+// TODO: This class represent a dropped bomb that will explode after a certain amount of time.
+//       It probably should not extend Weapon (or item). It cannot be picked up etc.
 public class Bomb extends Weapon {
     private final long placedAtTime;
     private final long explodeInMillis;

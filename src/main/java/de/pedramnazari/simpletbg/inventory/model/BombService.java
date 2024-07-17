@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.inventory.model;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
-import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class BombService implements Runnable {
     private static final Logger logger = Logger.getLogger(BombService.class.getName());
 
     private final List<Bomb> bombs = new ArrayList<>();
-    private final IItemService itemService;
     private final IHeroService heroService;
     private final IEnemyService enemyService;
     private final GameWorldController gameWorldController;
@@ -23,8 +21,7 @@ public class BombService implements Runnable {
     private boolean running = false;
 
     // TODO: remove GameWorldController and use events instead.
-    public BombService(IItemService itemService, IHeroService heroService , IEnemyService enemyService, GameWorldController gameWorldController) {
-        this.itemService = itemService;
+    public BombService(IHeroService heroService , IEnemyService enemyService, GameWorldController gameWorldController) {
         this.heroService = heroService;
         this.enemyService = enemyService;
         this.gameWorldController = gameWorldController;
@@ -35,8 +32,7 @@ public class BombService implements Runnable {
         synchronized (bombs) {
             bombs.add(bomb);
         }
-        itemService.addItem(bomb);
-        gameWorldController.updateItems();
+        gameWorldController.updateBombs(bombs);
 
         if (!running) {
             startService();
@@ -49,6 +45,16 @@ public class BombService implements Runnable {
         bombThread.start();
     }
 
+    public List<Bomb> getBombs() {
+        return bombs;
+    }
+
+    public void removeBomb(Bomb bomb) {
+        synchronized (bombs) {
+            bombs.remove(bomb);
+        }
+    }
+
     @Override
     public void run() {
         while (running) {
@@ -56,23 +62,23 @@ public class BombService implements Runnable {
                 Thread.sleep(100);
                 final List<Bomb> explodedBombs = new ArrayList<>();
 
-                synchronized (bombs) {
-                    for (Bomb bomb : bombs) {
+                synchronized (getBombs()) {
+                    for (Bomb bomb : getBombs()) {
                         if (bomb.shouldTriggerEffect()) {
                             explodeBomb(bomb);
-                        }
-                        else if (bomb.isExplosionOngoing()) {
-                            logger.info("Bomb explosion ongoing.");
+                        } else if (bomb.isExplosionOngoing()) {
                             executeBombAttack(bomb);
-                        }
-                        else if (bomb.isExplosionFinished()) {
-                            itemService.removeItem(bomb);
-                            gameWorldController.bombExplosionFinished(bomb);
+                        } else if (bomb.isExplosionFinished()) {
                             explodedBombs.add(bomb);
                         }
-
                     }
-                    bombs.removeAll(explodedBombs);
+                }
+
+                // Remove exploded bombs outside of synchronized block
+                // to avoid concurrent modification issues
+                for (Bomb bomb : explodedBombs) {
+                    removeBomb(bomb);
+                    gameWorldController.bombExplosionFinished(bomb);
                 }
             } catch (InterruptedException e) {
                 logger.severe("BombService interrupted: " + e.getMessage());
@@ -80,6 +86,7 @@ public class BombService implements Runnable {
             }
         }
     }
+
 
     public void stopService() {
         running = false;

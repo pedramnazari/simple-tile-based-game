@@ -194,7 +194,7 @@ public class GameInitializer {
          * Bombs
          */
         itemFactory.setBombFactory(new BombFactory());
-        itemFactory.setBombService(new BombService(itemService, heroService, enemyService, controller));
+        itemFactory.setBombService(new BombService(heroService, enemyService, controller));
 
 
 

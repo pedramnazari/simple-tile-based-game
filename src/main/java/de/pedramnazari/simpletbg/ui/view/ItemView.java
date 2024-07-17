@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 public class ItemView extends TileMapElementView<IItem>{
 
-    public ItemView(IItem tileMapElement, Image tileImage, int tileSize) {
-        super(tileMapElement, tileImage, tileSize);
+    public ItemView(IItem item, Image tileImage, int tileSize) {
+        super(item, tileImage, tileSize);
     }
 }
