@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.model.TileMapTestHelper;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ public class HeroAttackTest {
                 {F, F, F, F, F,},
         });
 
-        final HeroService heroService = new HeroService(
+        final IHeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
                 new HeroMovementService(new CollisionDetectionService()),
                 new HeroAttackService()
@@ -100,7 +101,7 @@ public class HeroAttackTest {
                 {F, F, F, F, F,},
         });
 
-        final HeroService heroService = new HeroService(
+        final IHeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
                 new HeroMovementService(new CollisionDetectionService()),
                 new HeroAttackService()
@@ -163,7 +164,7 @@ public class HeroAttackTest {
                 {F, F, F, F, F,},
         });
 
-        final HeroService heroService = new HeroService(
+        final IHeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
                 new HeroMovementService(new CollisionDetectionService()),
                 new HeroAttackService()
@@ -234,7 +235,7 @@ public class HeroAttackTest {
                 {F, F, F, F, F,},
         });
 
-        final HeroService heroService = new HeroService(
+        final IHeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
                 new HeroMovementService(new CollisionDetectionService()),
                 new HeroAttackService()
@@ -295,7 +296,7 @@ public class HeroAttackTest {
         });
 
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
-        final HeroService heroService = new HeroService(
+        final IHeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
                 new HeroMovementService(collisionDetectionService),
                 new HeroAttackService()

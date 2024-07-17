@@ -7,13 +7,14 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
 import java.util.List;
 
-public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier {
+public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier {
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
@@ -28,6 +29,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
         this.heroAttackService = heroAttackService;
     }
 
+    @Override
     public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
         final MovementResult result = heroMovementService.moveElement(hero, moveDirection, gameContext);
 
@@ -65,6 +67,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
     }
 
 
+    @Override
     public void init(int heroStartX, int heroStartY) {
         if (hero != null) {
             throw new IllegalStateException("Hero already initialized");
@@ -85,6 +88,7 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
         return getHero();
     }
 
+    @Override
     public HeroAttackService getHeroAttackService() {
         return heroAttackService;
     }
@@ -99,11 +103,13 @@ public class HeroService implements IHeroProvider, IItemPickUpNotifier, IHeroAtt
         heroAttackService.notifyHeroAttacksCharacter(attackedCharacter, damage);
     }
 
+    @Override
     public List<Point> heroAttacks(Collection<IEnemy> enemies) {
         return heroAttackService.heroAttacks(hero, enemies);
     }
 
     // TODO: Remove this method
+    @Override
     public CollisionDetectionService getCollisionDetectionService() {
         return heroMovementService.getCollisionDetectionService();
     }

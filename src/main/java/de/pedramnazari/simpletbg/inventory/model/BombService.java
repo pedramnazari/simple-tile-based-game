@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
-import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
 import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
@@ -16,14 +16,14 @@ public class BombService implements Runnable {
 
     private final List<Bomb> bombs = new ArrayList<>();
     private final IItemService itemService;
-    private final HeroService heroService;
+    private final IHeroService heroService;
     private final EnemyService enemyService;
     private final GameWorldController gameWorldController;
 
     private boolean running = false;
 
     // TODO: remove GameWorldController and use events instead.
-    public BombService(IItemService itemService, HeroService heroService , EnemyService enemyService, GameWorldController gameWorldController) {
+    public BombService(IItemService itemService, IHeroService heroService , EnemyService enemyService, GameWorldController gameWorldController) {
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
