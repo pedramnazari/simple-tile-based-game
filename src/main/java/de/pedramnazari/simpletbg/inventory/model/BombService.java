@@ -31,6 +31,7 @@ public class BombService implements Runnable {
     public void placeBomb(Bomb bomb) {
         synchronized (bombs) {
             bombs.add(bomb);
+            logger.info("Bomb placed: " + bomb);
         }
         gameWorldController.updateBombs(bombs);
 
@@ -93,7 +94,7 @@ public class BombService implements Runnable {
     }
 
     private void explodeBomb(Bomb bomb) {
-        logger.info("Bomb exploded.");
+        logger.info("Bomb exploded: " + bomb);
         bomb.triggerEffect();
 
         List<Point> attackPoints = executeBombAttack(bomb);

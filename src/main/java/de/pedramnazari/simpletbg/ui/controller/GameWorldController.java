@@ -14,8 +14,11 @@ import javafx.application.Platform;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener {
+
+    private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
     private final GameWorldService gameWorldService;
     // TODO: remove this dependency
@@ -123,6 +126,7 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
 
     public void bombExploded(Bomb bomb, List<Point> attackPoints) {
         // GUI operations must be executed on the JavaFX application thread
+        logger.info("Bomb exploded" + bomb);
         Platform.runLater(() -> gameWorldVisualizer.bombExploded(bomb, attackPoints));
     }
 

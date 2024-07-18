@@ -9,15 +9,10 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,23 +24,34 @@ public class GameWorldVisualizer extends Application {
     public static final int TILE_SIZE = 48;
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
-    private final Map<Point, EnemyView> enemyViews = new HashMap<>();
-    private final Map<Point, BombView> bombViews = new HashMap<>();
-    private GridPane grid;
+    private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
+    private final Collection<BombView> bombsViews = new ArrayList<>();
+    private GridPane tilesGrid;
+    private GridPane itemsGrid;
+    private GridPane bombsGrid;
+    private GridPane charactersGrid;
     private Scene scene;
     private HeroView heroView;
     private TilePane inventory;
 
     @Override
     public void start(Stage primaryStage) {
-        grid = new GridPane();
+
 
         final GameWorldController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
         final IHero hero = controller.getHero();
 
 
+        final StackPane stackPane = new StackPane();
+        tilesGrid = createGridPane(controller.getTileMap());
+        itemsGrid = createGridPane(controller.getTileMap());
+        bombsGrid = createGridPane(controller.getTileMap());
+        charactersGrid = createGridPane(controller.getTileMap());
+
         initFloorAndObstacleTiles(controller.getTileMap());
+
+
         updateItems(controller.getItems());
         Collection<IEnemy> enemies = controller.getEnemies();
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
@@ -55,10 +61,12 @@ public class GameWorldVisualizer extends Application {
         final Image heroImage = new Image(getClass().getResourceAsStream("/tiles/hero/hero.png"));
         heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
-        grid.add(heroView.getImageView(), hero.getX(), hero.getY());
+        charactersGrid.add(heroView.getImageView(), hero.getX(), hero.getY());
+
+        stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, charactersGrid);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(grid);
+        borderPane.setCenter(stackPane);
 
         inventory = new TilePane();
         inventory.setPrefTileWidth(TILE_SIZE);
@@ -73,6 +81,7 @@ public class GameWorldVisualizer extends Application {
 
             if (event.isControlDown()) {
                 controller.heroAttacks();
+                logger.info("Control key pressed");
             }
 
             switch (event.getCode()) {
@@ -95,8 +104,8 @@ public class GameWorldVisualizer extends Application {
             }
 
             if ((result != null) && result.hasElementMoved()) {
-                grid.getChildren().remove(heroView.getImageView());
-                grid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
+                charactersGrid.getChildren().remove(heroView.getImageView());
+                charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
                 heroView.getImageView().setOpacity(1.0);
             }
         });
@@ -104,6 +113,27 @@ public class GameWorldVisualizer extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private GridPane createGridPane(final TileMap tileMap) {
+        GridPane gridPane = new GridPane();
+        for (int y = 0; y < tileMap.getHeight(); y++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setMinHeight(TILE_SIZE);
+            rowConst.setMaxHeight(TILE_SIZE);
+            rowConst.setPrefHeight(TILE_SIZE);
+            gridPane.getRowConstraints().add(rowConst);
+        }
+
+        for (int x = 0; x < tileMap.getWidth(); x++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setMinWidth(TILE_SIZE);
+            colConst.setMaxWidth(TILE_SIZE);
+            colConst.setPrefWidth(TILE_SIZE);
+            gridPane.getColumnConstraints().add(colConst);
+
+        }
+        return gridPane;
     }
 
 
@@ -117,7 +147,7 @@ public class GameWorldVisualizer extends Application {
                 Image tileImage = new Image(getClass().getResourceAsStream(imagePath));
                 final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
 
-                grid.add(tileView.getImageView(), x, y);
+                tilesGrid.add(tileView.getImageView(), x, y);
             }
         }
     }
@@ -129,7 +159,7 @@ public class GameWorldVisualizer extends Application {
             imagePath = "/tiles/floor/wood.png";
         }
         else if (tile.getType() == TileType.STONE.getType()) {
-                imagePath = "/tiles/floor/stone.png";
+            imagePath = "/tiles/floor/stone.png";
         }
         else if (tile.getType() == TileType.WALL.getType()) {
             imagePath = "/tiles/obstacles/wall.png";
@@ -141,7 +171,7 @@ public class GameWorldVisualizer extends Application {
             imagePath = "/tiles/floor/floor.png";
         }
         else if (tile.getType() == TileType.EMPTY.getType()) {
-                imagePath = "/tiles/floor/empty.png";
+            imagePath = "/tiles/floor/empty.png";
         }
         return imagePath;
     }
@@ -150,7 +180,7 @@ public class GameWorldVisualizer extends Application {
         // TODO: do not delete views, instead update them
         for (Point point : itemViews.keySet()) {
             ItemView itemView = itemViews.get(point);
-            grid.getChildren().remove(itemView.getImageView());
+            itemsGrid.getChildren().remove(itemView.getImageView());
         }
 
         for (IItem item : items) {
@@ -174,16 +204,16 @@ public class GameWorldVisualizer extends Application {
             Point point = new Point(item.getX(), item.getY());
             itemViews.put(point, itemView);
 
-            grid.add(itemView.getImageView(), item.getX(), item.getY());
+            itemsGrid.add(itemView.getImageView(), item.getX(), item.getY());
         }
 
     }
 
     public void updateEnemies(Collection<IEnemy> enemies) {
         // TODO: do not delete views, instead update them
-        for (Point point : enemyViews.keySet()) {
-            EnemyView enemyView = enemyViews.get(point);
-            grid.getChildren().remove(enemyView.getImageView());
+        for (IEnemy enemy : enemyViews.keySet()) {
+            EnemyView enemyView = enemyViews.get(enemy);
+            charactersGrid.getChildren().remove(enemyView.getImageView());
         }
 
         for (IEnemy enemy : enemies) {
@@ -196,17 +226,15 @@ public class GameWorldVisualizer extends Application {
                 }
             }
 
-            if(enemyView == null) {
+            if (enemyView == null) {
                 String imagePath = getImagePath(enemy);
                 final Image enemyImage = new Image(getClass().getResourceAsStream(imagePath));
                 enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
             }
 
 
-            Point point = new Point(enemy.getX(), enemy.getY());
-            enemyViews.put(point, enemyView);
-
-            grid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
+            enemyViews.put(enemy, enemyView);
+            charactersGrid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
         }
     }
 
@@ -215,9 +243,11 @@ public class GameWorldVisualizer extends Application {
 
         if (enemy.getType() == TileType.ENEMY_LR.getType()) {
             imagePath = "/tiles/enemies/enemy.png";
-        } else if (enemy.getType() == TileType.ENEMY_TD.getType()) {
+        }
+        else if (enemy.getType() == TileType.ENEMY_TD.getType()) {
             imagePath = "/tiles/enemies/enemy2.png";
-        } else if (enemy.getType() == TileType.ENEMY_2D.getType()) {
+        }
+        else if (enemy.getType() == TileType.ENEMY_2D.getType()) {
             imagePath = "/tiles/enemies/enemy3.png";
         }
         else if (enemy.getType() == TileType.ENEMY_FH.getType()) {
@@ -231,19 +261,18 @@ public class GameWorldVisualizer extends Application {
 
 
     public void updateEnemy(IEnemy enemy, int damage) {
-        Point point = new Point(enemy.getX(), enemy.getY());
-        EnemyView enemyView = enemyViews.get(point);
+        EnemyView enemyView = enemyViews.get(enemy);
 
-        if (enemyView == null) {
-            throw new IllegalArgumentException("No enemy rectangle found for point: " + point);
+        if ((enemyView == null)) {
+            throw new IllegalArgumentException("No enemy rectangle found for enemy at position: " + enemy.getX() + ", " + enemy.getY());
         }
 
         if (enemy.getHealth() > 0) {
             enemyView.getImageView().setOpacity(0.5);
         }
         else {
-            grid.getChildren().remove(enemyView.getImageView());
-            enemyViews.remove(point);
+            charactersGrid.getChildren().remove(enemyView.getImageView());
+            enemyViews.remove(enemy);
         }
     }
 
@@ -268,7 +297,7 @@ public class GameWorldVisualizer extends Application {
             throw new IllegalArgumentException("No item rectangle found for point: " + point);
         }
 
-        grid.getChildren().remove(itemView.getImageView());
+        itemsGrid.getChildren().remove(itemView.getImageView());
         return itemView;
     }
 
@@ -287,44 +316,94 @@ public class GameWorldVisualizer extends Application {
     }
 
     private void removeBomb(Bomb bomb) {
-        Point point = new Point(bomb.getX(), bomb.getY());
-        BombView bombView = bombViews.remove(point);
+        logger.info("Remove bomb: " + bomb);
+        BombView bombView = null;
 
-        if (bombView == null) {
-            throw new IllegalArgumentException("No bomb rectangle found for point: " + point);
+        for (BombView view : bombsViews) {
+            if (view.getTileMapElement().equals(bomb)) {
+                if (view.isExplosion()) {
+                    throw new IllegalArgumentException("Bomb rectangle is an explosion: " + view);
+                }
+
+                if (bombView == null) {
+                    bombView = view;
+                }
+                else {
+                    throw new IllegalArgumentException("Multiple bomb rectangles found for bomb: " + bomb);
+                }
+            }
         }
 
-        grid.getChildren().remove(bombView.getImageView());
+        if (bombView == null) {
+            throw new IllegalArgumentException("No bomb rectangle found for bomb: " + bomb);
+        }
+
+        bombsViews.remove(bombView);
+        bombsGrid.getChildren().remove(bombView.getImageView());
     }
 
     public void bombExploded(Bomb bomb, List<Point> explosionPoints) {
+        logger.info("Bomb exploded: " + bomb);
         removeBomb(bomb);
 
+        addExplosionForBomb(bomb, explosionPoints);
+    }
+
+    private void addExplosionForBomb(Bomb bomb, List<Point> explosionPoints) {
         final Image attackImage = new Image(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png"));
         for (Point explosionPoint : explosionPoints) {
-            final BombView explosionView = new BombView(bomb, attackImage, TILE_SIZE);
-            bombViews.put(explosionPoint, explosionView);
-            grid.add(explosionView.getImageView(), explosionPoint.getX(), explosionPoint.getY());
+            final BombView explosionView = new BombView(bomb, attackImage, true, TILE_SIZE);
+            bombsViews.add(explosionView);
+            bombsGrid.add(explosionView.getImageView(), explosionPoint.getX(), explosionPoint.getY());
         }
     }
 
     public void bombExplosionFinished(Bomb bomb) {
+        logger.info("Bomb explosion finished: " + bomb);
+
         // Remove all explosions that belong to the bomb
-        for (BombView bombView : bombViews.values()) {
+        final List<BombView> explosionsToRemove = new ArrayList<>();
+
+        for (BombView bombView : bombsViews) {
             if (bombView.getTileMapElement().equals(bomb)) {
-                grid.getChildren().remove(bombView.getImageView());
+                if (!bombView.isExplosion()) {
+                    throw new IllegalArgumentException("Bomb rectangle is not an explosion: " + bombView);
+                }
+                bombsGrid.getChildren().remove(bombView.getImageView());
+                explosionsToRemove.add(bombView);
             }
         }
+
+        bombsViews.removeAll(explosionsToRemove);
     }
 
-    public void updateBombs(Collection<Bomb> bombs) {
+    public synchronized void updateBombs(Collection<Bomb> bombs) {
+        logger.info("Update bombs");
+
         // TODO: do not delete views, instead update them
-        for (Point point : bombViews.keySet()) {
-            BombView bombView = bombViews.get(point);
-            grid.getChildren().remove(bombView.getImageView());
+        final Collection<BombView> bombViewsToRemove = new ArrayList<>();
+
+        for (BombView bombView : bombsViews) {
+            if (!bombView.isExplosion()) {
+                bombsGrid.getChildren().remove(bombView.getImageView());
+                bombViewsToRemove.add(bombView);
+            }
         }
 
+        bombsViews.removeAll(bombViewsToRemove);
+
         for (Bomb bomb : bombs) {
+            if (!bomb.isExplosionOngoing()) {
+                for (BombView bombView : bombsViews) {
+                    if (bombView.getTileMapElement().equals(bomb)) {
+                        throw new IllegalArgumentException("Bomb rectangle already exists for bomb: " + bomb);
+                    }
+                }
+            }
+            else {
+                // Skip bombs that are currently exploding
+                continue;
+            }
 
             String imagePath = switch (bomb.getType()) {
                 case 231 -> "/tiles/items/weapons/bomb.png";
@@ -332,12 +411,10 @@ public class GameWorldVisualizer extends Application {
             };
 
             final Image bombImage = new Image(getClass().getResourceAsStream(imagePath));
-            final BombView bombView = new BombView(bomb, bombImage, TILE_SIZE);
+            final BombView bombView = new BombView(bomb, bombImage, false, TILE_SIZE);
 
-            Point point = new Point(bomb.getX(), bomb.getY());
-            bombViews.put(point, bombView);
-
-            grid.add(bombView.getImageView(), bomb.getX(), bomb.getY());
+            bombsViews.add(bombView);
+            bombsGrid.add(bombView.getImageView(), bomb.getX(), bomb.getY());
         }
 
     }

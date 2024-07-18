@@ -42,8 +42,6 @@ public class HeroAttackService implements IHeroAttackNotifier {
             yPos = weapon.getY();
         }
 
-        logger.info("Hero attacks using weapon: " + weapon.getName() + " with range " + weapon.getRange());
-
         final List<Point> attackPoints = determineAttackPoints(weapon, hero, xPos, yPos);
 
         if (attackPoints.isEmpty()) {
