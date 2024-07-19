@@ -145,11 +145,67 @@ public class GameInitializer {
         };
 
         final int[][] enemyConfig3 = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, E3, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E, O, O, E4}
+        };
+
+        final int[][] mapConfig4 = new int[][]{
+                {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+                {4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11},
+                {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+                {4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11},
+                {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+                {4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11},
+                {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+                {4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11},
+                {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+                {4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11,4,11},
+                {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+        };
+
+        final int[][] itemConfig4 = new int[][]{
+                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O}
+        };
+
+        final int[][] enemyConfig4 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E3},
+                {E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O},
+                {O, O, O, O, O, O, O, O, O, O, O, E, O, O, O, O, O, O, O, O},
+                {E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O},
+                {O, O, O, O, O, O, E, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O},
+                {O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O, E2, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4, O, E3},
+        };
+
+        final int[][] enemyConfig5 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E3, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -209,9 +265,9 @@ public class GameInitializer {
 
         gameWorldService.setQuest(quest1Config.getQuest());
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig3, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig3, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig3, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig4, tileFactory);
+        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig4, itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig5, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 

@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
+import de.pedramnazari.simpletbg.inventory.model.BombPlacer;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
@@ -13,8 +14,11 @@ import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier {
+
+    private static final Logger logger = Logger.getLogger(HeroService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
 
@@ -43,7 +47,15 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
             final IItem item = result.getCollectedItem().get();
 
             if (item instanceof IWeapon weapon) {
-                hero.setWeapon(weapon);
+                if (weapon instanceof BombPlacer newBombPlacer
+                        && hero.getWeapon().isPresent()
+                        && hero.getWeapon().get() instanceof BombPlacer oldBombPlacer) {
+                    logger.info("Merging bomb placers");
+                    oldBombPlacer.setRange(oldBombPlacer.getRange() + newBombPlacer.getRange());
+                }
+                else {
+                    hero.setWeapon(weapon);
+                }
             }
             else if (item instanceof IRing ring) {
                 hero.setRing(ring);
