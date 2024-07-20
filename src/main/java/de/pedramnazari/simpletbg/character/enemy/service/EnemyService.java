@@ -65,9 +65,6 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
                 // So the colliding element is always the hero.
                 final IHero hero = (IHero) result.getCollidingElements().iterator().next();
 
-                // TODO: handle in HeroService
-                hero.decreaseHealth(enemy.getAttackingPower());
-
                 notifyHeroHit(hero, enemy, enemy.getAttackingPower());
 
             }
@@ -164,7 +161,6 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
     }
 
     public void notifyHeroHit(IHero hero, ICharacter attackingCharacter, int damage) {
-        logger.log(Level.INFO, "Hero hit by enemy. Damage: " + damage + " Health: " + hero.getHealth());
         heroHitNotifier.notifyHeroHit(hero, attackingCharacter, damage);
     }
 }

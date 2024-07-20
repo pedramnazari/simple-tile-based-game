@@ -14,6 +14,7 @@ import javafx.application.Platform;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener {
@@ -111,12 +112,29 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
 
     @Override
     public void onHeroHit(IHero hero, ICharacter attackingCharacter, int damage) {
+        onHeroTakeDamage(hero, damage);
+        logger.log(Level.INFO, "Hero hit by enemy. Damage: " + damage + " Health: " + hero.getHealth());
+    }
+
+    public void onHeroTakeDamage(IHero hero, int damage) {
+        // TODO: handle in HeroService
+        hero.decreaseHealth(damage);
+
         if (hero.getHealth() > 0) {
             gameWorldVisualizer.handleHeroHit();
         }
         else {
             gameWorldVisualizer.handleHeroDefeated();
         }
+    }
+
+    public void onHeroHitByBomb(IHero hero, Bomb bomb, int damage) {
+        onHeroTakeDamage(hero, damage);
+    }
+
+    public void onEnemiesHitByBomb(IEnemy enemy, Bomb bomb, int damage) {
+        enemy.decreaseHealth(damage);
+        onEnemyHit(enemy, damage);
     }
 
     public void updateItems() {

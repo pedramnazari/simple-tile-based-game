@@ -1,11 +1,14 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.Point;
+import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
+import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -21,7 +24,7 @@ public class BombService implements Runnable {
     private boolean running = false;
 
     // TODO: remove GameWorldController and use events instead.
-    public BombService(IHeroService heroService , IEnemyService enemyService, GameWorldController gameWorldController) {
+    public BombService(IHeroService heroService, IEnemyService enemyService, GameWorldController gameWorldController) {
         this.heroService = heroService;
         this.enemyService = enemyService;
         this.gameWorldController = gameWorldController;
@@ -67,15 +70,17 @@ public class BombService implements Runnable {
                     for (Bomb bomb : getBombs()) {
                         if (bomb.shouldTriggerEffect()) {
                             explodeBomb(bomb);
-                        } else if (bomb.isExplosionOngoing()) {
+                        }
+                        else if (bomb.isExplosionOngoing()) {
                             executeBombAttack(bomb);
-                        } else if (bomb.isExplosionFinished()) {
+                        }
+                        else if (bomb.isExplosionFinished()) {
                             explodedBombs.add(bomb);
                         }
                     }
                 }
 
-                // Remove exploded bombs outside of synchronized block
+                // Remove exploded bombs outside synchronized block
                 // to avoid concurrent modification issues
                 for (Bomb bomb : explodedBombs) {
                     removeBomb(bomb);
@@ -103,6 +108,100 @@ public class BombService implements Runnable {
     }
 
     private List<Point> executeBombAttack(Bomb bomb) {
-        return heroService.heroAttacksUsingWeapon(bomb, heroService.getHero(), enemyService.getEnemies());
+        return this.heroAttacksUsingWeapon(bomb, heroService.getHero(), enemyService.getEnemies());
     }
+
+    public List<Point> heroAttacksUsingWeapon(final Bomb bomb, final IHero hero, final Collection<IEnemy> enemies) {
+        int xPos = bomb.getX();
+        int yPos = bomb.getY();
+
+        final List<Point> attackPoints = determineAttackPoints(bomb, xPos, yPos);
+
+        if (attackPoints.isEmpty()) {
+            return List.of();
+        }
+
+        int damage = bomb.getAttackingDamage();
+
+        notifyBombAttacksCharacter(bomb, hero, enemies, attackPoints, damage);
+
+        return attackPoints;
+    }
+
+    private void notifyBombAttacksCharacter(Bomb bomb, IHero hero, Collection<IEnemy> enemies, List<Point> attackPoints, int damage) {
+        for (Point attackPoint : attackPoints) {
+            if ((hero.getX() == attackPoint.getX()) && (hero.getY() == attackPoint.getY())) {
+                logger.info("Bomb attacks hero at position: " + attackPoint);
+                gameWorldController.onHeroHitByBomb(hero, bomb, damage);
+            }
+
+            for (IEnemy enemy : enemies) {
+                if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
+                    logger.info("Bomb attacks enemy at position: " + attackPoint);
+                    gameWorldController.onEnemiesHitByBomb(enemy, bomb, damage);
+                }
+            }
+
+        }
+    }
+
+    private List<Point> determineAttackPoints(Bomb bomb, int xPos, int yPos) {
+        final List<Point> attackPoints = new ArrayList<>();
+        // Attack also characters in same position as bomb
+        attackPoints.add(new Point(xPos, yPos));
+
+        final int range = bomb.getRange();
+
+        attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.LEFT));
+        attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.RIGHT));
+        attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.UP));
+        attackPoints.addAll(determineAttackPointsForDirection(range, xPos, yPos, MoveDirection.DOWN));
+
+        return attackPoints;
+    }
+
+    private List<Point> determineAttackPointsForDirection(int weaponRange, int xPos, int yPos, final MoveDirection moveDirection) {
+        final List<Point> attackPoints = new ArrayList<>();
+        int targetY;
+        int targetX;
+        if (moveDirection != null) {
+            for (int i = 1; i <= weaponRange; i++) {
+                switch (moveDirection) {
+                    case UP -> {
+                        targetX = xPos;
+                        targetY = yPos - i;
+                    }
+                    case DOWN -> {
+                        targetX = xPos;
+                        targetY = yPos + i;
+                    }
+                    case LEFT -> {
+                        targetX = xPos - i;
+                        targetY = yPos;
+                    }
+                    case RIGHT -> {
+                        targetX = xPos + i;
+                        targetY = yPos;
+                    }
+                    default -> {
+                        targetX = xPos;
+                        targetY = yPos;
+                    }
+                }
+
+                // TODO: remove dependency to GameContext
+                final CollisionDetectionService collisionDetectionService = GameContext.getInstance().getHeroService().getCollisionDetectionService();
+                final TileMap tileMap = GameContext.getInstance().getTileMap();
+
+                if (collisionDetectionService.isCollisionWithObstacleOrOutOfBounds(tileMap, targetX, targetY)) {
+                    break;
+                }
+
+                attackPoints.add(new Point(targetX, targetY));
+            }
+        }
+
+        return attackPoints;
+    }
+
 }
