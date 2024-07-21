@@ -138,7 +138,7 @@ public class BombService implements Runnable {
             for (IEnemy enemy : enemies) {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
                     logger.info("Bomb attacks enemy at position: " + attackPoint);
-                    gameWorldController.onEnemiesHitByBomb(enemy, bomb, damage);
+                    gameWorldController.onEnemyHitByBomb(enemy, bomb, damage);
                 }
             }
 

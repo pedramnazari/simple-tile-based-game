@@ -271,7 +271,12 @@ public class GameWorldVisualizer extends Application {
             enemyView.getImageView().setOpacity(0.5);
         }
         else {
-            charactersGrid.getChildren().remove(enemyView.getImageView());
+            boolean deleted = charactersGrid.getChildren().remove(enemyView.getImageView());
+
+            if (!deleted) {
+                throw new IllegalArgumentException("Enemy rectangle not found in grid");
+            }
+
             enemyViews.remove(enemy);
         }
     }

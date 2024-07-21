@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.ui.controller;
 
+import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
@@ -132,9 +133,11 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         onHeroTakeDamage(hero, damage);
     }
 
-    public void onEnemiesHitByBomb(IEnemy enemy, Bomb bomb, int damage) {
-        enemy.decreaseHealth(damage);
-        onEnemyHit(enemy, damage);
+    public void onEnemyHitByBomb(IEnemy enemy, Bomb bomb, int damage) {
+        // TODO: handle in EnemyService
+        ((EnemyService)gameWorldService.getEnemyService()).onHeroAttacksCharacter(enemy, damage);
+
+        logger.log(Level.INFO, "Enemy hit by bomb. Damage: " + damage + " Health: " + enemy.getHealth());
     }
 
     public void updateItems() {
