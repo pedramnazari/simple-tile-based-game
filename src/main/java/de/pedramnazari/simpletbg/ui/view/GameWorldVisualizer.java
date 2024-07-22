@@ -106,7 +106,6 @@ public class GameWorldVisualizer extends Application {
             if ((result != null) && result.hasElementMoved()) {
                 charactersGrid.getChildren().remove(heroView.getImageView());
                 charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
-                heroView.getImageView().setOpacity(1.0);
             }
         });
 
@@ -221,7 +220,6 @@ public class GameWorldVisualizer extends Application {
             for (EnemyView oldView : enemyViews.values()) {
                 if(oldView.getTileMapElement().equals(enemy)) {
                     enemyView = oldView;
-                    enemyView.getImageView().setOpacity(1.0);
                     break;
                 }
             }
@@ -268,7 +266,8 @@ public class GameWorldVisualizer extends Application {
         }
 
         if (enemy.getHealth() > 0) {
-            enemyView.getImageView().setOpacity(0.5);
+            double opacity = (double) enemy.getHealth() / 100;
+            enemyView.getImageView().setOpacity(opacity);
         }
         else {
             boolean deleted = charactersGrid.getChildren().remove(enemyView.getImageView());
@@ -312,12 +311,13 @@ public class GameWorldVisualizer extends Application {
 
     public void handleHeroDefeated() {
         logger.log(Level.INFO, "Hero defeated! -> Stop Game");
-        heroView.getImageView().setOpacity(0.5);
         scene.setOnKeyPressed(null);
     }
 
     public void handleHeroHit() {
-        heroView.getImageView().setOpacity(0.5);
+        IHero hero = heroView.getTileMapElement();
+        double opacity = (double) hero.getHealth() / 100;
+        heroView.getImageView().setOpacity(opacity);
     }
 
     private void removeBomb(Bomb bomb) {
