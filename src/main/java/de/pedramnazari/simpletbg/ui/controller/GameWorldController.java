@@ -5,7 +5,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
-import de.pedramnazari.simpletbg.inventory.model.Bomb;
+import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -117,6 +117,11 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         logger.log(Level.INFO, "Hero hit by enemy. Damage: " + damage + " Health: " + hero.getHealth());
     }
 
+    @Override
+    public void onHeroHit(IHero hero, IWeapon weapon, int damage) {
+        onHeroTakeDamage(hero, damage);
+    }
+
     public void onHeroTakeDamage(IHero hero, int damage) {
         // TODO: handle in HeroService
         hero.decreaseHealth(damage);
@@ -129,35 +134,29 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         }
     }
 
-    public void onHeroHitByBomb(IHero hero, Bomb bomb, int damage) {
-        onHeroTakeDamage(hero, damage);
-    }
-
-    public void onEnemyHitByBomb(IEnemy enemy, Bomb bomb, int damage) {
+    public void onEnemyHitByBomb(IEnemy enemy, IBomb bomb, int damage) {
         // TODO: handle in EnemyService
         ((EnemyService)gameWorldService.getEnemyService()).onHeroAttacksCharacter(enemy, damage);
 
         logger.log(Level.INFO, "Enemy hit by bomb. Damage: " + damage + " Health: " + enemy.getHealth());
     }
 
-    public void updateItems() {
+    @Override
+    public void onBombPlaced(IBomb newBomb, Collection<IBomb> allBombs) {
         // GUI operations must be executed on the JavaFX application thread
-        Platform.runLater(() -> gameWorldVisualizer.updateItems(getItems()));
+        Platform.runLater(() -> gameWorldVisualizer.updateBombs(allBombs));
     }
 
-    public void bombExploded(Bomb bomb, List<Point> attackPoints) {
+    @Override
+    public void onBombExploded(IBomb bomb, List<Point> attackPoints) {
         // GUI operations must be executed on the JavaFX application thread
         logger.info("Bomb exploded" + bomb);
         Platform.runLater(() -> gameWorldVisualizer.bombExploded(bomb, attackPoints));
     }
 
-    public void bombExplosionFinished(Bomb bomb) {
+    @Override
+    public void onBombExplosionFinished(IBomb bomb) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.bombExplosionFinished(bomb));
-    }
-
-    public void updateBombs(Collection<Bomb> bombs) {
-        // GUI operations must be executed on the JavaFX application thread
-        Platform.runLater(() -> gameWorldVisualizer.updateBombs(bombs));
     }
 }

@@ -1,7 +1,6 @@
 package de.pedramnazari.simpletbg.ui.view;
 
 import de.pedramnazari.simpletbg.config.GameInitializer;
-import de.pedramnazari.simpletbg.inventory.model.Bomb;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
@@ -169,6 +168,9 @@ public class GameWorldVisualizer extends Application {
         else if (tile.getType() == TileType.FLOOR.getType()) {
             imagePath = "/tiles/floor/floor.png";
         }
+        else if (tile.getType() == TileType.PATH.getType()) {
+            imagePath = "/tiles/floor/path.png";
+        }
         else if (tile.getType() == TileType.EMPTY.getType()) {
             imagePath = "/tiles/floor/empty.png";
         }
@@ -320,7 +322,7 @@ public class GameWorldVisualizer extends Application {
         heroView.getImageView().setOpacity(opacity);
     }
 
-    private void removeBomb(Bomb bomb) {
+    private void removeBomb(IBomb bomb) {
         logger.info("Remove bomb: " + bomb);
         BombView bombView = null;
 
@@ -347,14 +349,14 @@ public class GameWorldVisualizer extends Application {
         bombsGrid.getChildren().remove(bombView.getImageView());
     }
 
-    public void bombExploded(Bomb bomb, List<Point> explosionPoints) {
+    public void bombExploded(IBomb bomb, List<Point> explosionPoints) {
         logger.info("Bomb exploded: " + bomb);
         removeBomb(bomb);
 
         addExplosionForBomb(bomb, explosionPoints);
     }
 
-    private void addExplosionForBomb(Bomb bomb, List<Point> explosionPoints) {
+    private void addExplosionForBomb(IBomb bomb, List<Point> explosionPoints) {
         final Image attackImage = new Image(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png"));
         for (Point explosionPoint : explosionPoints) {
             final BombView explosionView = new BombView(bomb, attackImage, true, TILE_SIZE);
@@ -363,7 +365,7 @@ public class GameWorldVisualizer extends Application {
         }
     }
 
-    public void bombExplosionFinished(Bomb bomb) {
+    public void bombExplosionFinished(IBomb bomb) {
         logger.info("Bomb explosion finished: " + bomb);
 
         // Remove all explosions that belong to the bomb
@@ -382,7 +384,7 @@ public class GameWorldVisualizer extends Application {
         bombsViews.removeAll(explosionsToRemove);
     }
 
-    public synchronized void updateBombs(Collection<Bomb> bombs) {
+    public synchronized void updateBombs(Collection<IBomb> bombs) {
         logger.info("Update bombs");
 
         // TODO: do not delete views, instead update them
@@ -397,7 +399,7 @@ public class GameWorldVisualizer extends Application {
 
         bombsViews.removeAll(bombViewsToRemove);
 
-        for (Bomb bomb : bombs) {
+        for (IBomb bomb : bombs) {
             if (!bomb.isExplosionOngoing()) {
                 for (BombView bombView : bombsViews) {
                     if (bombView.getTileMapElement().equals(bomb)) {

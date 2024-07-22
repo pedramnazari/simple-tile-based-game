@@ -1,8 +1,8 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.inventory.model.BombPlacer;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
+import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
@@ -101,8 +101,8 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
     }
 
     @Override
-    public void addHeroAttackListener(IHeroAttackListener listener) {
-        heroAttackService.addHeroAttackListener(listener);
+    public void addListener(IHeroAttackListener listener) {
+        heroAttackService.addListener(listener);
     }
 
     @Override

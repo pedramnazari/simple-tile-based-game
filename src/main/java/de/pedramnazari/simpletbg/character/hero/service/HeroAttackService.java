@@ -1,8 +1,7 @@
 package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.inventory.model.Bomb;
-import de.pedramnazari.simpletbg.inventory.model.BombPlacer;
+import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
@@ -37,7 +36,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
         int xPos = hero.getX();
         int yPos = hero.getY();
 
-        if (weapon instanceof Bomb) {
+        if (weapon instanceof IBomb) {
             xPos = weapon.getX();
             yPos = weapon.getY();
         }
@@ -147,8 +146,8 @@ public class HeroAttackService implements IHeroAttackNotifier {
     }
 
     @Override
-    public void addHeroAttackListener(IHeroAttackListener listener) {
-        heroAttackNotifier.addHeroAttackListener(listener);
+    public void addListener(IHeroAttackListener listener) {
+        heroAttackNotifier.addListener(listener);
     }
 
     @Override

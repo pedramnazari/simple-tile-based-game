@@ -1,6 +1,11 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.inventory.model.*;
+import de.pedramnazari.simpletbg.inventory.model.Item;
+import de.pedramnazari.simpletbg.inventory.model.Ring;
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
+import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
+import de.pedramnazari.simpletbg.inventory.model.bomb.IBombService;
+import de.pedramnazari.simpletbg.tilemap.model.IBombFactory;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.IRing;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -16,8 +21,8 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
     public static final String ITEM_MAGIC_YELLOW_KEY2_NAME = "Magic Yellow Key";
     public static final String ITEM_MAGIC_YELLOW_KEY2_DESC = "A yellow key that opens the door to the next level.";
 
-    private BombService bombService;
-    private BombFactory bombFactory;
+    private IBombService bombService;
+    private IBombFactory bombFactory;
 
     @Override
     protected IItem createNonEmptyElement(int type, int x, int y) {
@@ -106,19 +111,19 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
         return item;
     }
 
-    public void setBombService(BombService bombService) {
+    public void setBombService(IBombService bombService) {
         this.bombService = bombService;
     }
 
-    public Optional<BombService> getBombService() {
+    public Optional<IBombService> getBombService() {
         return Optional.ofNullable(bombService);
     }
 
-    public void setBombFactory(BombFactory bombFactory) {
+    public void setBombFactory(IBombFactory bombFactory) {
         this.bombFactory = bombFactory;
     }
 
-    public Optional<BombFactory> getBombFactory() {
+    public Optional<IBombFactory> getBombFactory() {
         return Optional.ofNullable(bombFactory);
     }
 }

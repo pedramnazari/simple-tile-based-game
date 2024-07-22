@@ -1,42 +1,53 @@
-package de.pedramnazari.simpletbg.inventory.model;
+package de.pedramnazari.simpletbg.inventory.service.bomb;
 
+import de.pedramnazari.simpletbg.character.hero.service.HeroAttackNotifier;
+import de.pedramnazari.simpletbg.character.hero.service.IHeroAttackNotifier;
+import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
+import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
+import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
+import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
+import de.pedramnazari.simpletbg.inventory.model.bomb.IBombService;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
-import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class BombService implements Runnable {
+public class BombService implements Runnable, IBombService {
 
     private static final Logger logger = Logger.getLogger(BombService.class.getName());
 
-    private final List<Bomb> bombs = new ArrayList<>();
+    private final List<IBombEventListener> bombEventListeners = new ArrayList<>();
+    private final HeroHitNotifier heroHitNotifier = new HeroHitNotifier();
+    // TODO: replace with something like bombAttackNotifier?
+    private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
+
+    private final List<IBomb> bombs = new ArrayList<>();
     private final IHeroService heroService;
     private final IEnemyService enemyService;
-    private final GameWorldController gameWorldController;
 
     private boolean running = false;
 
     // TODO: remove GameWorldController and use events instead.
-    public BombService(IHeroService heroService, IEnemyService enemyService, GameWorldController gameWorldController) {
+    public BombService(IHeroService heroService, IEnemyService enemyService) {
         this.heroService = heroService;
         this.enemyService = enemyService;
-        this.gameWorldController = gameWorldController;
     }
 
 
-    public void placeBomb(Bomb bomb) {
+    @Override
+    public void placeBomb(IBomb bomb) {
         synchronized (bombs) {
             bombs.add(bomb);
             logger.info("Bomb placed: " + bomb);
         }
-        gameWorldController.updateBombs(bombs);
+        notifyBombPlaced(bomb);
+
 
         if (!running) {
             startService();
@@ -49,11 +60,13 @@ public class BombService implements Runnable {
         bombThread.start();
     }
 
-    public List<Bomb> getBombs() {
+    @Override
+    public List<IBomb> getBombs() {
         return bombs;
     }
 
-    public void removeBomb(Bomb bomb) {
+    @Override
+    public void removeBomb(IBomb bomb) {
         synchronized (bombs) {
             bombs.remove(bomb);
         }
@@ -64,10 +77,10 @@ public class BombService implements Runnable {
         while (running) {
             try {
                 Thread.sleep(100);
-                final List<Bomb> explodedBombs = new ArrayList<>();
+                final List<IBomb> explodedBombs = new ArrayList<>();
 
                 synchronized (getBombs()) {
-                    for (Bomb bomb : getBombs()) {
+                    for (IBomb bomb : getBombs()) {
                         if (bomb.shouldTriggerEffect()) {
                             explodeBomb(bomb);
                         }
@@ -82,9 +95,9 @@ public class BombService implements Runnable {
 
                 // Remove exploded bombs outside synchronized block
                 // to avoid concurrent modification issues
-                for (Bomb bomb : explodedBombs) {
+                for (IBomb bomb : explodedBombs) {
                     removeBomb(bomb);
-                    gameWorldController.bombExplosionFinished(bomb);
+                    notifyOnBombExplosionFinished(bomb);
                 }
             } catch (InterruptedException e) {
                 logger.severe("BombService interrupted: " + e.getMessage());
@@ -98,20 +111,20 @@ public class BombService implements Runnable {
         running = false;
     }
 
-    private void explodeBomb(Bomb bomb) {
+    private void explodeBomb(IBomb bomb) {
         logger.info("Bomb exploded: " + bomb);
         bomb.triggerEffect();
 
         List<Point> attackPoints = executeBombAttack(bomb);
 
-        gameWorldController.bombExploded(bomb, attackPoints);
+        notifyOnBombExploded(bomb, attackPoints);
     }
 
-    private List<Point> executeBombAttack(Bomb bomb) {
+    private List<Point> executeBombAttack(IBomb bomb) {
         return this.heroAttacksUsingWeapon(bomb, heroService.getHero(), enemyService.getEnemies());
     }
 
-    public List<Point> heroAttacksUsingWeapon(final Bomb bomb, final IHero hero, final Collection<IEnemy> enemies) {
+    public List<Point> heroAttacksUsingWeapon(final IBomb bomb, final IHero hero, final Collection<IEnemy> enemies) {
         int xPos = bomb.getX();
         int yPos = bomb.getY();
 
@@ -128,24 +141,26 @@ public class BombService implements Runnable {
         return attackPoints;
     }
 
-    private void notifyBombAttacksCharacter(Bomb bomb, IHero hero, Collection<IEnemy> enemies, List<Point> attackPoints, int damage) {
+    private void notifyBombAttacksCharacter(IBomb bomb, IHero hero, Collection<IEnemy> enemies, List<Point> attackPoints, int damage) {
         for (Point attackPoint : attackPoints) {
             if ((hero.getX() == attackPoint.getX()) && (hero.getY() == attackPoint.getY())) {
                 logger.info("Bomb attacks hero at position: " + attackPoint);
-                gameWorldController.onHeroHitByBomb(hero, bomb, damage);
+
+                heroHitNotifier.notifyHeroHit(hero, bomb, damage);
             }
 
             for (IEnemy enemy : enemies) {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
                     logger.info("Bomb attacks enemy at position: " + attackPoint);
-                    gameWorldController.onEnemyHitByBomb(enemy, bomb, damage);
+
+                    heroAttackNotifier.notifyHeroAttacksCharacter(enemy, damage);
                 }
             }
 
         }
     }
 
-    private List<Point> determineAttackPoints(Bomb bomb, int xPos, int yPos) {
+    private List<Point> determineAttackPoints(IBomb bomb, int xPos, int yPos) {
         final List<Point> attackPoints = new ArrayList<>();
         // Attack also characters in same position as bomb
         attackPoints.add(new Point(xPos, yPos));
@@ -202,6 +217,40 @@ public class BombService implements Runnable {
         }
 
         return attackPoints;
+    }
+
+    public void addBombEventListener(IBombEventListener listener) {
+        bombEventListeners.add(listener);
+    }
+
+    public void removeBombEventListener(IBombEventListener listener) {
+        bombEventListeners.remove(listener);
+    }
+
+    private void notifyBombPlaced(IBomb newBomb) {
+        for (IBombEventListener listener : bombEventListeners) {
+            listener.onBombPlaced(newBomb, bombs);
+        }
+    }
+
+    private void notifyOnBombExploded(IBomb bomb, List<Point> attackPoints) {
+        for (IBombEventListener listener : bombEventListeners) {
+            listener.onBombExploded(bomb, attackPoints);
+        }
+    }
+
+    private void notifyOnBombExplosionFinished(IBomb bomb) {
+        for (IBombEventListener listener : bombEventListeners) {
+            listener.onBombExplosionFinished(bomb);
+        }
+    }
+
+    public void addHeroHitListener(IHeroHitListener listener) {
+        heroHitNotifier.addListener(listener);
+    }
+
+    public void addHeroAttackListener(IHeroAttackListener listener) {
+        heroAttackNotifier.addListener(listener);
     }
 
 }

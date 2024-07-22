@@ -2,7 +2,6 @@ package de.pedramnazari.simpletbg.arch;
 
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
-import com.tngtech.archunit.junit.ArchIgnore;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
@@ -17,8 +16,6 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 public class CleanArchitectureTest {
 
 
-    // TODO: activate this test once Bomb classes are cleaned up
-    @ArchIgnore
     @ArchTest
     static final ArchRule models_should_only_depend_on_other_models =
             classes().that().resideInAPackage("..model..")
@@ -41,8 +38,6 @@ public class CleanArchitectureTest {
                     // TODO: remove access to GameContext (which is in de.pedramnazari.simpletbg.service)
                     .should().onlyDependOnClassesThat().resideInAnyPackage("de.pedramnazari.simpletbg.tilemap..", "de.pedramnazari.simpletbg.service", "java..");
 
-    // TODO: activate this test once Bomb classes are cleaned up
-    @ArchIgnore
     @ArchTest
     static final ArchRule package_inventory_should_only_depend_on_tilemap_and_inventory =
             classes().that().resideInAPackage("de.pedramnazari.simpletbg.inventory..")
@@ -94,8 +89,6 @@ public class CleanArchitectureTest {
                             "de.pedramnazari.simpletbg.service", "java..");
 
 
-    // TODO: activate this test once Bomb classes are cleaned up
-    @ArchIgnore
     @ArchTest
     static final ArchRule no_cycles_in_package_dependencies =
             slices().matching("de.pedramnazari.simpletbg.(*)..").should().beFreeOfCycles();

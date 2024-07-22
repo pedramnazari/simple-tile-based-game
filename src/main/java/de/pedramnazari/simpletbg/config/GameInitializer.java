@@ -11,9 +11,9 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.BombFactory;
-import de.pedramnazari.simpletbg.inventory.model.BombService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.inventory.service.bomb.BombService;
 import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
 import de.pedramnazari.simpletbg.quest.service.config.DefaultQuestConfigFactory;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
@@ -45,6 +45,8 @@ public class GameInitializer {
     private static final int S = TileType.STONE.getType();
     private static final int G = TileType.GRASS.getType();
     private static final int WA = TileType.WALL.getType();
+    private static final int P = TileType.PATH.getType();
+
 
 
     public static GameWorldController initAndStartGame() {
@@ -151,7 +153,7 @@ public class GameInitializer {
         };
 
         final int[][] enemyConfig3 = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -161,7 +163,7 @@ public class GameInitializer {
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E, O, O, E4}
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E, O, O, O}
         };
 
         final int[][] mapConfig4 = new int[][]{
@@ -179,7 +181,7 @@ public class GameInitializer {
         };
 
         final int[][] itemConfig4 = new int[][]{
-                {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, WEAPON_MULTI_SPIKE_LANCE.getType(), RING_MAGIC1.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -220,6 +222,48 @@ public class GameInitializer {
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E, O, O, O}
         };
 
+        final int[][] mapConfig6 = new int[][]{
+                {P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P},
+                {P, WA, WA, WA, WA, WA, WA, WA, WA, P, P, WA, WA, WA, WA, WA, WA, WA, WA, P},
+                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
+                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
+                {P, WA, P, P, WA, P, P, WA, WA, P, P, WA, WA, P, P, WA, P, P, WA, P},
+                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
+                {P, WA, P, P, P, WA, WA, P, P, WA, WA, P, P, WA, WA, P, P, P, WA, P},
+                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
+                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
+                {P, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, P},
+                {P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P}
+        };
+
+        final int[][] itemConfig6 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O}
+        };
+
+        final int[][] enemyConfig6 = new int[][]{
+                {O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2},
+                {O, O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, E, O, E2, E2, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, E3, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4}
+        };
+
         // TODO: Improve
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
@@ -245,7 +289,7 @@ public class GameInitializer {
         enemyService.registerObserver(controller);
         enemyService.addItemPickupListener(itemService);
         heroService.addItemPickupListener(itemService);
-        heroService.addHeroAttackListener(enemyService);
+        heroService.addListener(enemyService);
 
         heroService.addItemPickupListener(controller);
         enemyService.addItemPickupListener(controller);
@@ -256,7 +300,11 @@ public class GameInitializer {
          * Bombs
          */
         itemFactory.setBombFactory(new BombFactory());
-        itemFactory.setBombService(new BombService(heroService, enemyService, controller));
+        BombService bombService = new BombService(heroService, enemyService);
+        itemFactory.setBombService(bombService);
+        bombService.addBombEventListener(controller);
+        bombService.addHeroHitListener(controller);
+        bombService.addHeroAttackListener(enemyService);
 
 
         /**
@@ -270,9 +318,9 @@ public class GameInitializer {
 
         gameWorldService.setQuest(quest1Config.getQuest());
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig3, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig3, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig3, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig4, tileFactory);
+        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig4, itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig4, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 

@@ -1,10 +1,12 @@
-package de.pedramnazari.simpletbg.inventory.model;
+package de.pedramnazari.simpletbg.inventory.model.bomb;
 
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
+import de.pedramnazari.simpletbg.tilemap.model.IBomb;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 
 // TODO: This class represent a dropped bomb that will explode after a certain amount of time.
 //       It probably should not extend Weapon (or item). It cannot be picked up etc.
-public class Bomb extends Weapon {
+public class Bomb extends Weapon implements IBomb {
     private static int nextId = 0;
 
 
@@ -28,10 +30,12 @@ public class Bomb extends Weapon {
         setAttackingDamage(10);
     }
 
+    @Override
     public boolean shouldTriggerEffect() {
         return !hasExploded && ((System.currentTimeMillis() - placedAtTime) >= explodeInMillis);
     }
 
+    @Override
     public void triggerEffect() {
         if (shouldTriggerEffect()) {
             hasExploded = true;
@@ -39,6 +43,7 @@ public class Bomb extends Weapon {
         }
     }
 
+    @Override
     public boolean isExplosionOngoing() {
         if (hasExploded) {
             long currentTime = System.currentTimeMillis();
@@ -47,6 +52,7 @@ public class Bomb extends Weapon {
         return false;
     }
 
+    @Override
     public boolean isExplosionFinished() {
         if (hasExploded) {
             return !isExplosionOngoing();

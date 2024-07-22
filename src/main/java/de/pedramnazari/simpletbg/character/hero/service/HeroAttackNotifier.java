@@ -10,7 +10,7 @@ public class HeroAttackNotifier implements IHeroAttackNotifier {
     private final List<IHeroAttackListener> heroAttackListener = new ArrayList<>();
 
     @Override
-    public void addHeroAttackListener(IHeroAttackListener listener) {
+    public void addListener(IHeroAttackListener listener) {
         heroAttackListener.add(listener);
     }
 
