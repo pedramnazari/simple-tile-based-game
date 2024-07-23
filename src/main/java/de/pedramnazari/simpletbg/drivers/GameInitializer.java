@@ -47,6 +47,7 @@ public class GameInitializer {
     private static final int WA = TileType.WALL.getType();
     private static final int GS = GRASS_WITH_STONES.getType();
     private static final int F1 = FLOOR1.getType();
+    private static final int F2 = FLOOR2.getType();
 
 
 
@@ -224,17 +225,17 @@ public class GameInitializer {
         };
 
         final int[][] mapConfig6 = new int[][]{
-                {GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS},
-                {GS, WA, WA, WA, WA, WA, WA, WA, WA, GS, GS, WA, WA, WA, WA, WA, WA, WA, WA, GS},
-                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
-                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
-                {GS, WA, F1, F1, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, F1, F1, WA, GS},
-                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
-                {GS, WA, F1, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, F1, WA, GS},
-                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
-                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
-                {GS, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, GS},
-                {GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS}
+                {F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2},
+                {F2, WA, WA, WA, WA, WA, WA, WA, WA, F2, F2, WA, WA, WA, WA, WA, WA, WA, WA, F2},
+                {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
+                {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
+                {F2, WA, F1, F1, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, F1, F1, WA, F2},
+                {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
+                {F2, WA, F1, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, F1, WA, F2},
+                {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
+                {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
+                {F2, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, F2},
+                {F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2}
         };
 
         final int[][] itemConfig6 = new int[][]{

@@ -6,6 +6,7 @@ public enum TileType {
     WOOD(1),
     STONE(2),
     FLOOR1(3),
+    FLOOR2(7),
     GRASS(4),
     PATH(5),
     GRASS_WITH_STONES(6),

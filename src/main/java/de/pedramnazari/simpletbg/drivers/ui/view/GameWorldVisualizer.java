@@ -166,6 +166,9 @@ public class GameWorldVisualizer extends Application {
         else if (tile.getType() == TileType.FLOOR1.getType()) {
             imagePath = "/tiles/floor/floor1.png";
         }
+        else if (tile.getType() == TileType.FLOOR2.getType()) {
+            imagePath = "/tiles/floor/floor2.png";
+        }
         else if (tile.getType() == TileType.PATH.getType()) {
             imagePath = "/tiles/floor/path.png";
         }
