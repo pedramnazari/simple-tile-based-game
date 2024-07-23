@@ -28,7 +28,7 @@ public class EnemyServiceTest {
     private static final int O = TileType.EMPTY.getType();
     private static final int E = TileType.ENEMY_LR.getType();
     private static final int W = TileType.WALL.getType();
-    private static final int F = TileType.FLOOR.getType();
+    private static final int F = TileType.FLOOR1.getType();
 
     private IEnemyService enemyService;
     private EnemyMovementService enemyMovementService;

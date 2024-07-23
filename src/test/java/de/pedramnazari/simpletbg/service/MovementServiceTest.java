@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MovementServiceTest {
 
-    private static final int F = TileType.FLOOR.getType();
+    private static final int F = TileType.FLOOR1.getType();
     private static final int W = TileType.WALL.getType();
 
     private HeroMovementService heroMovementService;

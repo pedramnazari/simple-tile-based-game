@@ -165,11 +165,14 @@ public class GameWorldVisualizer extends Application {
         else if (tile.getType() == TileType.GRASS.getType()) {
             imagePath = "/tiles/floor/grass.png";
         }
-        else if (tile.getType() == TileType.FLOOR.getType()) {
-            imagePath = "/tiles/floor/floor.png";
+        else if (tile.getType() == TileType.FLOOR1.getType()) {
+            imagePath = "/tiles/floor/floor1.png";
         }
         else if (tile.getType() == TileType.PATH.getType()) {
             imagePath = "/tiles/floor/path.png";
+        }
+        else if (tile.getType() == TileType.GRASS_WITH_STONES.getType()) {
+            imagePath = "/tiles/floor/grass_with_stones.png";
         }
         else if (tile.getType() == TileType.EMPTY.getType()) {
             imagePath = "/tiles/floor/empty.png";

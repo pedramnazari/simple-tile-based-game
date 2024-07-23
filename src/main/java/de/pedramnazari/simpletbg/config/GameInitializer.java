@@ -45,7 +45,8 @@ public class GameInitializer {
     private static final int S = TileType.STONE.getType();
     private static final int G = TileType.GRASS.getType();
     private static final int WA = TileType.WALL.getType();
-    private static final int P = TileType.PATH.getType();
+    private static final int GS = GRASS_WITH_STONES.getType();
+    private static final int F1 = FLOOR1.getType();
 
 
 
@@ -223,17 +224,17 @@ public class GameInitializer {
         };
 
         final int[][] mapConfig6 = new int[][]{
-                {P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P},
-                {P, WA, WA, WA, WA, WA, WA, WA, WA, P, P, WA, WA, WA, WA, WA, WA, WA, WA, P},
-                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
-                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
-                {P, WA, P, P, WA, P, P, WA, WA, P, P, WA, WA, P, P, WA, P, P, WA, P},
-                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
-                {P, WA, P, P, P, WA, WA, P, P, WA, WA, P, P, WA, WA, P, P, P, WA, P},
-                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
-                {P, WA, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, WA, P},
-                {P, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, P},
-                {P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P}
+                {GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS},
+                {GS, WA, WA, WA, WA, WA, WA, WA, WA, GS, GS, WA, WA, WA, WA, WA, WA, WA, WA, GS},
+                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
+                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
+                {GS, WA, F1, F1, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, F1, F1, WA, GS},
+                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
+                {GS, WA, F1, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, F1, WA, GS},
+                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
+                {GS, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, GS},
+                {GS, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, WA, GS},
+                {GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS, GS}
         };
 
         final int[][] itemConfig6 = new int[][]{
@@ -318,9 +319,9 @@ public class GameInitializer {
 
         gameWorldService.setQuest(quest1Config.getQuest());
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig4, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig4, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig4, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig6, tileFactory);
+        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig6, itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig6, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 
