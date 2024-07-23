@@ -1,16 +1,16 @@
-package de.pedramnazari.simpletbg.ui.controller;
+package de.pedramnazari.simpletbg.drivers.ui.controller;
 
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
-import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
+import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
-import de.pedramnazari.simpletbg.ui.view.GameWorldVisualizer;
 import javafx.application.Platform;
 
 import java.util.Collection;

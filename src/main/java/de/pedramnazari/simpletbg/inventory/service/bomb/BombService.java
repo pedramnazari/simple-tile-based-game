@@ -1,16 +1,11 @@
 package de.pedramnazari.simpletbg.inventory.service.bomb;
 
-import de.pedramnazari.simpletbg.character.hero.service.HeroAttackNotifier;
-import de.pedramnazari.simpletbg.character.hero.service.IHeroAttackNotifier;
-import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
-import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombService;
+import de.pedramnazari.simpletbg.inventory.service.IWeaponDealsDamageListener;
+import de.pedramnazari.simpletbg.inventory.service.WeaponDealsDamageNotifier;
 import de.pedramnazari.simpletbg.tilemap.model.*;
-import de.pedramnazari.simpletbg.tilemap.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
-import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
+import de.pedramnazari.simpletbg.tilemap.service.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 
 import java.util.ArrayList;
@@ -24,8 +19,8 @@ public class BombService implements Runnable, IBombService {
 
     private final List<IBombEventListener> bombEventListeners = new ArrayList<>();
     private final HeroHitNotifier heroHitNotifier = new HeroHitNotifier();
-    // TODO: replace with something like bombAttackNotifier?
-    private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
+
+    private final WeaponDealsDamageNotifier weaponDealsDamageNotifier = new WeaponDealsDamageNotifier();
 
     private final List<IBomb> bombs = new ArrayList<>();
     private final IHeroService heroService;
@@ -153,7 +148,7 @@ public class BombService implements Runnable, IBombService {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
                     logger.info("Bomb attacks enemy at position: " + attackPoint);
 
-                    heroAttackNotifier.notifyHeroAttacksCharacter(enemy, damage);
+                    weaponDealsDamageNotifier.notifyWeaponDealsDamage(bomb, enemy, damage);
                 }
             }
 
@@ -249,8 +244,8 @@ public class BombService implements Runnable, IBombService {
         heroHitNotifier.addListener(listener);
     }
 
-    public void addHeroAttackListener(IHeroAttackListener listener) {
-        heroAttackNotifier.addListener(listener);
+    public void addWeaponDealsDamageListener(IWeaponDealsDamageListener listener) {
+        weaponDealsDamageNotifier.addListener(listener);
     }
 
 }

@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.ui.view;
+package de.pedramnazari.simpletbg.drivers.ui.view;
 
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import javafx.scene.image.Image;

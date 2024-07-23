@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.character.service;
+package de.pedramnazari.simpletbg.tilemap.service;
 
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;

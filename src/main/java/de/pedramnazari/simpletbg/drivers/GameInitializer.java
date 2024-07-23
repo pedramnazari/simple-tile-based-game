@@ -1,4 +1,4 @@
-package de.pedramnazari.simpletbg.config;
+package de.pedramnazari.simpletbg.drivers;
 
 import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.BombFactory;
@@ -27,7 +28,6 @@ import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.LeftToRightMovementStrategy;
-import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 
 import java.util.Collection;
 
@@ -305,7 +305,7 @@ public class GameInitializer {
         itemFactory.setBombService(bombService);
         bombService.addBombEventListener(controller);
         bombService.addHeroHitListener(controller);
-        bombService.addHeroAttackListener(enemyService);
+        bombService.addWeaponDealsDamageListener(enemyService);
 
 
         /**

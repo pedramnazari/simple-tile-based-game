@@ -1,9 +1,9 @@
-package de.pedramnazari.simpletbg.ui.view;
+package de.pedramnazari.simpletbg.drivers.ui.view;
 
-import de.pedramnazari.simpletbg.config.GameInitializer;
+import de.pedramnazari.simpletbg.drivers.GameInitializer;
+import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
-import de.pedramnazari.simpletbg.ui.controller.GameWorldController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,8 +35,6 @@ public class GameWorldVisualizer extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-
         final GameWorldController controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
         final IHero hero = controller.getHero();

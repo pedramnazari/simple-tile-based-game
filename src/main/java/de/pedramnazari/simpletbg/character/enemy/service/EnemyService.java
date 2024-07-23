@@ -1,14 +1,15 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
-import de.pedramnazari.simpletbg.character.service.HeroHitNotifier;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.character.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.IWeaponDealsDamageListener;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.HeroHitNotifier;
 import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
+import de.pedramnazari.simpletbg.tilemap.service.IHeroHitListener;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNotifier, IHeroAttackListener {
+public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNotifier, IHeroAttackListener, IWeaponDealsDamageListener {
     private final Logger logger = Logger.getLogger(EnemyService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
@@ -131,8 +132,8 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
     }
 
     @Override
-    public void onHeroAttacksCharacter(final ICharacter character, int damage) {
-        if (!(character instanceof IEnemy enemy)) {
+    public void onHeroAttacksCharacter(final ICharacter attackCharacter, int damage) {
+        if (!(attackCharacter instanceof IEnemy enemy)) {
             return;
         }
 
@@ -160,4 +161,8 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
         heroHitNotifier.addListener(listener);
     }
 
+    @Override
+    public void onWeaponDealsDamage(IWeapon weapon, ICharacter attackedCharacter, int damage) {
+        onHeroAttacksCharacter(attackedCharacter, damage);
+    }
 }
