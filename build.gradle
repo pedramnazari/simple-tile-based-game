@@ -28,5 +28,5 @@ javafx {
 }
 
 application {
-    mainClassName = 'de.pedramnazari.simpletbg.ui.view.GameWorldVisualizer'
+    mainClassName = 'de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer'
 }
