@@ -10,7 +10,7 @@ public class CollisionDetectionService {
 
 
     public boolean isCollisionWithObstacle(final TileMap tileMap, final int x, final int y) {
-add         final Tile tile = tileMap.getTile(x, y);
+        final Tile tile = tileMap.getTile(x, y);
         return tile.isObstacle() && !tile.isDestroyed();
     }
 
