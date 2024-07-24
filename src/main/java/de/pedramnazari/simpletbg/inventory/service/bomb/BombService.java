@@ -116,10 +116,8 @@ public class BombService implements Runnable, IBombService {
     }
 
     private List<Point> executeBombAttack(IBomb bomb) {
-        return this.heroAttacksUsingWeapon(bomb, heroService.getHero(), enemyService.getEnemies());
-    }
-
-    public List<Point> heroAttacksUsingWeapon(final IBomb bomb, final IHero hero, final Collection<IEnemy> enemies) {
+        final IHero hero = heroService.getHero();
+        final Collection<IEnemy> enemies = enemyService.getEnemies();
         int xPos = bomb.getX();
         int yPos = bomb.getY();
 
@@ -203,7 +201,18 @@ public class BombService implements Runnable, IBombService {
                 final CollisionDetectionService collisionDetectionService = GameContext.getInstance().getHeroService().getCollisionDetectionService();
                 final TileMap tileMap = GameContext.getInstance().getTileMap();
 
-                if (collisionDetectionService.isCollisionWithObstacleOrOutOfBounds(tileMap, targetX, targetY)) {
+                if (collisionDetectionService.isOutOfBounds(tileMap, targetX, targetY)) {
+                    break;
+                }
+                else if (collisionDetectionService.isCollisionWithObstacle(tileMap, targetX, targetY)) {
+                    final Tile tile = tileMap.getTile(targetX, targetY);
+
+                    if (tile.isDestroyable()) {
+                        // Obstacles are damaged by bomb...
+                        attackPoints.add(new Point(targetX, targetY));
+                    }
+
+                    // ...Elements behind obstacles are not affected. So stop here.
                     break;
                 }
 

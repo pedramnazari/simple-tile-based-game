@@ -14,7 +14,4 @@ public interface IBombEventListener {
 
     void onBombExplosionFinished(IBomb bomb);
 
-
-
-
 }

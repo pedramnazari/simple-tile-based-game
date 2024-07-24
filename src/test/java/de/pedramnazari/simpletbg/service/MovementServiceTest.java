@@ -16,6 +16,7 @@ import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.ITileFactory;
+import de.pedramnazari.simpletbg.tilemap.service.TileMapService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
@@ -50,6 +51,7 @@ public class MovementServiceTest {
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
         gameWorldService = new GameWorldService(
+                new TileMapService(),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
                 new EnemyService(enemyMovementService));

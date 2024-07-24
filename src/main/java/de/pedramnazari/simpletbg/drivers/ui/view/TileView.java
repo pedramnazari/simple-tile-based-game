@@ -5,7 +5,17 @@ import javafx.scene.image.Image;
 
 public class TileView extends TileMapElementView<Tile> {
 
+    private String imagePath;
+
     public TileView(Tile tile, Image tileImage, int tileSize) {
         super(tile, tileImage, tileSize);
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

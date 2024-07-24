@@ -10,6 +10,7 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroHitListener;
+import de.pedramnazari.simpletbg.tilemap.service.ITileHitListener;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import javafx.application.Platform;
 
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -158,5 +159,11 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void onBombExplosionFinished(IBomb bomb) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.bombExplosionFinished(bomb));
+    }
+
+    @Override
+    public void onTileHit(IWeapon weapon, Tile tile) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.handleTileHit(weapon, tile));
     }
 }

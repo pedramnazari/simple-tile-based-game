@@ -10,7 +10,10 @@ public enum TileType {
     GRASS(4),
     PATH(5),
     GRASS_WITH_STONES(6),
-    WALL(11),
+
+    WALL(50),
+
+    DESTROYABLE_WALL(75),
 
     ITEM_YELLOW_KEY(100),
     ITEM_YELLOW_KEY2(101),

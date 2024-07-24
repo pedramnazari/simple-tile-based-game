@@ -26,6 +26,7 @@ import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
+import de.pedramnazari.simpletbg.tilemap.service.TileMapService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.LeftToRightMovementStrategy;
 
@@ -48,6 +49,7 @@ public class GameInitializer {
     private static final int GS = GRASS_WITH_STONES.getType();
     private static final int F1 = FLOOR1.getType();
     private static final int F2 = FLOOR2.getType();
+    private static final int DW = DESTROYABLE_WALL.getType();
 
 
 
@@ -226,7 +228,7 @@ public class GameInitializer {
 
         final int[][] mapConfig6 = new int[][]{
                 {F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2, F2},
-                {F2, WA, WA, WA, WA, WA, WA, WA, WA, F2, F2, WA, WA, WA, WA, WA, WA, WA, WA, F2},
+                {F2, WA, WA, WA, WA, WA, WA, WA, WA, DW, DW, WA, WA, WA, WA, WA, WA, WA, WA, F2},
                 {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
                 {F2, WA, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, F1, WA, F2},
                 {F2, WA, F1, F1, WA, F1, F1, WA, WA, F1, F1, WA, WA, F1, F1, WA, F1, F1, WA, F2},
@@ -253,7 +255,7 @@ public class GameInitializer {
         };
 
         final int[][] enemyConfig6 = new int[][]{
-                {O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4},
+                {O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2},
                 {O, O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -275,6 +277,7 @@ public class GameInitializer {
 
         final DefaultItemFactory itemFactory = new DefaultItemFactory();
         final DefaultTileFactory tileFactory = new DefaultTileFactory();
+        final TileMapService tileMapService = new TileMapService();
         final ItemService itemService = new ItemService();
         final HeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
@@ -282,6 +285,7 @@ public class GameInitializer {
                 new HeroAttackService());
 
         final GameWorldService gameWorldService = new GameWorldService(
+                tileMapService,
                 itemService,
                 heroService,
                 enemyService);
@@ -298,6 +302,8 @@ public class GameInitializer {
         enemyService.addHeroHitListener(controller);
         enemyService.addEnemyHitListener(controller);
 
+        tileMapService.addTileHitListener(controller);
+
         /**
          * Bombs
          */
@@ -306,6 +312,7 @@ public class GameInitializer {
         itemFactory.setBombService(bombService);
         bombService.addBombEventListener(controller);
         bombService.addHeroHitListener(controller);
+        bombService.addBombEventListener(tileMapService);
         bombService.addWeaponDealsDamageListener(enemyService);
 
 

@@ -1,11 +1,12 @@
 package de.pedramnazari.simpletbg.character.model;
 
+import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 
 import java.util.Optional;
 
-public abstract class Character implements de.pedramnazari.simpletbg.tilemap.model.ICharacter {
+public abstract class Character implements ICharacter {
 
     private final int type;
     private int x;

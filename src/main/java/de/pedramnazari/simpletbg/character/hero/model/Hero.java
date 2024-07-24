@@ -1,13 +1,14 @@
 package de.pedramnazari.simpletbg.character.hero.model;
 
 import de.pedramnazari.simpletbg.character.model.Character;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.IInventory;
 import de.pedramnazari.simpletbg.tilemap.model.IRing;
 import de.pedramnazari.simpletbg.tilemap.model.IWeapon;
 
 import java.util.Optional;
 
-public class Hero extends Character implements de.pedramnazari.simpletbg.tilemap.model.IHero {
+public class Hero extends Character implements IHero {
 
     private IInventory inventory;
     private IWeapon weapon;

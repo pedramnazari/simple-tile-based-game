@@ -16,6 +16,7 @@ import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.TileMapService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
 import org.junit.jupiter.api.AfterEach;
@@ -54,6 +55,7 @@ public class GameWorldServiceTest {
         heroService.addItemPickupListener(itemService);
 
         gameWorldService = new GameWorldService(
+                new TileMapService(),
                 itemService,
                 heroService,
                 new EnemyService(enemyMovementService));
@@ -168,7 +170,7 @@ public class GameWorldServiceTest {
     public void testMoveHeroWithinSingleMapWithObstacles() {
         final int[][] mapConfig = new int[][]{
                 {6, 3, 1},
-                {6, 11, 1},
+                {6, TileType.WALL.getType(), 1},
                 {5, 4, 2}};
 
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);

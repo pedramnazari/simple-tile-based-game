@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.service;
 
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
+import de.pedramnazari.simpletbg.tilemap.model.TileType;
 
 // TODO: separate TileFactory for obstacles, items etc
 public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> implements ITileFactory {
@@ -26,7 +27,12 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         final Tile tile = new Tile(type, x, y);
 
         // "Floor" tiles and obstacles
-        tile.setObstacle(type > 10);
+        tile.setObstacle(type >= TileType.WALL.getType());
+
+        if (type >= 75) {
+            tile.setDestroyable(true);
+            tile.setHitPoints(2);
+        }
 
         return tile;
     }

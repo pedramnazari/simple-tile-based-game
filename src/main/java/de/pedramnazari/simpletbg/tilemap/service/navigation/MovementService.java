@@ -42,7 +42,7 @@ public class MovementService {
             result.setOldX(element.getX());
             result.setOldY(element.getY());
             result.setOldMapIndex(currentMapIndex);
-            result.hasElementMoved();
+            result.setHasElementMoved(false);
         }
 
         return result;
@@ -123,7 +123,7 @@ public class MovementService {
 
             if (isPositionWithinBoundsOfCurrentMap(tileMap, newPosition.getX(), newPosition.getY())) {
                 final Tile newTile = tileMap.getTile(newPosition.getX(), newPosition.getY());
-                if (!newTile.isObstacle()) {
+                if (!newTile.isObstacle() || newTile.isDestroyed()) {
                     validPositions.add(newPosition);
                 }
             }

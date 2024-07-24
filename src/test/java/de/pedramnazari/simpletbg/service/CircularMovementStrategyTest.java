@@ -12,6 +12,7 @@ import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.ITileFactory;
+import de.pedramnazari.simpletbg.tilemap.service.TileMapService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CircularMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,7 @@ public class CircularMovementStrategyTest {
         enemyMovementService.addMovementStrategy(movementStrategy);
 
         gameWorldService = new GameWorldService(
+                new TileMapService(),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
                 new EnemyService(enemyMovementService));

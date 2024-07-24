@@ -2,10 +2,7 @@ package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.*;
-import de.pedramnazari.simpletbg.tilemap.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
-import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
-import de.pedramnazari.simpletbg.tilemap.service.IItemService;
+import de.pedramnazari.simpletbg.tilemap.service.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
 import java.util.Collection;
@@ -20,6 +17,7 @@ public class GameWorldService {
 
     private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
 
+    private final ITileMapService tileMapService;
     private final IItemService itemService;
     private final IHeroService heroService;
     private final IEnemyService enemyService;
@@ -27,13 +25,11 @@ public class GameWorldService {
     private String currentMapIndex;
     private boolean initialized = false;
 
-    // TODO: Introduce GameWorld class to hold all maps, items, enemies, hero etc.
-    // Maps
-    private TileMap tileMap;
     private Quest quest;
 
 
-    public GameWorldService(IItemService itemService, IHeroService heroService, IEnemyService enemyService) {
+    public GameWorldService(ITileMapService tileMapService, IItemService itemService, IHeroService heroService, IEnemyService enemyService) {
+        this.tileMapService = tileMapService;
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
@@ -47,9 +43,7 @@ public class GameWorldService {
         // TODO: check consistency between tile map and item map (e.g. whether item is on obstacle)
         itemService.addItems(items);
 
-        this.createAndInitMap(tiles, heroX, heroY);
-
-        initialized = true;
+        final TileMap tileMap = this.createAndInitMap(tiles, heroX, heroY);
 
         enemyService.init(enemiesConfig);
 
@@ -62,8 +56,8 @@ public class GameWorldService {
         // TODO: check whether hero position is valid
         heroService.init(heroX, heroY);
 
-        // TODO: use factory to create map
-        this.tileMap = new TileMap("", tiles);
+        tileMapService.initTileMap(tiles);
+        final TileMap tileMap = tileMapService.getTileMap();
 
         initialized = true;
 
@@ -131,7 +125,7 @@ public class GameWorldService {
 
 
     public TileMap getTileMap() {
-        return tileMap;
+        return tileMapService.getTileMap();
     }
 
     public IHero getHero() {

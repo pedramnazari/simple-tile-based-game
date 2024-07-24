@@ -4,12 +4,17 @@ import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -32,12 +37,17 @@ public class GameWorldVisualizer extends Application {
     private Scene scene;
     private HeroView heroView;
     private TilePane inventory;
+    private GameWorldController controller;
+    private IHero hero;
+
+    private boolean right, left, down, up;
+    private Map<Point, TileView> tilesView = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {
-        final GameWorldController controller = GameInitializer.initAndStartGame();
+        controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
-        final IHero hero = controller.getHero();
+        hero = controller.getHero();
 
 
         final StackPane stackPane = new StackPane();
@@ -47,7 +57,6 @@ public class GameWorldVisualizer extends Application {
         charactersGrid = createGridPane(controller.getTileMap());
 
         initFloorAndObstacleTiles(controller.getTileMap());
-
 
         updateItems(controller.getItems());
         Collection<IEnemy> enemies = controller.getEnemies();
@@ -73,42 +82,77 @@ public class GameWorldVisualizer extends Application {
 
 
         scene = new Scene(borderPane, 1100, 575);
-        scene.setOnKeyPressed(event -> {
-            MovementResult result = null;
-
-            if (event.isControlDown()) {
-                controller.heroAttacks();
-                logger.info("Control key pressed");
-            }
-
-            switch (event.getCode()) {
-                case RIGHT:
-                    result = controller.moveHeroToRight();
-                    heroView.setX(hero.getX());
-                    break;
-                case LEFT:
-                    result = controller.moveHeroToLeft();
-                    heroView.setX(hero.getX());
-                    break;
-                case DOWN:
-                    result = controller.moveHeroDown();
-                    heroView.setY(hero.getY());
-                    break;
-                case UP:
-                    result = controller.moveHeroUp();
-                    heroView.setY(hero.getY());
-                    break;
-            }
-
-            if ((result != null) && result.hasElementMoved()) {
-                charactersGrid.getChildren().remove(heroView.getImageView());
-                charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
-            }
-        });
+        scene.setOnKeyPressed(this::handleKeyPressed);
+        scene.setOnKeyReleased(this::handleKeyReleased);
 
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(120), e -> moveHero()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void handleKeyPressed(KeyEvent event) {
+        if (event.isControlDown()) {
+            controller.heroAttacks();
+            logger.info("Control key pressed");
+        }
+
+        if (event.getCode() == KeyCode.RIGHT) {
+            right = true;
+        }
+        if (event.getCode() == KeyCode.LEFT) {
+            left = true;
+        }
+        if (event.getCode() == KeyCode.DOWN) {
+            down = true;
+        }
+        if (event.getCode() == KeyCode.UP) {
+            up = true;
+        }
+    }
+
+    private void handleKeyReleased(KeyEvent event) {
+        if (event.getCode() == KeyCode.UP) {
+            up = false;
+        }
+        if (event.getCode() == KeyCode.DOWN) {
+            down = false;
+        }
+        if (event.getCode() == KeyCode.LEFT) {
+            left = false;
+        }
+        if (event.getCode() == KeyCode.RIGHT) {
+            right = false;
+        }
+    }
+
+    private void moveHero() {
+        MovementResult result = null;
+
+        if (right) {
+            result = controller.moveHeroToRight();
+            heroView.setX(hero.getX());
+        }
+        if (left) {
+            result = controller.moveHeroToLeft();
+            heroView.setX(hero.getX());
+        }
+        if (down) {
+            result = controller.moveHeroDown();
+            heroView.setY(hero.getY());
+        }
+        if (up) {
+            result = controller.moveHeroUp();
+            heroView.setY(hero.getY());
+        }
+
+        if ((result != null) && result.hasElementMoved()) {
+            charactersGrid.getChildren().remove(heroView.getImageView());
+            charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
+        }
     }
 
     private GridPane createGridPane(final TileMap tileMap) {
@@ -141,7 +185,10 @@ public class GameWorldVisualizer extends Application {
                 String imagePath = getImagePath(tile);
 
                 Image tileImage = new Image(getClass().getResourceAsStream(imagePath));
+
                 final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
+                tileView.setImagePath(imagePath);
+                tilesView.put(new Point(tile.getX(), tile.getY()),tileView);
 
                 tilesGrid.add(tileView.getImageView(), x, y);
             }
@@ -175,8 +222,14 @@ public class GameWorldVisualizer extends Application {
         else if (tile.getType() == TileType.GRASS_WITH_STONES.getType()) {
             imagePath = "/tiles/floor/grass_with_stones.png";
         }
+        else if (tile.getType() == TileType.DESTROYABLE_WALL.getType()) {
+            imagePath = "/tiles/obstacles/destroyable_wall1.png";
+        }
         else if (tile.getType() == TileType.EMPTY.getType()) {
             imagePath = "/tiles/floor/empty.png";
+        }
+        else {
+            throw new IllegalArgumentException("Unknown tile type: " + tile.getType());
         }
         return imagePath;
     }
@@ -224,7 +277,7 @@ public class GameWorldVisualizer extends Application {
         for (IEnemy enemy : enemies) {
             EnemyView enemyView = null;
             for (EnemyView oldView : enemyViews.values()) {
-                if(oldView.getTileMapElement().equals(enemy)) {
+                if (oldView.getTileMapElement().equals(enemy)) {
                     enemyView = oldView;
                     break;
                 }
@@ -428,5 +481,32 @@ public class GameWorldVisualizer extends Application {
             bombsGrid.add(bombView.getImageView(), bomb.getX(), bomb.getY());
         }
 
+    }
+
+    public void handleTileHit(IWeapon weapon, Tile tile) {
+        if (tile.isDestroyed()) {
+            logger.info("Tile already destroyed: " + tile);
+            Point point = new Point(tile.getX(), tile.getY());
+            final TileView oldTileView = tilesView.get(point);
+
+            if (oldTileView == null) {
+                throw new IllegalArgumentException("No tile rectangle found for point: " + point);
+            }
+
+            String[] split = oldTileView.getImagePath().split("\\.");
+            String destroyedImagePath = split[0] + "_destroyed." + split[1];
+
+
+            Image tileImage = new Image(getClass().getResourceAsStream(destroyedImagePath));
+
+            final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
+
+
+            tilesGrid.getChildren().remove(oldTileView.getImageView());
+            tilesView.remove(point);
+
+            tilesGrid.add(tileView.getImageView(), tile.getX(), tile.getY());
+            tilesView.put(point, tileView);
+        }
     }
 }

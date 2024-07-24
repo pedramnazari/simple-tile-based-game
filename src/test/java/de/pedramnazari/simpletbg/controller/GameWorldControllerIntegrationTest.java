@@ -14,6 +14,7 @@ import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.tilemap.service.TileMapService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.RandomMovementStrategy;
 import org.junit.jupiter.api.AfterEach;
@@ -36,6 +37,7 @@ public class GameWorldControllerIntegrationTest {
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
         GameWorldService gameWorldService = new GameWorldService(
+                new TileMapService(),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService), new HeroAttackService()),
                 new EnemyService(enemyMovementService));

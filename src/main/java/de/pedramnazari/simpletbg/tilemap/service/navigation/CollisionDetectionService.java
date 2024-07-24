@@ -10,12 +10,16 @@ public class CollisionDetectionService {
 
 
     public boolean isCollisionWithObstacle(final TileMap tileMap, final int x, final int y) {
-        final Tile newTile = tileMap.getTile(x, y);
-        return newTile.isObstacle();
+add         final Tile tile = tileMap.getTile(x, y);
+        return tile.isObstacle() && !tile.isDestroyed();
     }
 
     public boolean isCollisionWithObstacleOrOutOfBounds(final TileMap tileMap, final int x, final int y) {
-        return !tileMap.isWithinBounds(x, y) || isCollisionWithObstacle(tileMap, x, y);
+        return isOutOfBounds(tileMap, x, y) || isCollisionWithObstacle(tileMap, x, y);
+    }
+
+    public boolean isOutOfBounds(TileMap tileMap, int x, int y) {
+        return !tileMap.isWithinBounds(x, y);
     }
 
     public boolean isCollision(ITileMapElement element1, ITileMapElement element2) {
