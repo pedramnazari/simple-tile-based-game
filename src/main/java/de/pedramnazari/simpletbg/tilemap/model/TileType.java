@@ -34,6 +34,8 @@ public enum TileType {
     ENEMY_2D(520), // two-dimensional
     ENEMY_FH(530), // follow hero
 
+    EXIT(999),
+
     HERO(1000);
 
 

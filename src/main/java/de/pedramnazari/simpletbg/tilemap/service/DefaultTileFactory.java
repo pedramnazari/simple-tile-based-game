@@ -15,6 +15,9 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         Tile tile;
         if (type < 100) {
             tile = createFloorAndObstacleTiles(type, x, y);
+        }
+        else if (type == TileType.EXIT.getType()) {
+            tile = new Tile(type, x, y);
         } else {
             throw new IllegalArgumentException("Unknown tile type: " + type);
         }

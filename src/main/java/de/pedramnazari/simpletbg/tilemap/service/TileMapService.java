@@ -7,12 +7,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class TileMapService implements ITileMapService, IBombEventListener {
+public class TileMapService implements ITileMapService, IBombEventListener, IHeroMovedListener {
 
     private static final Logger logger = Logger.getLogger(TileMapService.class.getName());
 
-    private final TileHitNotifier tileHitNotifier = new TileHitNotifier();
     private final ITileFactory tileFactory;
+    private final TileHitNotifier tileHitNotifier = new TileHitNotifier();
+    private final CharacterMovedToSpecialTileNotifier characterMovedToSpecialTileNotifier = new CharacterMovedToSpecialTileNotifier();
 
     private TileMap tileMap;
 
@@ -76,5 +77,22 @@ public class TileMapService implements ITileMapService, IBombEventListener {
 
     public void notifyTileHit(IWeapon weapon, Tile tile) {
         tileHitNotifier.notifyTileHit(weapon, tile);
+    }
+
+    @Override
+    public void onHeroMoved(IHero hero, int oldX, int oldY) {
+        final Tile tile = tileMap.getTile(hero.getX(), hero.getY());
+
+        characterMovedToSpecialTileNotifier.notifyCharacterMovedToSpecialTile(hero, tile);
+
+        logger.info("Hero moved to tile: " + tile);
+    }
+
+    public void addCharacterMovedToSpecialTileListener(ICharacterMovedToSpecialTileListener listener) {
+        characterMovedToSpecialTileNotifier.addListener(listener);
+    }
+
+    public void removeCharacterMovedToSpecialTileListener(ICharacterMovedToSpecialTileListener listener) {
+        characterMovedToSpecialTileNotifier.removeListener(listener);
     }
 }

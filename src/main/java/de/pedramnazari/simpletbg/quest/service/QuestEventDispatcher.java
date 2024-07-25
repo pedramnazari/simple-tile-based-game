@@ -7,9 +7,8 @@ import de.pedramnazari.simpletbg.quest.model.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.service.event.AllEnemiesDefeatedQuestEvent;
 import de.pedramnazari.simpletbg.quest.service.event.ItemPickUpQuestEvent;
-import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
-import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
-import de.pedramnazari.simpletbg.tilemap.model.IItem;
+import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.ICharacterMovedToSpecialTileListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListener {
+public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListener, ICharacterMovedToSpecialTileListener {
     private static final Logger logger = Logger.getLogger(QuestEventDispatcher.class.getName());
 
     private final Map<Class<? extends IQuestEvent>, List<IQuestEventListener<? extends IQuestEvent>>> listeners = new HashMap<>();
@@ -69,6 +68,14 @@ public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListe
 
     public Quest getQuest() {
         return quest;
+    }
+
+    @Override
+    public void onCharacterMovedToSpecialTile(ICharacter character, Tile specialTile) {
+        if ((character instanceof IHero) && (specialTile.getType() == (TileType.EXIT.getType()))) {
+            logger.info("Dispatch: Quest completed and Hero moved to exit");
+            //dispatch(new HeroMovedToExitQuestEvent());
+        }
     }
 }
 

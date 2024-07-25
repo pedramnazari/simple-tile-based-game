@@ -7,8 +7,7 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
 import de.pedramnazari.simpletbg.tilemap.model.*;
-import de.pedramnazari.simpletbg.tilemap.service.GameContext;
-import de.pedramnazari.simpletbg.tilemap.service.IHeroService;
+import de.pedramnazari.simpletbg.tilemap.service.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
@@ -16,11 +15,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier {
+public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier, ICharacterMovedToSpecialTileListener {
 
     private static final Logger logger = Logger.getLogger(HeroService.class.getName());
 
     private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
+    private final HeroMovedNotifier heroMovedNotifier = new HeroMovedNotifier();
 
     private final IHeroFactory heroFactory;
     private final HeroMovementService heroMovementService;
@@ -38,6 +38,10 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
         final MovementResult result = heroMovementService.moveElement(hero, moveDirection, gameContext);
 
         handleItemIfCollected(result);
+
+        if (result.hasElementMoved()) {
+            notifyHeroMoved(hero, result.getOldX(), result.getOldY());
+        }
 
         return result;
     }
@@ -78,6 +82,17 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
         itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 
+    public void addListener(IHeroMovedListener listener) {
+        heroMovedNotifier.addListener(listener);
+    }
+
+    public void removeListener(IHeroMovedListener listener) {
+        heroMovedNotifier.removeListener(listener);
+    }
+
+    public void notifyHeroMoved(IHero hero, int oldX, int oldY) {
+        heroMovedNotifier.notifyHeroMoved(hero, oldX, oldY);
+    }
 
     @Override
     public void init(int heroStartX, int heroStartY) {
@@ -127,4 +142,14 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
         return heroMovementService.getCollisionDetectionService();
     }
 
+    @Override
+    public void onCharacterMovedToSpecialTile(ICharacter character, Tile specialTile) {
+        if (!hero.equals(character)) {
+            return;
+        }
+
+        if (specialTile.getType() == TileType.EXIT.getType()) {
+            logger.info("Hero reached the exit");
+        }
+    }
 }

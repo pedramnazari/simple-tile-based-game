@@ -273,7 +273,7 @@ public class GameInitializer {
                 {GR, WA, DW, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {DW, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {DW, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
-                {DW, DW, GR, GR, DW, DW, DW, GR, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {DW, DW, GR, GR, DW, DW, DW, GR, DW, TileType.EXIT.getType(), GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {GR, GR, GR, GR, GR, GR, DW, GR, DW, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
                 {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
@@ -310,6 +310,7 @@ public class GameInitializer {
         enemyService.addItemPickupListener(itemService);
         heroService.addItemPickupListener(itemService);
         heroService.addListener(enemyService);
+        heroService.addListener(tileMapService);
 
         heroService.addItemPickupListener(controller);
         enemyService.addItemPickupListener(controller);
@@ -338,6 +339,7 @@ public class GameInitializer {
         final QuestEventDispatcher questEventDispatcher = quest1Config.getQuestEventDispatcher();
         enemyService.addEnemyHitListener(questEventDispatcher);
         heroService.addItemPickupListener(questEventDispatcher);
+        tileMapService.addCharacterMovedToSpecialTileListener(questEventDispatcher);
 
         gameWorldService.setQuest(quest1Config.getQuest());
 
