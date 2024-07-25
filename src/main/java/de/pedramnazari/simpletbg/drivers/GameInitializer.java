@@ -49,7 +49,7 @@ public class GameInitializer {
     private static final int GS = GRASS_WITH_STONES.getType();
     private static final int F1 = FLOOR1.getType();
     private static final int F2 = FLOOR2.getType();
-    private static final int DW = DESTROYABLE_WALL.getType();
+    private static final int DW = DESTRUCTIBLE_WALL.getType();
 
 
 

@@ -224,7 +224,7 @@ public class GameWorldVisualizer extends Application {
         else if (tileType == TileType.GRASS_WITH_STONES.getType()) {
             imagePath = "/tiles/floor/grass_with_stones.png";
         }
-        else if (tileType == TileType.DESTROYABLE_WALL.getType()) {
+        else if (tileType == TileType.DESTRUCTIBLE_WALL.getType()) {
             imagePath = "/tiles/obstacles/destroyable_wall1.png";
         }
         else if (tileType == TileType.EMPTY.getType()) {

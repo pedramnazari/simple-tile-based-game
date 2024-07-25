@@ -13,7 +13,7 @@ public enum TileType {
 
     WALL(50),
 
-    DESTROYABLE_WALL(75),
+    DESTRUCTIBLE_WALL(75),
 
     ITEM_YELLOW_KEY(100),
     ITEM_YELLOW_KEY2(101),
