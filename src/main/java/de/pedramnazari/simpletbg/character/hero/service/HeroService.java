@@ -151,5 +151,26 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
         if (specialTile.getType() == TileType.EXIT.getType()) {
             logger.info("Hero reached the exit");
         }
+        else if (specialTile.isPortal()) {
+            logger.info("Hero stepped on a portal");
+
+            if(specialTile.getPortalDestination().isPresent()) {
+                final Tile destination = specialTile.getPortalDestination().get();
+                logger.info("Hero will be moved to portal destination: " + destination);
+                final MovementResult result = heroMovementService.moveElementToPositionWithinMap(GameContext.getInstance(), hero, destination.getX(), destination.getY());
+
+                if (result.hasElementMoved()) {
+                    logger.info("!!!Hero moved to new position: " + hero.getX() + ", " + hero.getY());
+                }
+                else {
+                    logger.info("???Hero did not move");
+                }
+
+                logger.info("Hero's new position: " + hero.getX() + ", " + hero.getY());
+            }
+            else {
+                throw new IllegalStateException("Portal destination not set");
+            }
+        }
     }
 }

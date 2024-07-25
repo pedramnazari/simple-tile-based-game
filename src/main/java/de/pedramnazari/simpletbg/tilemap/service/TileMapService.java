@@ -25,6 +25,21 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
     @Override
     public void initTileMap(Tile[][] tiles) {
         tileMap = new TileMap("", tiles);
+
+        initPortals();
+    }
+
+    private void initPortals() {
+        final Collection<Tile> portals = tileMap.getTilesOfType(TileType.PORTAL);
+        if ((portals.size() == 1) || (portals.size() > 2)) {
+            throw new IllegalStateException("There must be no or exactly 2 portals on the map");
+        }
+
+        final Tile portal1 = portals.stream().findFirst().get();
+        final Tile portal2 = portals.stream().skip(1).findFirst().get();
+
+        portal1.setPortalDestination(portal2);
+        portal2.setPortalDestination(portal1);
     }
 
     @Override
@@ -83,9 +98,12 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
     public void onHeroMoved(IHero hero, int oldX, int oldY) {
         final Tile tile = tileMap.getTile(hero.getX(), hero.getY());
 
-        characterMovedToSpecialTileNotifier.notifyCharacterMovedToSpecialTile(hero, tile);
+        if  (tile.isPortal() || tile.getType() == TileType.EXIT.getType()) {
+            logger.info("Hero moved to special tile: " + tile);
+            characterMovedToSpecialTileNotifier.notifyCharacterMovedToSpecialTile(hero, tile);
+        }
 
-        logger.info("Hero moved to tile: " + tile);
+
     }
 
     public void addCharacterMovedToSpecialTileListener(ICharacterMovedToSpecialTileListener listener) {

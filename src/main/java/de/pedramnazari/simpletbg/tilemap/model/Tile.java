@@ -1,6 +1,8 @@
 package de.pedramnazari.simpletbg.tilemap.model;
 
-// TODO: split to multiple sub-classes (e.g.DestructibleTile, DoorTile, etc.)
+import java.util.Optional;
+
+// TODO: split to multiple sub-classes (e.g.DestructibleTile, DoorTile, PortalTile, etc.)
 public class Tile implements ITileMapElement {
     private final int type;
     private final int x;
@@ -8,8 +10,9 @@ public class Tile implements ITileMapElement {
     private boolean isObstacle;
     private boolean isDestructible;
     private int transformToNewTileType = -1;
-
     private int hitPoints = -1;
+    private Tile portalDestination;
+    private boolean isPortal;
 
     public Tile(int type, int x, int y) {
         this.type = type;
@@ -78,6 +81,25 @@ public class Tile implements ITileMapElement {
 
     public boolean canTransformToNewTileType() {
         return this.transformToNewTileType != -1;
+    }
+
+    public boolean isPortal() {
+        return isPortal;
+    }
+
+    public void setPortal(boolean isPortal) {
+        this.isPortal = isPortal;
+    }
+
+    public void setPortalDestination(Tile tile) {
+        if (!tile.isPortal()) {
+            throw new IllegalArgumentException("Destination tile is not a portal");
+        }
+        portalDestination = tile;
+    }
+
+    public Optional<Tile> getPortalDestination() {
+        return Optional.ofNullable(portalDestination);
     }
 
     @Override

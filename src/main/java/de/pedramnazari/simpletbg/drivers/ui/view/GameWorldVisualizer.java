@@ -233,6 +233,9 @@ public class GameWorldVisualizer extends Application {
         else if (tileType == TileType.EXIT.getType()) {
             imagePath = "/tiles/special/exit.png";
         }
+        else if (tileType == TileType.PORTAL.getType()) {
+            imagePath = "/tiles/special/portal.png";
+        }
         else {
             throw new IllegalArgumentException("Unknown tile type: " + tileType);
         }

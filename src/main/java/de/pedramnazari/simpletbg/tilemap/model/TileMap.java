@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.model;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 public class TileMap {
 
@@ -39,5 +40,12 @@ public class TileMap {
 
     public String getMapId() {
         return mapId;
+    }
+
+    public Collection<Tile> getTilesOfType(TileType type) {
+        return Arrays.stream(tiles)
+                .flatMap(Arrays::stream)
+                .filter(tile -> tile.getType() == type.getType())
+                .toList();
     }
 }

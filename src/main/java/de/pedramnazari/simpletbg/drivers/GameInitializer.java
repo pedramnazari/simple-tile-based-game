@@ -255,12 +255,12 @@ public class GameInitializer {
         };
 
         final int[][] enemyConfig6 = new int[][]{
-                {O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2},
-                {O, O, E, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, E, O, E2, E2, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, E2, E2, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -269,17 +269,17 @@ public class GameInitializer {
         };
 
         final int[][] mapConfig7 = new int[][]{
-                {GR, GR, GR, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
-                {GR, WA, DW, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
-                {DW, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
-                {DW, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
-                {DW, DW, GR, GR, DW, DW, DW, GR, DW, TileType.EXIT.getType(), GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
-                {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
-                {GR, GR, GR, GR, GR, GR, DW, GR, DW, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
-                {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
-                {GR, GR, GR, GR, GR, GR, GR, GR, DW, GR, GR, GR, DW, GR, DW, GR, DW, GR, DW, GR},
-                {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
-                {GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
+                {GR, GR, PORTAL.getType(), GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
+                {DW, DW, GR, GR, GR, GR, GR, PORTAL.getType(), WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {DW, WA, GR, WA, DW, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
+                {DW, DW, GR, GR, DW, DW, DW, GR, WA, EXIT.getType(), GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, WA, GR, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
+                {GR, GR, GR, GR, GR, GR, DW, GR, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
+                {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
+                {GR, GR, GR, DW, GR, GR, GR, GR, WA, GR, GR, GR, DW, GR, DW, GR, DW, GR, GR, GR},
+                {GR, WA, GR, WA, GR, WA, DW, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
+                {GR, GR, GR, DW, DW, DW, DW, GR, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
         };
 
         // TODO: Improve
@@ -318,6 +318,7 @@ public class GameInitializer {
         enemyService.addEnemyHitListener(controller);
 
         tileMapService.addTileHitListener(controller);
+        tileMapService.addCharacterMovedToSpecialTileListener(heroService);
 
         /**
          * Bombs

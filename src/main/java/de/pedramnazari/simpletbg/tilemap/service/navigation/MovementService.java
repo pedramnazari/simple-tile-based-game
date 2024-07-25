@@ -35,9 +35,11 @@ public class MovementService {
             result = moveElementToPositionWithinMap(gameContext, element, newX, newY);
             result.setOldMapIndex(currentMapIndex);
             result.setNewMapIndex(currentMapIndex);
-        } else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
+        }
+        else if (!isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
             result = moveElementBetweenMaps(tileMap, element, moveDirection, currentMapIndex);
-        } else {
+        }
+        else {
             result = new MovementResult();
             result.setOldX(element.getX());
             result.setOldY(element.getY());
@@ -140,7 +142,18 @@ public class MovementService {
         return isValidMovePositionWithinMap(tileMap, element.getX(), element.getY(), newX, newY);
     }
 
+
     public boolean isValidMovePositionWithinMap(TileMap tileMap, int oldX, int oldY, int newX, int newY) {
-        return calcValidMovePositionsWithinMap(tileMap, oldX, oldY).contains(new Point(newX, newY));
+        if (calcValidMovePositionsWithinMap(tileMap, oldX, oldY).contains(new Point(newX, newY))) {
+            return true;
+        }
+
+        // TODO: add a method such as teleportCharacter(int destinationX, destinationY) to handle teleportation
+        return isDestinationPortalTile(tileMap, newX, newY);
+    }
+
+    private static boolean isDestinationPortalTile(TileMap tileMap, int newX, int newY) {
+        final Tile destinationTile = tileMap.getTile(newX, newY);
+        return (destinationTile != null) && destinationTile.isPortal();
     }
 }

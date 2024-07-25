@@ -18,7 +18,12 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         }
         else if (type == TileType.EXIT.getType()) {
             tile = new Tile(type, x, y);
-        } else {
+        }
+        else if (type == TileType.PORTAL.getType()) {
+            tile = new Tile(type, x, y);
+            tile.setPortal(true);
+        }
+        else {
             throw new IllegalArgumentException("Unknown tile type: " + type);
         }
 

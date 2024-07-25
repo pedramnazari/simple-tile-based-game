@@ -74,7 +74,6 @@ public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListe
     public void onCharacterMovedToSpecialTile(ICharacter character, Tile specialTile) {
         if ((character instanceof IHero) && (specialTile.getType() == (TileType.EXIT.getType()))) {
             logger.info("Dispatch: Quest completed and Hero moved to exit");
-            //dispatch(new HeroMovedToExitQuestEvent());
         }
     }
 }
