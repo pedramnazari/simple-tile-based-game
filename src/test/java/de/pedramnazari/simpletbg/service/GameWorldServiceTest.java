@@ -55,7 +55,7 @@ public class GameWorldServiceTest {
         heroService.addItemPickupListener(itemService);
 
         gameWorldService = new GameWorldService(
-                new TileMapService(),
+                new TileMapService(tileFactory),
                 itemService,
                 heroService,
                 new EnemyService(enemyMovementService));

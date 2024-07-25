@@ -30,7 +30,8 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         tile.setObstacle(type >= TileType.WALL.getType());
 
         if (type >= 75) {
-            tile.setDestroyable(true);
+            tile.setDestructible(true);
+            tile.setTransformToNewTileType(TileType.WALL.getType());
             tile.setHitPoints(2);
         }
 

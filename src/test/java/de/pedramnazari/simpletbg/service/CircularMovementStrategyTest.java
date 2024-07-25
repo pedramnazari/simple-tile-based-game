@@ -44,7 +44,7 @@ public class CircularMovementStrategyTest {
         enemyMovementService.addMovementStrategy(movementStrategy);
 
         gameWorldService = new GameWorldService(
-                new TileMapService(),
+                new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
                 new EnemyService(enemyMovementService));

@@ -11,9 +11,14 @@ public class TileMapService implements ITileMapService, IBombEventListener {
 
     private static final Logger logger = Logger.getLogger(TileMapService.class.getName());
 
-    private TileHitNotifier tileHitNotifier = new TileHitNotifier();
+    private final TileHitNotifier tileHitNotifier = new TileHitNotifier();
+    private final ITileFactory tileFactory;
 
     private TileMap tileMap;
+
+    public TileMapService(ITileFactory tileFactory) {
+        this.tileFactory = tileFactory;
+    }
 
 
     @Override
@@ -41,13 +46,15 @@ public class TileMapService implements ITileMapService, IBombEventListener {
             if (tileMap.isWithinBounds(x, y)) {
                 final Tile tile = tileMap.getTile(x, y);
 
-                if (tile.isDestroyable() && !tile.isDestroyed()) {
+                if (tile.isDestructible() && !tile.isDestroyed()) {
                     tile.hit();
 
                     notifyTileHit(bomb, tile);
 
                     if (tile.isDestroyed()) {
-                        logger.info("Tile destroyed: " + tile);
+                        if (tile.canTransformToNewTileType()) {
+                            tileMap.setTile(x, y, tileFactory.createElement(tile.getTransformToNewTileType(), x, y));
+                        }
                     }
                 }
             }

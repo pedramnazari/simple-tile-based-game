@@ -37,7 +37,7 @@ public class GameWorldControllerIntegrationTest {
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
         GameWorldService gameWorldService = new GameWorldService(
-                new TileMapService(),
+                new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService), new HeroAttackService()),
                 new EnemyService(enemyMovementService));

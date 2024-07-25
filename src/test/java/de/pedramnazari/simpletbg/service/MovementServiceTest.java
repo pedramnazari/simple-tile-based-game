@@ -51,7 +51,7 @@ public class MovementServiceTest {
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
         gameWorldService = new GameWorldService(
-                new TileMapService(),
+                new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
                 new EnemyService(enemyMovementService));

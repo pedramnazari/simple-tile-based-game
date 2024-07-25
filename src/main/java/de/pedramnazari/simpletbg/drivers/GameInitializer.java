@@ -44,7 +44,7 @@ public class GameInitializer {
 
     private static final int W = TileType.WOOD.getType();
     private static final int S = TileType.STONE.getType();
-    private static final int G = TileType.GRASS.getType();
+    private static final int GR = TileType.GRASS.getType();
     private static final int WA = TileType.WALL.getType();
     private static final int GS = GRASS_WITH_STONES.getType();
     private static final int F1 = FLOOR1.getType();
@@ -268,6 +268,20 @@ public class GameInitializer {
                 {O, E3, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E4}
         };
 
+        final int[][] mapConfig7 = new int[][]{
+                {GR, GR, GR, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, WA, DW, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
+                {DW, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {DW, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
+                {DW, DW, GR, GR, DW, DW, DW, GR, DW, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
+                {GR, GR, GR, GR, GR, GR, DW, GR, DW, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
+                {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
+                {GR, GR, GR, GR, GR, GR, GR, GR, DW, GR, GR, GR, DW, GR, DW, GR, DW, GR, DW, GR},
+                {GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
+                {GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
+        };
+
         // TODO: Improve
         final CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
@@ -277,7 +291,7 @@ public class GameInitializer {
 
         final DefaultItemFactory itemFactory = new DefaultItemFactory();
         final DefaultTileFactory tileFactory = new DefaultTileFactory();
-        final TileMapService tileMapService = new TileMapService();
+        final TileMapService tileMapService = new TileMapService(tileFactory);
         final ItemService itemService = new ItemService();
         final HeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
@@ -327,7 +341,7 @@ public class GameInitializer {
 
         gameWorldService.setQuest(quest1Config.getQuest());
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig6, tileFactory);
+        final Tile[][] tiles = new TileConfigParser().parse(mapConfig7, tileFactory);
         final Collection<IItem> items = new ItemConfigParser().parse(itemConfig6, itemFactory);
         final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig6, new DefaultEnemyFactory(collisionDetectionService, heroService));
 

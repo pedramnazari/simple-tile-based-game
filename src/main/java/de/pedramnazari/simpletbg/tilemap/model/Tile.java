@@ -1,11 +1,13 @@
 package de.pedramnazari.simpletbg.tilemap.model;
 
+// TODO: split to multiple sub-classes (e.g.DestructibleTile, DoorTile, etc.)
 public class Tile implements ITileMapElement {
     private final int type;
     private final int x;
     private final int y;
     private boolean isObstacle;
-    private boolean isDestroyable;
+    private boolean isDestructible;
+    private int transformToNewTileType = -1;
 
     private int hitPoints = -1;
 
@@ -36,16 +38,16 @@ public class Tile implements ITileMapElement {
         this.isObstacle = isObstacle;
     }
 
-    public boolean isDestroyable() {
-        return isDestroyable;
+    public boolean isDestructible() {
+        return isDestructible;
     }
 
-    public void setDestroyable(boolean destroyable) {
-        isDestroyable = destroyable;
+    public void setDestructible(boolean destructible) {
+        isDestructible = destructible;
     }
 
     public void hit() {
-        if (this.isDestroyable && !this.isDestroyed()) {
+        if (this.isDestructible && !this.isDestroyed()) {
             this.hitPoints--;
         }
     }
@@ -66,6 +68,18 @@ public class Tile implements ITileMapElement {
         return hitPoints;
     }
 
+    public int getTransformToNewTileType() {
+        return transformToNewTileType;
+    }
+
+    public void setTransformToNewTileType(int transformToNewTileType) {
+        this.transformToNewTileType = transformToNewTileType;
+    }
+
+    public boolean canTransformToNewTileType() {
+        return this.transformToNewTileType != -1;
+    }
+
     @Override
     public String toString() {
         return "Tile{" +
@@ -73,7 +87,7 @@ public class Tile implements ITileMapElement {
                 ", x=" + x +
                 ", y=" + y +
                 ", isObstacle=" + isObstacle +
-                ", isDestroyable=" + isDestroyable +
+                ", isDestroyable=" + isDestructible +
                 ", hitPoints=" + hitPoints +
                 '}';
     }

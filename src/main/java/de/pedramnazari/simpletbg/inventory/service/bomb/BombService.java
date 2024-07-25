@@ -207,7 +207,7 @@ public class BombService implements Runnable, IBombService {
                 else if (collisionDetectionService.isCollisionWithObstacle(tileMap, targetX, targetY)) {
                     final Tile tile = tileMap.getTile(targetX, targetY);
 
-                    if (tile.isDestroyable()) {
+                    if (tile.isDestructible()) {
                         // Obstacles are damaged by bomb...
                         attackPoints.add(new Point(targetX, targetY));
                     }

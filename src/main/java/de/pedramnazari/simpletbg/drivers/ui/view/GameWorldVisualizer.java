@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 // TODO: One big class, split into smaller classes
 public class GameWorldVisualizer extends Application {
 
@@ -64,7 +66,7 @@ public class GameWorldVisualizer extends Application {
         updateEnemies(enemies);
 
         // add hero to grid
-        final Image heroImage = new Image(getClass().getResourceAsStream("/tiles/hero/hero.png"));
+        final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/hero.png")));
         heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
         charactersGrid.add(heroView.getImageView(), hero.getX(), hero.getY());
@@ -182,9 +184,9 @@ public class GameWorldVisualizer extends Application {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(x, y);
 
-                String imagePath = getImagePath(tile);
+                String imagePath = getImagePathForTile(tile.getType());
 
-                Image tileImage = new Image(getClass().getResourceAsStream(imagePath));
+                Image tileImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
 
                 final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
                 tileView.setImagePath(imagePath);
@@ -195,41 +197,41 @@ public class GameWorldVisualizer extends Application {
         }
     }
 
-    private String getImagePath(Tile tile) {
+    private String getImagePathForTile(int tileType) {
         String imagePath = "";
 
-        if (tile.getType() == TileType.WOOD.getType()) {
+        if (tileType == TileType.WOOD.getType()) {
             imagePath = "/tiles/floor/wood.png";
         }
-        else if (tile.getType() == TileType.STONE.getType()) {
+        else if (tileType == TileType.STONE.getType()) {
             imagePath = "/tiles/floor/stone.png";
         }
-        else if (tile.getType() == TileType.WALL.getType()) {
+        else if (tileType == TileType.WALL.getType()) {
             imagePath = "/tiles/obstacles/wall.png";
         }
-        else if (tile.getType() == TileType.GRASS.getType()) {
+        else if (tileType == TileType.GRASS.getType()) {
             imagePath = "/tiles/floor/grass.png";
         }
-        else if (tile.getType() == TileType.FLOOR1.getType()) {
+        else if (tileType == TileType.FLOOR1.getType()) {
             imagePath = "/tiles/floor/floor1.png";
         }
-        else if (tile.getType() == TileType.FLOOR2.getType()) {
+        else if (tileType == TileType.FLOOR2.getType()) {
             imagePath = "/tiles/floor/floor2.png";
         }
-        else if (tile.getType() == TileType.PATH.getType()) {
+        else if (tileType == TileType.PATH.getType()) {
             imagePath = "/tiles/floor/path.png";
         }
-        else if (tile.getType() == TileType.GRASS_WITH_STONES.getType()) {
+        else if (tileType == TileType.GRASS_WITH_STONES.getType()) {
             imagePath = "/tiles/floor/grass_with_stones.png";
         }
-        else if (tile.getType() == TileType.DESTROYABLE_WALL.getType()) {
+        else if (tileType == TileType.DESTROYABLE_WALL.getType()) {
             imagePath = "/tiles/obstacles/destroyable_wall1.png";
         }
-        else if (tile.getType() == TileType.EMPTY.getType()) {
+        else if (tileType == TileType.EMPTY.getType()) {
             imagePath = "/tiles/floor/empty.png";
         }
         else {
-            throw new IllegalArgumentException("Unknown tile type: " + tile.getType());
+            throw new IllegalArgumentException("Unknown tile type: " + tileType);
         }
         return imagePath;
     }
@@ -284,8 +286,8 @@ public class GameWorldVisualizer extends Application {
             }
 
             if (enemyView == null) {
-                String imagePath = getImagePath(enemy);
-                final Image enemyImage = new Image(getClass().getResourceAsStream(imagePath));
+                String imagePath = getImagePathForEnemy(enemy.getType());
+                final Image enemyImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
                 enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
             }
 
@@ -295,23 +297,23 @@ public class GameWorldVisualizer extends Application {
         }
     }
 
-    private String getImagePath(IEnemy enemy) {
+    private String getImagePathForEnemy(final int enemyType) {
         String imagePath;
 
-        if (enemy.getType() == TileType.ENEMY_LR.getType()) {
+        if ( enemyType == TileType.ENEMY_LR.getType()) {
             imagePath = "/tiles/enemies/enemy.png";
         }
-        else if (enemy.getType() == TileType.ENEMY_TD.getType()) {
+        else if ( enemyType == TileType.ENEMY_TD.getType()) {
             imagePath = "/tiles/enemies/enemy2.png";
         }
-        else if (enemy.getType() == TileType.ENEMY_2D.getType()) {
+        else if ( enemyType == TileType.ENEMY_2D.getType()) {
             imagePath = "/tiles/enemies/enemy3.png";
         }
-        else if (enemy.getType() == TileType.ENEMY_FH.getType()) {
+        else if ( enemyType == TileType.ENEMY_FH.getType()) {
             imagePath = "/tiles/enemies/enemy4.png";
         }
         else {
-            throw new IllegalArgumentException("Unknown enemy type: " + enemy.getType());
+            throw new IllegalArgumentException("Unknown enemy type: " +  enemyType);
         }
         return imagePath;
     }
@@ -414,7 +416,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     private void addExplosionForBomb(IBomb bomb, List<Point> explosionPoints) {
-        final Image attackImage = new Image(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png"));
+        final Image attackImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png")));
         for (Point explosionPoint : explosionPoints) {
             final BombView explosionView = new BombView(bomb, attackImage, true, TILE_SIZE);
             bombsViews.add(explosionView);
@@ -474,7 +476,7 @@ public class GameWorldVisualizer extends Application {
                 default -> throw new IllegalArgumentException("Unknown bomb type: " + bomb.getType());
             };
 
-            final Image bombImage = new Image(getClass().getResourceAsStream(imagePath));
+            final Image bombImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
             final BombView bombView = new BombView(bomb, bombImage, false, TILE_SIZE);
 
             bombsViews.add(bombView);
@@ -493,12 +495,20 @@ public class GameWorldVisualizer extends Application {
                 throw new IllegalArgumentException("No tile rectangle found for point: " + point);
             }
 
-            String[] split = oldTileView.getImagePath().split("\\.");
-            String destroyedImagePath = split[0] + "_destroyed." + split[1];
+            String destroyedImagePath = "";
+
+            if (tile.canTransformToNewTileType()) {
+                // TODO: update of the view should be done, when the tiles are exchanged in the tilemap.
+                //       Here the view "guesses" that it has to be exchanged.
+                destroyedImagePath = getImagePathForTile(tile.getTransformToNewTileType());
+            }
+            else {
+                String[] split = oldTileView.getImagePath().split("\\.");
+                destroyedImagePath = split[0] + "_destroyed." + split[1];
+            }
 
 
-            Image tileImage = new Image(getClass().getResourceAsStream(destroyedImagePath));
-
+            final Image tileImage = new Image(requireNonNull(getClass().getResourceAsStream(destroyedImagePath)));
             final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
 
 
