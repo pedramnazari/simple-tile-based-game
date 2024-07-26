@@ -8,6 +8,8 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -43,6 +45,8 @@ public class GameWorldVisualizer extends Application {
 
     private boolean right, left, down, up;
     private Map<Point, TileView> tilesView = new HashMap<>();
+    private Label healthLabel;
+    private ProgressBar healthBar;
 
     @Override
     public void start(Stage primaryStage) {
@@ -81,6 +85,8 @@ public class GameWorldVisualizer extends Application {
         inventory.setAlignment(Pos.TOP_LEFT);
         borderPane.setBottom(inventory);
 
+        VBox healthView = createHealthView();
+        borderPane.setRight(healthView);
 
         scene = new Scene(borderPane, 1100, 575);
         scene.setOnKeyPressed(this::handleKeyPressed);
@@ -93,6 +99,42 @@ public class GameWorldVisualizer extends Application {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> moveHero()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
+
+    private VBox createHealthView() {
+        VBox healthBox = new VBox();
+        healthBox.setAlignment(Pos.TOP_RIGHT);
+        healthBox.setSpacing(10);
+
+        healthLabel = new Label("Health: " + hero.getHealth());
+        healthBar = new ProgressBar(hero.getHealth() / 100.0);
+        healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
+
+        healthBox.getChildren().addAll(healthLabel, healthBar);
+
+        return healthBox;
+    }
+
+    private String getHeroHealthProgressBarColor() {
+        String color = "";
+
+        double healthPercentage = hero.getHealth() / 100.0;
+
+        if (healthPercentage < 0.5) {
+            color = "red";
+        } else if (healthPercentage < 0.8) {
+            color = "yellow";
+        } else {
+            color = "green";
+        }
+
+        return color;
+    }
+
+    private void updateHeroHealthView() {
+        healthLabel.setText("Hero Health: " + hero.getHealth());
+        healthBar.setProgress(hero.getHealth() / 100.0);
+        healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
     }
 
     private void handleKeyPressed(KeyEvent event) {
@@ -148,10 +190,11 @@ public class GameWorldVisualizer extends Application {
     public void handleHeroMoved(IHero hero, int oldX, int oldY) {
         heroView.setX(hero.getX());
         heroView.setY(hero.getY());
-        updateHeroOpacity();
 
         charactersGrid.getChildren().remove(heroView.getImageView());
         charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
+
+        updateHeroHealthView();
 
     }
 
@@ -387,13 +430,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleHeroHit() {
-        updateHeroOpacity();
-    }
-
-    private void updateHeroOpacity() {
-        IHero hero = heroView.getTileMapElement();
-        double opacity = (double) hero.getHealth() / 100;
-        heroView.getImageView().setOpacity(opacity);
+        updateHeroHealthView();
     }
 
     private void removeBomb(IBomb bomb) {

@@ -52,7 +52,7 @@ public class GameInitializer {
     private static final int DW = DESTRUCTIBLE_WALL.getType();
 
     private static final int HP = HEALTH_POTION.getType();
-
+    private static final int WHP = WALL_HIDING_PORTAL.getType();
 
 
     public static GameWorldController initAndStartGame() {
@@ -199,7 +199,7 @@ public class GameInitializer {
         };
 
         final int[][] mapConfig7 = new int[][]{
-                {GR, GR, WALL_HIDING_PORTAL.getType(), GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, GR, GR, GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {DW, DW, GR, GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {DW, WA, GR, WA, DW, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
@@ -209,7 +209,7 @@ public class GameInitializer {
                 {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, PORTAL.getType(), WA},
                 {GR, GR, GR, DW, GR, GR, GR, GR, WA, GR, GR, GR, DW, GR, DW, GR, DW, GR, GR, GR},
                 {GR, WA, GR, WA, GR, WA, DW, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
-                {GR, GR, GR, DW, DW, DW, DW, GR, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
+                {GR, GR, GR, DW, DW, DW, DW, WHP, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
         };
 
         final int[][] itemConfig7 = new int[][]{
