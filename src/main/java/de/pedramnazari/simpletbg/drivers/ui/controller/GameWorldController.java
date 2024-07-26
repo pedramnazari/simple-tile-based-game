@@ -10,8 +10,8 @@ import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroHitListener;
+import de.pedramnazari.simpletbg.tilemap.service.IHeroMovedListener;
 import de.pedramnazari.simpletbg.tilemap.service.ITileHitListener;
-import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import javafx.application.Platform;
 
 import java.util.Collection;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener{
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -47,20 +47,20 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         gameWorldService.start();
     }
 
-    public MovementResult moveHeroToRight() {
-        return gameWorldService.moveHeroToRight();
+    public void moveHeroToRight() {
+        gameWorldService.moveHeroToRight();
     }
 
-    public MovementResult moveHeroToLeft() {
-        return gameWorldService.moveHeroToLeft();
+    public void moveHeroToLeft() {
+        gameWorldService.moveHeroToLeft();
     }
 
-    public MovementResult moveHeroUp() {
-        return gameWorldService.moveHeroUp();
+    public void moveHeroUp() {
+        gameWorldService.moveHeroUp();
     }
 
-    public MovementResult moveHeroDown() {
-        return gameWorldService.moveHeroDown();
+    public void moveHeroDown() {
+        gameWorldService.moveHeroDown();
     }
 
     public Collection<IItem> getItems() {
@@ -165,5 +165,11 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void onTileHit(IWeapon weapon, Tile tile) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.handleTileHit(weapon, tile));
+    }
+
+    @Override
+    public void onHeroMoved(IHero hero, int oldX, int oldY) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.handleHeroMoved(hero, oldX, oldY));
     }
 }

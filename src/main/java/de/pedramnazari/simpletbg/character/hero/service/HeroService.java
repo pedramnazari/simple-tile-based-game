@@ -82,7 +82,7 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
         itemPickUpNotifier.notifyItemPickedUp(element, item);
     }
 
-    public void addListener(IHeroMovedListener listener) {
+    public void addHeroMovedListener(IHeroMovedListener listener) {
         heroMovedNotifier.addListener(listener);
     }
 
@@ -116,13 +116,13 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
     }
 
     @Override
-    public void addListener(IHeroAttackListener listener) {
-        heroAttackService.addListener(listener);
+    public void addHeroAttackListener(IHeroAttackListener listener) {
+        heroAttackService.addHeroAttackListener(listener);
     }
 
     @Override
-    public void notifyHeroAttacksCharacter(ICharacter attackedCharacter, int damage) {
-        heroAttackService.notifyHeroAttacksCharacter(attackedCharacter, damage);
+    public void notifyHeroAttackCharacter(ICharacter attackedCharacter, int damage) {
+        heroAttackService.notifyHeroAttackCharacter(attackedCharacter, damage);
     }
 
     @Override

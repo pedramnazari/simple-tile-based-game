@@ -9,10 +9,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.tilemap.model.IHero;
-import de.pedramnazari.simpletbg.tilemap.model.Point;
-import de.pedramnazari.simpletbg.tilemap.model.TileMap;
-import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.DefaultTileFactory;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.ITileFactory;
@@ -32,11 +29,14 @@ public class MovementServiceTest {
 
     private static final int F = TileType.FLOOR1.getType();
     private static final int W = TileType.WALL.getType();
+    private static final int P = TileType.PORTAL.getType();
 
     private HeroMovementService heroMovementService;
     private GameWorldService gameWorldService;
     private IHero hero;
     private ITileFactory tileFactory;
+    private HeroService heroService;
+    private TileMapService tileMapService;
 
     @BeforeEach
     public void setUp() {
@@ -50,11 +50,16 @@ public class MovementServiceTest {
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
 
+        heroService = new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService());
+        tileMapService = new TileMapService(tileFactory);
         gameWorldService = new GameWorldService(
-                new TileMapService(tileFactory),
+                tileMapService,
                 new ItemService(),
-                new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
+                heroService,
                 new EnemyService(enemyMovementService));
+
+        heroService.addHeroMovedListener(tileMapService);
+        tileMapService.addCharacterMovedToSpecialTileListener(heroService);
     }
 
     @Test
@@ -137,6 +142,59 @@ public class MovementServiceTest {
 
         assertEquals(1, hero.getX());
         assertEquals(2, hero.getY());
+    }
+
+    @Test
+    public void testTeleportBetweenPortals() {
+        final int[][] mapConfig = new int[][]{
+                {P, F, F},
+                {F, W, P},
+                {F, F, W}};
+
+        final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
+        assertNotNull(tileMap);
+
+        hero = gameWorldService.getHero();
+        assertNotNull(hero);
+
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), heroService, new EnemyServiceMock(), "map");
+
+        MovementResult result = heroService.moveHero(MoveDirection.LEFT, GameContext.getInstance());
+        assertTrue(result.hasElementMoved());
+        assertEquals(2, hero.getX());
+        assertEquals(1, hero.getY());
+
+        // Hero steps on a portal
+        result = heroService.moveHero(MoveDirection.RIGHT, GameContext.getInstance());
+        assertFalse(result.hasElementMoved());
+        assertEquals(2, hero.getX());
+        assertEquals(1, hero.getY());
+
+        result = heroService.moveHero(MoveDirection.DOWN, GameContext.getInstance());
+        assertFalse(result.hasElementMoved());
+
+        result = heroService.moveHero(MoveDirection.UP, GameContext.getInstance());
+        assertTrue(result.hasElementMoved());
+        assertEquals(2, hero.getX());
+        assertEquals(0, hero.getY());
+
+        // Hero steps on a portal
+        result = heroService.moveHero(MoveDirection.DOWN, GameContext.getInstance());
+        assertTrue(result.hasElementMoved());
+        assertEquals(0, hero.getX());
+        assertEquals(0, hero.getY());
+
+        result = heroService.moveHero(MoveDirection.DOWN, GameContext.getInstance());
+        assertTrue(result.hasElementMoved());
+        assertEquals(0, hero.getX());
+        assertEquals(1, hero.getY());
+
+
+
+
+
+
+
     }
 
     @AfterEach

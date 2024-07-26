@@ -35,11 +35,13 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
             throw new IllegalStateException("There must be no or exactly 2 portals on the map");
         }
 
-        final Tile portal1 = portals.stream().findFirst().get();
-        final Tile portal2 = portals.stream().skip(1).findFirst().get();
+        if (portals.size() == 2) {
+            final Tile portal1 = portals.stream().findFirst().get();
+            final Tile portal2 = portals.stream().skip(1).findFirst().get();
 
-        portal1.setPortalDestination(portal2);
-        portal2.setPortalDestination(portal1);
+            portal1.setPortalDestination(portal2);
+            portal2.setPortalDestination(portal1);
+        }
     }
 
     @Override

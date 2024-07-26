@@ -309,8 +309,9 @@ public class GameInitializer {
         enemyService.registerObserver(controller);
         enemyService.addItemPickupListener(itemService);
         heroService.addItemPickupListener(itemService);
-        heroService.addListener(enemyService);
-        heroService.addListener(tileMapService);
+        heroService.addHeroAttackListener(enemyService);
+        heroService.addHeroMovedListener(tileMapService);
+        heroService.addHeroMovedListener(controller);
 
         heroService.addItemPickupListener(controller);
         enemyService.addItemPickupListener(controller);

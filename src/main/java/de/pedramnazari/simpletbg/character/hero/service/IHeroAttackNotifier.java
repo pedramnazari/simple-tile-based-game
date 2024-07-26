@@ -4,7 +4,7 @@ import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
 
 public interface IHeroAttackNotifier {
-    void addListener(IHeroAttackListener listener);
+    void addHeroAttackListener(IHeroAttackListener listener);
 
-    void notifyHeroAttacksCharacter(ICharacter attackedCharacter, int damage);
+    void notifyHeroAttackCharacter(ICharacter attackedCharacter, int damage);
 }

@@ -67,7 +67,6 @@ public class MovementService {
 
     private boolean isPositionWithinBoundsOfCurrentMap(final TileMap tileMap, final int newX, final int newY) {
         // Current assumption: all maps have the same side
-        // TODO: in future, check whether figure can be placed to this position (e.g., that there is no rock)
         return (newX >= 0) && (newX < tileMap.getWidth()) && (newY >= 0) && (newY < tileMap.getHeight());
     }
 
@@ -148,8 +147,12 @@ public class MovementService {
             return true;
         }
 
-        // TODO: add a method such as teleportCharacter(int destinationX, destinationY) to handle teleportation
-        return isDestinationPortalTile(tileMap, newX, newY);
+        if (isPositionWithinBoundsOfCurrentMap(tileMap, newX, newY)) {
+            // TODO: add a method such as teleportCharacter(int destinationX, destinationY) to handle teleportation
+            return isDestinationPortalTile(tileMap, newX, newY);
+        }
+
+        return false;
     }
 
     private static boolean isDestinationPortalTile(TileMap tileMap, int newX, int newY) {

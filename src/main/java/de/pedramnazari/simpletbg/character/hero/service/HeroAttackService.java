@@ -59,7 +59,7 @@ public class HeroAttackService implements IHeroAttackNotifier {
             for (IEnemy enemy : enemies) {
                 if ((enemy.getX() == attackPoint.getX()) && (enemy.getY() == attackPoint.getY())) {
                     logger.info("Hero attacks enemy at position: " + attackPoint);
-                    notifyHeroAttacksCharacter(enemy, damage);
+                    notifyHeroAttackCharacter(enemy, damage);
                 }
             }
         }
@@ -146,13 +146,13 @@ public class HeroAttackService implements IHeroAttackNotifier {
     }
 
     @Override
-    public void addListener(IHeroAttackListener listener) {
-        heroAttackNotifier.addListener(listener);
+    public void addHeroAttackListener(IHeroAttackListener listener) {
+        heroAttackNotifier.addHeroAttackListener(listener);
     }
 
     @Override
-    public void notifyHeroAttacksCharacter(ICharacter attackedCharacter, int damage) {
-        heroAttackNotifier.notifyHeroAttacksCharacter(attackedCharacter, damage);
+    public void notifyHeroAttackCharacter(ICharacter attackedCharacter, int damage) {
+        heroAttackNotifier.notifyHeroAttackCharacter(attackedCharacter, damage);
     }
 
 }

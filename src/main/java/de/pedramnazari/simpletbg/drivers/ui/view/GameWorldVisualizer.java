@@ -3,7 +3,6 @@ package de.pedramnazari.simpletbg.drivers.ui.view;
 import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.tilemap.model.*;
-import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -91,7 +90,7 @@ public class GameWorldVisualizer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(120), e -> moveHero()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> moveHero()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
@@ -132,29 +131,25 @@ public class GameWorldVisualizer extends Application {
     }
 
     private void moveHero() {
-        MovementResult result = null;
-
         if (right) {
-            result = controller.moveHeroToRight();
-            heroView.setX(hero.getX());
+            controller.moveHeroToRight();
         }
         if (left) {
-            result = controller.moveHeroToLeft();
-            heroView.setX(hero.getX());
+            controller.moveHeroToLeft();
         }
         if (down) {
-            result = controller.moveHeroDown();
-            heroView.setY(hero.getY());
+            controller.moveHeroDown();
         }
         if (up) {
-            result = controller.moveHeroUp();
-            heroView.setY(hero.getY());
+            controller.moveHeroUp();
         }
+    }
 
-        if ((result != null) && result.hasElementMoved()) {
-            charactersGrid.getChildren().remove(heroView.getImageView());
-            charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
-        }
+    public void handleHeroMoved(IHero hero, int oldX, int oldY) {
+        heroView.setX(hero.getX());
+        heroView.setY(hero.getY());
+        charactersGrid.getChildren().remove(heroView.getImageView());
+        charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
     }
 
     private GridPane createGridPane(final TileMap tileMap) {
@@ -525,4 +520,6 @@ public class GameWorldVisualizer extends Application {
             tilesView.put(point, tileView);
         }
     }
+
+
 }

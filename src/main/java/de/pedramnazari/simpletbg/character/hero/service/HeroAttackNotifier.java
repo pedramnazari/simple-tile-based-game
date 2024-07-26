@@ -10,12 +10,12 @@ public class HeroAttackNotifier implements IHeroAttackNotifier {
     private final List<IHeroAttackListener> heroAttackListener = new ArrayList<>();
 
     @Override
-    public void addListener(IHeroAttackListener listener) {
+    public void addHeroAttackListener(IHeroAttackListener listener) {
         heroAttackListener.add(listener);
     }
 
     @Override
-    public void notifyHeroAttacksCharacter(ICharacter attackedCharacter, int damage) {
+    public void notifyHeroAttackCharacter(ICharacter attackedCharacter, int damage) {
         for (IHeroAttackListener listener : heroAttackListener) {
             listener.onHeroAttacksCharacter(attackedCharacter, damage);
         }
