@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListener, ICharacterMovedToSpecialTileListener {
-    private static final Logger logger = Logger.getLogger(QuestEventDispatcher.class.getName());
+public class QuestService implements IEnemyHitListener, IItemPickUpListener, ICharacterMovedToSpecialTileListener {
+    private static final Logger logger = Logger.getLogger(QuestService.class.getName());
 
     private final Map<Class<? extends IQuestEvent>, List<IQuestEventListener<? extends IQuestEvent>>> listeners = new HashMap<>();
     private final Quest quest;
 
-    public QuestEventDispatcher(Quest quest) {
+    public QuestService(Quest quest) {
         this.quest = quest;
     }
 
@@ -88,7 +88,7 @@ public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListe
 
     private void checkIfQuestIsCompleted() {
         if (quest.isCompleted()) {
-            logger.info("Dispatch: Quest completed and hero reached exit");
+            logger.info("Dispatch: Quest completed and hero reached exit --> Stop game");
             //dispatch(new QuestCompletedEvent());
         }
     }

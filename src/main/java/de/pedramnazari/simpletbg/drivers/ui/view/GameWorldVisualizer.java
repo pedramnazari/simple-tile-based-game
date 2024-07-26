@@ -349,7 +349,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleAllEnemiesDefeated() {
-        logger.log(Level.INFO, "All enemies defeated! -> Stop Game");
+
     }
 
     public void handleItemPickedUp(ICharacter element, IItem item) {

@@ -15,7 +15,7 @@ import de.pedramnazari.simpletbg.inventory.model.BombFactory;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.inventory.service.bomb.BombService;
-import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
+import de.pedramnazari.simpletbg.quest.service.QuestService;
 import de.pedramnazari.simpletbg.quest.service.config.DefaultQuestConfigFactory;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfigFactory;
@@ -294,10 +294,10 @@ public class GameInitializer {
          */
         final IQuestConfigFactory questConfigFactory = new DefaultQuestConfigFactory();
         final IQuestConfig questConfig = questConfigFactory.createQuestConfig(QuestDefeatAllEnemiesAndGoToExitConfig.QUEST_ID);
-        final QuestEventDispatcher questEventDispatcher = questConfig.getQuestEventDispatcher();
-        enemyService.addEnemyHitListener(questEventDispatcher);
-        heroService.addItemPickupListener(questEventDispatcher);
-        tileMapService.addCharacterMovedToSpecialTileListener(questEventDispatcher);
+        final QuestService questService = questConfig.getQuestEventDispatcher();
+        enemyService.addEnemyHitListener(questService);
+        heroService.addItemPickupListener(questService);
+        tileMapService.addCharacterMovedToSpecialTileListener(questService);
 
         gameWorldService.setQuest(questConfig.getQuest());
 

@@ -1,12 +1,12 @@
 package de.pedramnazari.simpletbg.quest.service.config;
 
 import de.pedramnazari.simpletbg.quest.model.Quest;
-import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
+import de.pedramnazari.simpletbg.quest.service.QuestService;
 
 public abstract class AbstractQuestConfig implements IQuestConfig {
     private final String questId;
     protected Quest quest;
-    protected QuestEventDispatcher questEventDispatcher;
+    protected QuestService questService;
 
     public AbstractQuestConfig(String questId) {
         this.questId = questId;
@@ -18,7 +18,7 @@ public abstract class AbstractQuestConfig implements IQuestConfig {
     }
 
     @Override
-    public QuestEventDispatcher getQuestEventDispatcher() {
-        return questEventDispatcher;
+    public QuestService getQuestEventDispatcher() {
+        return questService;
     }
 }

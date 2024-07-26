@@ -3,7 +3,7 @@ package de.pedramnazari.simpletbg.quest.service.config;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestObjective;
 import de.pedramnazari.simpletbg.quest.service.ItemPickUpQuestObjective;
-import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
+import de.pedramnazari.simpletbg.quest.service.QuestService;
 import de.pedramnazari.simpletbg.quest.service.event.AllEnemiesDefeatedQuestEvent;
 import de.pedramnazari.simpletbg.quest.service.event.ItemPickUpQuestEvent;
 
@@ -22,8 +22,8 @@ public class Quest1Config extends AbstractQuestConfig {
         quest.addObjective(questObjective1);
         quest.addObjective(questObjective2);
 
-        this.questEventDispatcher = new QuestEventDispatcher(quest);
-        questEventDispatcher.registerListener(AllEnemiesDefeatedQuestEvent.class, questObjective1);
-        questEventDispatcher.registerListener(ItemPickUpQuestEvent.class, questObjective2);
+        this.questService = new QuestService(quest);
+        questService.registerListener(AllEnemiesDefeatedQuestEvent.class, questObjective1);
+        questService.registerListener(ItemPickUpQuestEvent.class, questObjective2);
     }
 }

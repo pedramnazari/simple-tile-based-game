@@ -2,7 +2,7 @@ package de.pedramnazari.simpletbg.quest.service.config;
 
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.service.AllEnemiesDefeatedQuestObjective;
-import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
+import de.pedramnazari.simpletbg.quest.service.QuestService;
 import de.pedramnazari.simpletbg.quest.service.event.AllEnemiesDefeatedQuestEvent;
 
 public class QuestDefeatAllEnemiesAndGoToExitConfig extends AbstractQuestConfig{
@@ -18,7 +18,7 @@ public class QuestDefeatAllEnemiesAndGoToExitConfig extends AbstractQuestConfig{
 
         quest.addObjective(questObjective1);
 
-        this.questEventDispatcher = new QuestEventDispatcher(quest);
-        questEventDispatcher.registerListener(AllEnemiesDefeatedQuestEvent.class, questObjective1);
+        this.questService = new QuestService(quest);
+        questService.registerListener(AllEnemiesDefeatedQuestEvent.class, questObjective1);
     }
 }
