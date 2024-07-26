@@ -13,6 +13,7 @@ public class Quest {
     private final String name;
     private final String description;
     private final List<QuestObjective> objectives = new ArrayList<>();
+    private boolean heroMustReachExit = false;
 
     private final Map<Class<? extends IQuestEvent>, List<IQuestEventListener<? extends IQuestEvent>>> listeners;
 
@@ -29,6 +30,14 @@ public class Quest {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setHeroMustReachExit(boolean heroMustReachExit) {
+        this.heroMustReachExit = heroMustReachExit;
+    }
+
+    public boolean isHeroMustReachExit() {
+        return heroMustReachExit;
     }
 
     public void addObjective(QuestObjective objective) {

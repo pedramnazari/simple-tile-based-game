@@ -16,19 +16,26 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         if (type < 100) {
             tile = createFloorAndObstacleTiles(type, x, y);
         }
-        else if (type == TileType.EXIT.getType()) {
-            tile = new Tile(type, x, y);
-        }
-        else if (type == TileType.PORTAL.getType()) {
-            tile = new Tile(type, x, y);
-            tile.setPortal(true);
-        }
-        else if (type == TileType.PORTAL_BEHIND_WALL.getType()) {
+        else if (type == TileType.WALL_HIDING_PORTAL.getType()) {
             tile = new Tile(type, x, y);
             tile.setObstacle(true);
             tile.setDestructible(true);
             tile.setHitPoints(2);
             tile.setTransformToNewTileType(TileType.PORTAL.getType());
+        }
+        else if (type == TileType.WALL_HIDING_EXIT.getType()) {
+            tile = new Tile(type, x, y);
+            tile.setObstacle(true);
+            tile.setDestructible(true);
+            tile.setHitPoints(2);
+            tile.setTransformToNewTileType(TileType.EXIT.getType());
+        }
+        else if (type == TileType.PORTAL.getType()) {
+            tile = new Tile(type, x, y);
+            tile.setPortal(true);
+        }
+        else if (type == TileType.EXIT.getType()) {
+            tile = new Tile(type, x, y);
         }
         else {
             throw new IllegalArgumentException("Unknown tile type: " + type);

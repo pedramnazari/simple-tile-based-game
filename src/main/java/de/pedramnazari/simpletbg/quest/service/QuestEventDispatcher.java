@@ -37,9 +37,10 @@ public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListe
                 ((IQuestEventListener<T>) listener).onEvent(event);
             }
 
-            if (quest.isCompleted()) {
-                logger.info("Dispatch: Quest completed");
-                //dispatch(new QuestCompletedEvent());
+            // If the quest requires the hero to reach the exit, the method
+            // handleHeroReachedExit() will check if the quest is completed
+            if (!quest.isHeroMustReachExit()) {
+                checkIfQuestIsCompleted();
             }
         }
     }
@@ -73,7 +74,22 @@ public class QuestEventDispatcher implements IEnemyHitListener, IItemPickUpListe
     @Override
     public void onCharacterMovedToSpecialTile(ICharacter character, Tile specialTile) {
         if ((character instanceof IHero) && (specialTile.getType() == (TileType.EXIT.getType()))) {
-            logger.info("Dispatch: Quest completed and Hero moved to exit");
+            handleHeroReachedExit();
+        }
+    }
+
+    private void handleHeroReachedExit() {
+        if (!quest.isHeroMustReachExit()) {
+            return;
+        }
+
+        checkIfQuestIsCompleted();
+    }
+
+    private void checkIfQuestIsCompleted() {
+        if (quest.isCompleted()) {
+            logger.info("Dispatch: Quest completed and hero reached exit");
+            //dispatch(new QuestCompletedEvent());
         }
     }
 }

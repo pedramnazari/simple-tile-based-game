@@ -31,7 +31,7 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
 
     private void initPortals() {
         final Collection<Tile> portals = tileMap.getTilesOfType(TileType.PORTAL);
-        final Collection<Tile> portalBehindWalls = tileMap.getTilesOfType(TileType.PORTAL_BEHIND_WALL);
+        final Collection<Tile> portalBehindWalls = tileMap.getTilesOfType(TileType.WALL_HIDING_PORTAL);
 
         final int portalCount = portals.size() + portalBehindWalls.size();
 

@@ -223,7 +223,7 @@ public class GameWorldServiceTest {
 
         final int[][] itemsConfig = new int[][]{
                 {O, O, O},
-                {O, O, 100},
+                {O, O, TileType.ITEM_YELLOW_KEY.getType()},
                 {O, O, TileType.WEAPON_SWORD.getType()}};
 
         final int[][] enemiesConfig = new int[][]{

@@ -17,6 +17,7 @@ public class Quest1Config extends AbstractQuestConfig {
         this.quest = new Quest("Defeat all enemies and collect black sword.", "You have to defeat all enemies and collect the black sword to win the game");
         final AllEnemiesDefeatedQuestObjective questObjective1 = new AllEnemiesDefeatedQuestObjective("Defeat all enemies");
         final ItemPickUpQuestObjective questObjective2 = new ItemPickUpQuestObjective("Collect black sword");
+        quest.setHeroMustReachExit(false);
 
         quest.addObjective(questObjective1);
         quest.addObjective(questObjective2);

@@ -19,7 +19,7 @@ import de.pedramnazari.simpletbg.quest.service.QuestEventDispatcher;
 import de.pedramnazari.simpletbg.quest.service.config.DefaultQuestConfigFactory;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfigFactory;
-import de.pedramnazari.simpletbg.quest.service.config.Quest1Config;
+import de.pedramnazari.simpletbg.quest.service.config.QuestDefeatAllEnemiesAndGoToExitConfig;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
@@ -197,11 +197,11 @@ public class GameInitializer {
         };
 
         final int[][] mapConfig7 = new int[][]{
-                {GR, GR, PORTAL_BEHIND_WALL.getType(), GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, GR, WALL_HIDING_PORTAL.getType(), GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {DW, DW, GR, GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {DW, WA, GR, WA, DW, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
-                {DW, DW, GR, GR, DW, DW, DW, GR, WA, EXIT.getType(), GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {DW, DW, GR, GR, DW, DW, DW, GR, WA, WALL_HIDING_EXIT.getType(), GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {GR, WA, GR, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {GR, GR, GR, GR, GR, GR, DW, GR, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
                 {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, PORTAL.getType(), WA},
@@ -293,19 +293,19 @@ public class GameInitializer {
          * **** Quests ****
          */
         final IQuestConfigFactory questConfigFactory = new DefaultQuestConfigFactory();
-        final IQuestConfig quest1Config = questConfigFactory.createQuestConfig(Quest1Config.QUEST_ID);
-        final QuestEventDispatcher questEventDispatcher = quest1Config.getQuestEventDispatcher();
+        final IQuestConfig questConfig = questConfigFactory.createQuestConfig(QuestDefeatAllEnemiesAndGoToExitConfig.QUEST_ID);
+        final QuestEventDispatcher questEventDispatcher = questConfig.getQuestEventDispatcher();
         enemyService.addEnemyHitListener(questEventDispatcher);
         heroService.addItemPickupListener(questEventDispatcher);
         tileMapService.addCharacterMovedToSpecialTileListener(questEventDispatcher);
 
-        gameWorldService.setQuest(quest1Config.getQuest());
+        gameWorldService.setQuest(questConfig.getQuest());
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig7, tileFactory);
         final Collection<IItem> items = new ItemConfigParser().parse(itemConfig7, itemFactory);
         final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig7, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
-        controller.startGameUsingMap(tiles, items, enemies, 1, 1);
+        controller.startGameUsingMap(tiles, items, enemies, 0, 0);
 
         return controller;
     }

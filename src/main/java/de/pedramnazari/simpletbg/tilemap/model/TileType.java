@@ -14,9 +14,12 @@ public enum TileType {
     WALL(50),
 
     DESTRUCTIBLE_WALL(75),
+    WALL_HIDING_PORTAL(101),
+    WALL_HIDING_EXIT(102),
 
-    ITEM_YELLOW_KEY(100),
-    ITEM_YELLOW_KEY2(101),
+
+    ITEM_YELLOW_KEY(150),
+    ITEM_YELLOW_KEY2(151),
 
     WEAPON_SWORD(200),
     WEAPON_SWORD2(201),
@@ -32,10 +35,9 @@ public enum TileType {
     ENEMY_LR(500), // left-right,
     ENEMY_TD(510), // top-down
     ENEMY_2D(520), // two-dimensional
-    ENEMY_FH(530), // follow hero
+    ENEMY_FH(530), // follow hero,
 
     PORTAL(900),
-    PORTAL_BEHIND_WALL(910),
     EXIT(999),
 
     HERO(1000);

@@ -9,6 +9,9 @@ public class DefaultQuestConfigFactory implements IQuestConfigFactory{
             case Quest1Config.QUEST_ID:
                 questConfig = new Quest1Config();
                 break;
+            case QuestDefeatAllEnemiesAndGoToExitConfig.QUEST_ID:
+                questConfig = new QuestDefeatAllEnemiesAndGoToExitConfig();
+                break;
             default:
                 throw new IllegalArgumentException("Invalid quest id: " + questId);
         }

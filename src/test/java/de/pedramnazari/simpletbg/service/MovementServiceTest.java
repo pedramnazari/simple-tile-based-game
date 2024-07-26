@@ -32,7 +32,7 @@ public class MovementServiceTest {
     private static final int F = TileType.FLOOR1.getType();
     private static final int W = TileType.WALL.getType();
     private static final int P = TileType.PORTAL.getType();
-    private static final int PW = TileType.PORTAL_BEHIND_WALL.getType();
+    private static final int PW = TileType.WALL_HIDING_PORTAL.getType();
 
     private HeroMovementService heroMovementService;
     private GameWorldService gameWorldService;

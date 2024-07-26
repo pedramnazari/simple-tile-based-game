@@ -70,6 +70,7 @@ public class GameWorldService {
         }
 
         logger.log(Level.INFO, "Starting the game loop");
+        logger.log(Level.INFO, "The quest is '" + quest.getName() + "': " + quest.getDescription());
 
 
         Runnable moveEnemiesRunner = new Runnable() {
