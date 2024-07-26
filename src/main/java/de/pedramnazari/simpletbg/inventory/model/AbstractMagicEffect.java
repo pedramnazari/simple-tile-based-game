@@ -1,14 +1,14 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
-import de.pedramnazari.simpletbg.tilemap.model.IMagicPower;
+import de.pedramnazari.simpletbg.tilemap.model.IMagicEffect;
 
-public abstract class AbstractMagicPower implements IMagicPower {
+public abstract class AbstractMagicEffect implements IMagicEffect {
 
     private final String name;
     private IItem associatedItem;
 
-    public AbstractMagicPower(String name) {
+    public AbstractMagicEffect(String name) {
         this.name = name;
     }
 

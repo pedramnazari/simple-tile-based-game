@@ -148,8 +148,11 @@ public class GameWorldVisualizer extends Application {
     public void handleHeroMoved(IHero hero, int oldX, int oldY) {
         heroView.setX(hero.getX());
         heroView.setY(hero.getY());
+        updateHeroOpacity();
+
         charactersGrid.getChildren().remove(heroView.getImageView());
         charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
+
     }
 
     private GridPane createGridPane(final TileMap tileMap) {
@@ -262,6 +265,7 @@ public class GameWorldVisualizer extends Application {
                 case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
                 case 230 -> "/tiles/items/weapons/bomb_placer.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
+                case 160 -> "/tiles/items/consumable/health_potion.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };
 
@@ -383,6 +387,10 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleHeroHit() {
+        updateHeroOpacity();
+    }
+
+    private void updateHeroOpacity() {
         IHero hero = heroView.getTileMapElement();
         double opacity = (double) hero.getHealth() / 100;
         heroView.getImageView().setOpacity(opacity);

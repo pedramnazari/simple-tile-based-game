@@ -4,9 +4,9 @@ import java.util.Optional;
 
 public interface IRing extends IItem {
 
-    void setMagicPower(IMagicPower magicPower);
+    void setMagicPower(IMagicEffect magicPower);
 
-    Optional<IMagicPower> getMagicPower();
+    Optional<IMagicEffect> getMagicPower();
 
 
     int getAttackingPower();

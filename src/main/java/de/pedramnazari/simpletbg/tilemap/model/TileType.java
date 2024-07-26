@@ -21,6 +21,8 @@ public enum TileType {
     ITEM_YELLOW_KEY(150),
     ITEM_YELLOW_KEY2(151),
 
+    HEALTH_POTION(160),
+
     WEAPON_SWORD(200),
     WEAPON_SWORD2(201),
     WEAPON_LANCE(220),

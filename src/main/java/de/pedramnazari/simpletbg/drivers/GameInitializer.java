@@ -51,6 +51,8 @@ public class GameInitializer {
     private static final int F2 = FLOOR2.getType();
     private static final int DW = DESTRUCTIBLE_WALL.getType();
 
+    private static final int HP = HEALTH_POTION.getType();
+
 
 
     public static GameWorldController initAndStartGame() {
@@ -220,7 +222,7 @@ public class GameInitializer {
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, HP, O, O, O, O, O, O, O, HP, O},
                 {O, O, O, O, O, O, O, O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O}
         };
 

@@ -1,13 +1,13 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
-import de.pedramnazari.simpletbg.tilemap.model.IMagicPower;
+import de.pedramnazari.simpletbg.tilemap.model.IMagicEffect;
 import de.pedramnazari.simpletbg.tilemap.model.IRing;
 
 import java.util.Optional;
 
 public class Ring extends Item implements IRing {
 
-    private IMagicPower magicPower;
+    private IMagicEffect magicPower;
 
     private int attackingPower = 0;
 
@@ -16,7 +16,7 @@ public class Ring extends Item implements IRing {
     }
 
     @Override
-    public void setMagicPower(IMagicPower magicPower) {
+    public void setMagicPower(IMagicEffect magicPower) {
         if (this.magicPower != null) {
             this.magicPower.setAssociatedItem(null);
         }
@@ -26,7 +26,7 @@ public class Ring extends Item implements IRing {
     }
 
     @Override
-    public Optional<IMagicPower> getMagicPower() {
+    public Optional<IMagicEffect> getMagicPower() {
         return Optional.ofNullable(magicPower);
     }
 

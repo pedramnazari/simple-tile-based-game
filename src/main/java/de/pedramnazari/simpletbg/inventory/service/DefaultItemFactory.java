@@ -1,14 +1,13 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
+import de.pedramnazari.simpletbg.inventory.model.ConsumableItem;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.model.Ring;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombService;
-import de.pedramnazari.simpletbg.tilemap.model.IBombFactory;
-import de.pedramnazari.simpletbg.tilemap.model.IItem;
-import de.pedramnazari.simpletbg.tilemap.model.IRing;
-import de.pedramnazari.simpletbg.tilemap.model.TileType;
+import de.pedramnazari.simpletbg.inventory.service.magiceffect.HealthIncreaseMagicEffect;
+import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
 
 import java.util.Optional;
@@ -41,6 +40,12 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             itemName = ITEM_MAGIC_YELLOW_KEY2_NAME;
             itemDescription = ITEM_MAGIC_YELLOW_KEY2_DESC;
             item = new Item(x, y, itemName, itemDescription, type);
+        }
+        else if (type == TileType.HEALTH_POTION.getType()) {
+            final IMagicEffect magicPower = new HealthIncreaseMagicEffect(20);
+            final ConsumableItem magicPotion = new ConsumableItem(magicPower, x, y, type);
+
+            item = magicPotion;
         }
         else if (type == TileType.WEAPON_SWORD.getType()) {
             itemName = "Sword";

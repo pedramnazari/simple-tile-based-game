@@ -64,6 +64,10 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
             else if (item instanceof IRing ring) {
                 hero.setRing(ring);
             }
+            else if (item instanceof IConsumableItem magicPotion) {
+                logger.info("Hero picked up magic potion");
+                magicPotion.consume(hero);
+            }
             else {
                 hero.getInventory().addItem(item);
             }
