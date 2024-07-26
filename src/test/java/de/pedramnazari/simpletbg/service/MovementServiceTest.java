@@ -7,6 +7,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
+import de.pedramnazari.simpletbg.inventory.model.bomb.Bomb;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +32,7 @@ public class MovementServiceTest {
     private static final int F = TileType.FLOOR1.getType();
     private static final int W = TileType.WALL.getType();
     private static final int P = TileType.PORTAL.getType();
+    private static final int PW = TileType.PORTAL_BEHIND_WALL.getType();
 
     private HeroMovementService heroMovementService;
     private GameWorldService gameWorldService;
@@ -145,7 +148,7 @@ public class MovementServiceTest {
     }
 
     @Test
-    public void testTeleportBetweenPortals() {
+    public void testTeleport_BetweenPortals() {
         final int[][] mapConfig = new int[][]{
                 {P, F, F},
                 {F, W, P},
@@ -188,13 +191,60 @@ public class MovementServiceTest {
         assertTrue(result.hasElementMoved());
         assertEquals(0, hero.getX());
         assertEquals(1, hero.getY());
+    }
+
+    @Test
+    public void testTeleport_betweenPortalsBehindWalls() {
+        final int[][] mapConfig = new int[][]{
+                {PW, F, F},
+                {F, W, P},
+                {F, F, W}};
+
+        final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
+        assertNotNull(tileMap);
+
+        hero = gameWorldService.getHero();
+        assertNotNull(hero);
+
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), heroService, new EnemyServiceMock(), "map");
+
+        final Tile wallHidingPortal = tileMap.getTile(0, 0);
+        assertFalse(wallHidingPortal.isDestroyed());
+        assertFalse(wallHidingPortal.isPortal());
+        assertTrue(wallHidingPortal.isDestructible());
+        final int hitPoints = wallHidingPortal.getHitPoints();
+        assertEquals(2, hitPoints);
+
+        // Hero cannot move to the left because of the wall
+        MovementResult result = heroService.moveHero(MoveDirection.LEFT, GameContext.getInstance());
+        assertFalse(result.hasElementMoved());
+        assertEquals(1, hero.getX());
+        assertEquals(0, hero.getY());
 
 
+        // Destroy the wall with a bomb...
+        for (int i = 1; i <= hitPoints; i++) {
+            IBomb bomb = new Bomb(1, 0, 0);
+            List<Point> attackingPoints = List.of(new Point(0, 0));
+            tileMapService.onBombExploded(bomb, attackingPoints);
+        }
+
+        assertEquals(0, wallHidingPortal.getHitPoints());
+        assertTrue(wallHidingPortal.isDestroyed());
+
+        // ...to reveal the portal
+        final Tile portal = tileMap.getTile(0, 0);
+        assertTrue(portal.isPortal());
+        assertFalse(portal.isDestroyed());
+        assertFalse(portal.isDestructible());
 
 
-
-
-
+        // Hero can now move to the left to the portal...
+        result = heroService.moveHero(MoveDirection.LEFT, GameContext.getInstance());
+        assertTrue(result.hasElementMoved());
+        // ...and teleport to the other portal
+        assertEquals(2, hero.getX());
+        assertEquals(1, hero.getY());
     }
 
     @AfterEach

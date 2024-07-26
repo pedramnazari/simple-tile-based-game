@@ -17,8 +17,8 @@ public class Bomb extends Weapon implements IBomb {
     private boolean hasExploded;
     private final int explosionDurationInMillis = 1000;
 
-    public Bomb(int x, int y, String name, String description, long explodeInMillis) {
-        super(x, y, name, description, TileType.WEAPON_BOMB.getType());
+    public Bomb(int x, int y, long explodeInMillis) {
+        super(x, y, "Bomb", "Bomb", TileType.WEAPON_BOMB.getType());
         this.placedAtTime = System.currentTimeMillis();
         this.explodeInMillis = explodeInMillis;
         this.hasExploded = false;

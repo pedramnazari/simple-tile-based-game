@@ -56,78 +56,6 @@ public class GameInitializer {
     public static GameWorldController initAndStartGame() {
 
         // TODO: move to AllTileMapConfigData
-        final int[][] mapConfig = new int[][]{
-                {1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 11, 11, 11, 11, 1, 1, 1, 1, 1},
-                {11, 2, 11, 1, 1, 1, 11, 2, 2, 2, 1, 1, 1, 1, 1},
-                {11, 2, 11, 11, 11, 11, 11, 2, 2, 2, 1, 1, 1, 1, 1},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 11, 11, 11, 11},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 11, 11, 4, 4, 11},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 11},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 11, 11, 4, 4, 11},
-        };
-
-        final int[][] itemConfig = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, 100, O, 200, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, 101, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, 101, O, O, 101, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, 201, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-        };
-
-        final int[][] enemyConfig = new int[][]{
-                {E3, O, O, E2, O, O, O, O, E, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, E, O, O, O, O, O, O, O, E2, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-        };
-
-        final int[][] mapConfig2 = new int[][]{
-                {11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11},
-                {11, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 11},
-                {11, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 11},
-                {11, 4, 2, 11, 11, 11, 2, 2, 2, 11, 11, 11, 2, 4, 11},
-                {11, 4, 2, 11, 1, 11, 2, 2, 2, 11, 1, 11, 2, 4, 11},
-                {11, 4, 2, 11, 1, 11, 2, 2, 2, 11, 1, 11, 2, 4, 11},
-                {11, 4, 2, 11, 1, 11, 2, 2, 2, 11, 1, 11, 2, 4, 11},
-                {11, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 11},
-                {11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11}
-        };
-
-        final int[][] itemConfig2 = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, 100, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, 101, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, 101, O, 101, O, O, O, 201, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-        };
-
-        final int[][] enemyConfig2 = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, E4, O},
-                {O, O, E3, O, O, O, O, O, E2, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, E2, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, E2, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, E, O, O, E4, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-        };
-
         final int[][] mapConfig3 = new int[][]{
                 {11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11},
                 {11, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 11},
@@ -269,17 +197,45 @@ public class GameInitializer {
         };
 
         final int[][] mapConfig7 = new int[][]{
-                {GR, GR, PORTAL.getType(), GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {GR, GR, PORTAL_BEHIND_WALL.getType(), GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
-                {DW, DW, GR, GR, GR, GR, GR, PORTAL.getType(), WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
+                {DW, DW, GR, GR, GR, GR, GR, GR, WA, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {DW, WA, GR, WA, DW, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {DW, DW, GR, GR, DW, DW, DW, GR, WA, EXIT.getType(), GR, GR, GR, GR, GR, GR, GR, GR, GR, GR},
                 {GR, WA, GR, WA, GR, WA, GR, WA, WA, WA, GR, WA, GR, WA, GR, WA, GR, WA, GR, WA},
                 {GR, GR, GR, GR, GR, GR, DW, GR, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
-                {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
+                {GR, WA, DW, WA, GR, WA, GR, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, PORTAL.getType(), WA},
                 {GR, GR, GR, DW, GR, GR, GR, GR, WA, GR, GR, GR, DW, GR, DW, GR, DW, GR, GR, GR},
                 {GR, WA, GR, WA, GR, WA, DW, WA, WA, WA, GR, WA, DW, WA, GR, WA, GR, WA, GR, WA},
                 {GR, GR, GR, DW, DW, DW, DW, GR, WA, GR, GR, GR, DW, DW, DW, DW, DW, DW, DW, DW},
+        };
+
+        final int[][] itemConfig7 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O}
+        };
+
+        final int[][] enemyConfig7 = new int[][]{
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E2, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, E, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, E2, O, O, O, O, O, O, O, E4, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, E3, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O}
         };
 
         // TODO: Improve
@@ -346,8 +302,8 @@ public class GameInitializer {
         gameWorldService.setQuest(quest1Config.getQuest());
 
         final Tile[][] tiles = new TileConfigParser().parse(mapConfig7, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig6, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig6, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig7, itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig7, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
         controller.startGameUsingMap(tiles, items, enemies, 1, 1);
 

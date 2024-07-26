@@ -7,6 +7,6 @@ public class BombFactory implements IBombFactory {
 
     @Override
     public Bomb createBomb(int x, int y, int triggerEffectInMilliseconds) {
-        return new Bomb(x, y, "Bomb", "Bomb", triggerEffectInMilliseconds );
+        return new Bomb(x, y, triggerEffectInMilliseconds );
     }
 }

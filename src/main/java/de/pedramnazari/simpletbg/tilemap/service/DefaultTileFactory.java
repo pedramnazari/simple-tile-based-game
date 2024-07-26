@@ -23,6 +23,13 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
             tile = new Tile(type, x, y);
             tile.setPortal(true);
         }
+        else if (type == TileType.PORTAL_BEHIND_WALL.getType()) {
+            tile = new Tile(type, x, y);
+            tile.setObstacle(true);
+            tile.setDestructible(true);
+            tile.setHitPoints(2);
+            tile.setTransformToNewTileType(TileType.PORTAL.getType());
+        }
         else {
             throw new IllegalArgumentException("Unknown tile type: " + type);
         }
@@ -43,7 +50,6 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
             }
             else if (type == TileType.DESTRUCTIBLE_WALL.getType()) {
                 tile.setDestructible(true);
-//            tile.setTransformToNewTileType(TileType.WALL.getType());
                 tile.setHitPoints(2);
             }
         }

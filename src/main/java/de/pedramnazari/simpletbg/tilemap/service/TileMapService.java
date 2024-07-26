@@ -31,7 +31,11 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
 
     private void initPortals() {
         final Collection<Tile> portals = tileMap.getTilesOfType(TileType.PORTAL);
-        if ((portals.size() == 1) || (portals.size() > 2)) {
+        final Collection<Tile> portalBehindWalls = tileMap.getTilesOfType(TileType.PORTAL_BEHIND_WALL);
+
+        final int portalCount = portals.size() + portalBehindWalls.size();
+
+        if ((portalCount == 1) || (portalCount > 2)) {
             throw new IllegalStateException("There must be no or exactly 2 portals on the map");
         }
 
@@ -39,8 +43,7 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
             final Tile portal1 = portals.stream().findFirst().get();
             final Tile portal2 = portals.stream().skip(1).findFirst().get();
 
-            portal1.setPortalDestination(portal2);
-            portal2.setPortalDestination(portal1);
+            linkPortals(portal1, portal2);
         }
     }
 
@@ -71,12 +74,42 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
 
                     if (tile.isDestroyed()) {
                         if (tile.canTransformToNewTileType()) {
-                            tileMap.setTile(x, y, tileFactory.createElement(tile.getTransformToNewTileType(), x, y));
+                            transformToNewTileType(tile, x, y);
                         }
                     }
                 }
             }
         }
+    }
+
+    private void transformToNewTileType(Tile tile, int x, int y) {
+        final Tile newTile = tileFactory.createElement(tile.getTransformToNewTileType(), x, y);
+        tileMap.setTile(x, y, newTile);
+
+        linkPortalToDestination(newTile);
+    }
+
+    private void linkPortalToDestination(Tile tile) {
+        if (tile.isPortal()) {
+            Tile portalDestination = tile.getPortalDestination().orElse(null);
+
+            if (portalDestination == null) {
+                final Collection<Tile> portals = tileMap.getTilesOfType(TileType.PORTAL);
+
+                portalDestination = portals.stream().filter(p -> !p.equals(tile)).findFirst().orElse(null);
+            }
+
+            if (portalDestination != null) {
+                linkPortals(tile, portalDestination);
+            }
+
+            // Note: portalDestination is null if the destination is still hidden (e.g., behind a wall)
+        }
+    }
+
+    private void linkPortals(Tile portal1, Tile portal2) {
+        portal1.setPortalDestination(portal2);
+        portal2.setPortalDestination(portal1);
     }
 
     @Override
@@ -100,7 +133,7 @@ public class TileMapService implements ITileMapService, IBombEventListener, IHer
     public void onHeroMoved(IHero hero, int oldX, int oldY) {
         final Tile tile = tileMap.getTile(hero.getX(), hero.getY());
 
-        if  (tile.isPortal() || tile.getType() == TileType.EXIT.getType()) {
+        if (tile.isPortal() || tile.getType() == TileType.EXIT.getType()) {
             logger.info("Hero moved to special tile: " + tile);
             characterMovedToSpecialTileNotifier.notifyCharacterMovedToSpecialTile(hero, tile);
         }

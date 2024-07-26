@@ -21,7 +21,7 @@ public enum TileType {
     WEAPON_SWORD(200),
     WEAPON_SWORD2(201),
     WEAPON_LANCE(220),
-    WEAPON_DOUBLE_ENDED_LANCE(221), // attacks foward and backward
+    WEAPON_DOUBLE_ENDED_LANCE(221), // attacks forward and backward,
     WEAPON_MULTI_SPIKE_LANCE(222), // attacks in all directions
 
     WEAPON_BOMB_PLACER(230),
@@ -35,6 +35,7 @@ public enum TileType {
     ENEMY_FH(530), // follow hero
 
     PORTAL(900),
+    PORTAL_BEHIND_WALL(910),
     EXIT(999),
 
     HERO(1000);

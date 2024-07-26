@@ -28,6 +28,7 @@ public class TileMap {
 
     public void setTile(int x, int y, Tile tile) {
         tiles[y][x] = tile;
+        // TODO: set x and y in tile?
     }
 
     public boolean isWithinBounds(int x, int y) {
