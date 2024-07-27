@@ -57,7 +57,11 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
                     oldBombPlacer.setRange(oldBombPlacer.getRange() + newBombPlacer.getRange());
                     logger.info("Merging bomb placers. New Range is " + oldBombPlacer.getRange());
                 }
-                else {
+                else if (hero.getWeapon().isEmpty()) {
+                    hero.setWeapon(weapon);
+                }
+                else { // hero already has a weapon
+                    hero.getInventory().addItem(hero.getWeapon().get());
                     hero.setWeapon(weapon);
                 }
             }

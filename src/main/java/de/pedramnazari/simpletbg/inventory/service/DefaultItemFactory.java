@@ -6,7 +6,7 @@ import de.pedramnazari.simpletbg.inventory.model.Ring;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombService;
-import de.pedramnazari.simpletbg.inventory.service.magiceffect.HealthIncreaseMagicEffect;
+import de.pedramnazari.simpletbg.inventory.service.magiceffect.HealthModifierMagicEffect;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
 
@@ -42,10 +42,16 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             item = new Item(x, y, itemName, itemDescription, type);
         }
         else if (type == TileType.HEALTH_POTION.getType()) {
-            final IMagicEffect magicPower = new HealthIncreaseMagicEffect(20);
+            final IMagicEffect magicPower = new HealthModifierMagicEffect(20);
             final ConsumableItem magicPotion = new ConsumableItem(magicPower, x, y, type);
 
             item = magicPotion;
+        }
+        else if (type == TileType.POISON_POTION.getType()) {
+        final IMagicEffect magicPower = new HealthModifierMagicEffect(-20);
+        final ConsumableItem poisonPotion = new ConsumableItem(magicPower, x, y, type);
+
+        item = poisonPotion;
         }
         else if (type == TileType.WEAPON_SWORD.getType()) {
             itemName = "Sword";

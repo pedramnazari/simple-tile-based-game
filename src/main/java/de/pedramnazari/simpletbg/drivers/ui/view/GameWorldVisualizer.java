@@ -309,10 +309,11 @@ public class GameWorldVisualizer extends Application {
                 case 230 -> "/tiles/items/weapons/bomb_placer.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
                 case 160 -> "/tiles/items/consumable/health_potion.png";
+                case 170 -> "/tiles/items/consumable/poison_potion.png";
                 default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
             };
 
-            final Image itemImage = new Image(getClass().getResourceAsStream(imagePath));
+            final Image itemImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
             final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
 
             Point point = new Point(item.getX(), item.getY());
@@ -403,7 +404,10 @@ public class GameWorldVisualizer extends Application {
         ItemView itemView = removeItem(item);
 
         if (element instanceof IHero hero) {
-            inventory.getChildren().add(itemView.getImageView());
+            if (hero.getInventory().getItems().contains(item)) {
+                inventory.getChildren().add(itemView.getImageView());
+            }
+
         }
 
     }

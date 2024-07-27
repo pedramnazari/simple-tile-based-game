@@ -52,6 +52,7 @@ public class GameInitializer {
     private static final int DW = DESTRUCTIBLE_WALL.getType();
 
     private static final int HP = HEALTH_POTION.getType();
+    private static final int PP = POISON_POTION.getType();
     private static final int WHP = WALL_HIDING_PORTAL.getType();
 
 
@@ -213,14 +214,14 @@ public class GameInitializer {
         };
 
         final int[][] itemConfig7 = new int[][]{
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, PP, O, O, O, O, O},
                 {WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, WEAPON_SWORD2.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O},
+                {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, PP, O},
+                {PP, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
                 {O, O, O, O, O, O, O, O, O, O, HP, O, O, O, O, O, O, O, HP, O},
                 {O, O, O, O, O, O, O, O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O, O, O, O, O}
