@@ -425,7 +425,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        StartView.main(args);
     }
 
     public void handleHeroDefeated() {
