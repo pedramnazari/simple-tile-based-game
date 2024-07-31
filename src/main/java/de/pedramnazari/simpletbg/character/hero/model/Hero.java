@@ -30,7 +30,6 @@ public class Hero extends Character implements IHero {
 
     @Override
     public void setWeapon(IWeapon weapon) {
-        // TODO: handle case that hero already has a weapon (drop it or put it in inventory)
         this.weapon = weapon;
     }
 

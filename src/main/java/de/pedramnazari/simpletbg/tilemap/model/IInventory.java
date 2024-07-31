@@ -8,4 +8,6 @@ public interface IInventory {
     void removeItem(IItem item);
 
     Collection<IItem> getItems();
+
+    boolean containsItem(IItem item);
 }

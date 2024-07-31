@@ -1,10 +1,8 @@
 package de.pedramnazari.simpletbg.character.enemy.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
 import de.pedramnazari.simpletbg.inventory.service.IWeaponDealsDamageListener;
-import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.event.*;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.HeroHitNotifier;
@@ -18,11 +16,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNotifier, IHeroAttackListener, IWeaponDealsDamageListener {
+public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackListener, IWeaponDealsDamageListener {
     private final Logger logger = Logger.getLogger(EnemyService.class.getName());
 
-    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
     private final HeroHitNotifier heroHitNotifier = new HeroHitNotifier();
+
+    private final Collection<IItemEventListener> itemEventListeners = new ArrayList<>();
 
     private final EnemyMovementService enemyMovementService;
 
@@ -84,7 +83,7 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
         if (result.getCollectedItem().isPresent()) {
             final IItem item = result.getCollectedItem().get();
 
-            itemPickUpNotifier.notifyItemPickedUp(result.getItemCollector().get(), item);
+            notifyItemCollected(new ItemCollectedEvent(result.getItemCollector().get(), item));
         }
     }
 
@@ -122,16 +121,6 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
     }
 
     @Override
-    public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
-        itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
-    }
-
-    @Override
-    public void notifyItemPickedUp(ICharacter element, IItem item) {
-        itemPickUpNotifier.notifyItemPickedUp(element, item);
-    }
-
-    @Override
     public void onHeroAttacksCharacter(final ICharacter attackCharacter, int damage) {
         if (!(attackCharacter instanceof IEnemy enemy)) {
             return;
@@ -164,5 +153,33 @@ public class EnemyService implements IEnemyService, IEnemySubject, IItemPickUpNo
     @Override
     public void onWeaponDealsDamage(IWeapon weapon, ICharacter attackedCharacter, int damage) {
         onHeroAttacksCharacter(attackedCharacter, damage);
+    }
+
+    public void addItemEventListener(IItemEventListener listener) {
+        itemEventListeners.add(listener);
+    }
+
+    private void notifyItemCollected(ItemCollectedEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemCollected(event);
+        }
+    }
+
+    private void notifyItemEquipped(ItemEquippedEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemEquipped(event);
+        }
+    }
+
+    private void notifyItemAddedToInventory(ItemAddedToInventoryEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemAddedToInventory(event);
+        }
+    }
+
+    private void notifyItemConsumed(ItemConsumedEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemUsed(event);
+        }
     }
 }

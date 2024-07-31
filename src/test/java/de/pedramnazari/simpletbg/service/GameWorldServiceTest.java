@@ -52,7 +52,7 @@ public class GameWorldServiceTest {
                 new DefaultHeroFactory(),
                 new HeroMovementService(collisionDetectionService),
                 new HeroAttackService());
-        heroService.addItemPickupListener(itemService);
+        heroService.addItemEventListener(itemService);
 
         gameWorldService = new GameWorldService(
                 new TileMapService(tileFactory),

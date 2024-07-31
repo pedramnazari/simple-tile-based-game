@@ -1,12 +1,13 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
+import de.pedramnazari.simpletbg.tilemap.model.IInventory;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Inventory implements de.pedramnazari.simpletbg.tilemap.model.IInventory {
+public class Inventory implements IInventory {
 
     private final Collection<IItem> items;
 
@@ -27,6 +28,11 @@ public class Inventory implements de.pedramnazari.simpletbg.tilemap.model.IInven
     @Override
     public Collection<IItem> getItems() {
         return List.copyOf(items);
+    }
+
+    @Override
+    public boolean containsItem(IItem item) {
+        return items.contains(item);
     }
 
 }

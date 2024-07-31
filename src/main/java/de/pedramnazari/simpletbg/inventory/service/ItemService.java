@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
-import de.pedramnazari.simpletbg.tilemap.model.ICharacter;
+import de.pedramnazari.simpletbg.inventory.service.event.*;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.service.IItemService;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemService implements IItemService, IItemPickUpListener {
+public class ItemService implements IItemService, IItemEventListener {
 
     private final Collection<IItem> items = new ArrayList<>();
 
@@ -45,11 +45,28 @@ public class ItemService implements IItemService, IItemPickUpListener {
     }
 
     @Override
-    public void onItemPickedUp(ICharacter element, IItem item) {
+    public void onItemCollected(ItemCollectedEvent event) {
+        IItem item = event.item();
+
         if (!items.contains(item)) {
             throw new IllegalArgumentException("Item not in list");
         }
 
         items.remove(item);
+    }
+
+    @Override
+    public void onItemEquipped(ItemEquippedEvent event) {
+
+    }
+
+    @Override
+    public void onItemAddedToInventory(ItemAddedToInventoryEvent event) {
+
+    }
+
+    @Override
+    public void onItemUsed(ItemConsumedEvent event) {
+
     }
 }

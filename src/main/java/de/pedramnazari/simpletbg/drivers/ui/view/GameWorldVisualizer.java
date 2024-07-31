@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -403,11 +404,16 @@ public class GameWorldVisualizer extends Application {
     public void handleItemPickedUp(ICharacter element, IItem item) {
         ItemView itemView = removeItem(item);
 
-        if (element instanceof IHero hero) {
-            if (hero.getInventory().getItems().contains(item)) {
-                inventory.getChildren().add(itemView.getImageView());
-            }
+        if (element instanceof IHero h) {
+            if (h.getInventory().containsItem(item)) {
+                final ImageView itemImageView = itemView.getImageView();
+                itemImageView.setOnMouseClicked(event -> {
+                    logger.info("Item in inventory clicked: " + item);
+                    controller.onInventarItemClicked(item);
+                });
 
+                inventory.getChildren().add(itemImageView);
+            }
         }
 
     }

@@ -21,4 +21,6 @@ public interface IHeroService {
 
     // TODO: Remove this method
     CollisionDetectionService getCollisionDetectionService();
+
+    void useItem(IItem item);
 }

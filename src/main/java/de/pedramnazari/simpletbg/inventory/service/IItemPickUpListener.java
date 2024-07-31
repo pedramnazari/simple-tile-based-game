@@ -5,6 +5,6 @@ import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 public interface IItemPickUpListener {
 
-    void onItemPickedUp(ICharacter element, IItem item);
+    void onItemPickedUp(ICharacter character, IItem item);
 
 }

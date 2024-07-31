@@ -3,24 +3,24 @@ package de.pedramnazari.simpletbg.character.hero.service;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.Inventory;
 import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpNotifier;
-import de.pedramnazari.simpletbg.inventory.service.ItemPickUpNotifier;
+import de.pedramnazari.simpletbg.inventory.service.event.*;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.*;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.MovementResult;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNotifier, IHeroAttackNotifier, ICharacterMovedToSpecialTileListener {
+public class HeroService implements IHeroService, IHeroProvider, IHeroAttackNotifier, ICharacterMovedToSpecialTileListener {
 
     private static final Logger logger = Logger.getLogger(HeroService.class.getName());
 
-    private final ItemPickUpNotifier itemPickUpNotifier = new ItemPickUpNotifier();
     private final HeroMovedNotifier heroMovedNotifier = new HeroMovedNotifier();
+
+    private final Collection<IItemEventListener> itemEventListeners = new ArrayList<>();
 
     private final IHeroFactory heroFactory;
     private final HeroMovementService heroMovementService;
@@ -37,9 +37,8 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
     public MovementResult moveHero(MoveDirection moveDirection, GameContext gameContext) {
         final MovementResult result = heroMovementService.moveElement(hero, moveDirection, gameContext);
 
-        handleItemIfCollected(result);
-
         if (result.hasElementMoved()) {
+            handleItemIfCollected(result);
             notifyHeroMoved(hero, result.getOldX(), result.getOldY());
         }
 
@@ -51,43 +50,53 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
             final IItem item = result.getCollectedItem().get();
 
             if (item instanceof IWeapon weapon) {
-                if (weapon instanceof BombPlacer newBombPlacer
-                        && hero.getWeapon().isPresent()
-                        && hero.getWeapon().get() instanceof BombPlacer oldBombPlacer) {
-                    oldBombPlacer.setRange(oldBombPlacer.getRange() + newBombPlacer.getRange());
-                    logger.info("Merging bomb placers. New Range is " + oldBombPlacer.getRange());
-                }
-                else if (hero.getWeapon().isEmpty()) {
-                    hero.setWeapon(weapon);
-                }
-                else { // hero already has a weapon
-                    hero.getInventory().addItem(hero.getWeapon().get());
-                    hero.setWeapon(weapon);
-                }
+                handleWeaponCollected(weapon);
             }
             else if (item instanceof IRing ring) {
-                hero.setRing(ring);
+                handleRingCollected(ring);
             }
             else if (item instanceof IConsumableItem magicPotion) {
-                logger.info("Hero picked up magic potion");
-                magicPotion.consume(hero);
+                handleConsumableItemCollected(magicPotion);
             }
             else {
-                hero.getInventory().addItem(item);
+                addItemToInventory(item);
             }
 
-            itemPickUpNotifier.notifyItemPickedUp(hero, item);
+            notifyItemCollected(new ItemCollectedEvent(hero, item));
         }
     }
 
-    @Override
-    public void addItemPickupListener(IItemPickUpListener itemPickUpListener) {
-        itemPickUpNotifier.addItemPickupListener(itemPickUpListener);
+    private void handleWeaponCollected(IWeapon weapon) {
+        if (weapon instanceof BombPlacer newBombPlacer
+                && hero.getWeapon().isPresent()
+                && hero.getWeapon().get() instanceof BombPlacer oldBombPlacer) {
+            oldBombPlacer.setRange(oldBombPlacer.getRange() + newBombPlacer.getRange());
+            logger.info("Merging bomb placers. New Range is " + oldBombPlacer.getRange());
+        }
+        else if (hero.getWeapon().isEmpty()) {
+            hero.setWeapon(weapon);
+        }
+        else { // hero already has a weapon
+            addItemToInventory(weapon);
+        }
     }
 
-    @Override
-    public void notifyItemPickedUp(ICharacter element, IItem item) {
-        itemPickUpNotifier.notifyItemPickedUp(element, item);
+    private void handleRingCollected(IRing ring) {
+        if (hero.getRing().isEmpty()) {
+            hero.setRing(ring);
+        }
+        else {
+            addItemToInventory(ring);
+        }
+    }
+
+    private void handleConsumableItemCollected(IConsumableItem magicPotion) {
+        logger.info("Hero picked up magic potion");
+        consumeItem(magicPotion);
+    }
+
+    private void addItemToInventory(IItem item) {
+        hero.getInventory().addItem(item);
     }
 
     public void addHeroMovedListener(IHeroMovedListener listener) {
@@ -151,6 +160,46 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
     }
 
     @Override
+    public void useItem(IItem item) {
+        if (item instanceof IConsumableItem consumableItem) {
+            consumeItem(consumableItem);
+        }
+        else if (item instanceof IWeapon newWeapon) {
+            useWeapon(newWeapon);
+        }
+        else if (item instanceof IRing newRing) {
+            useRing(newRing);
+        }
+        else {
+            throw new IllegalArgumentException("Item type not supported: " + item.getClass());
+        }
+    }
+
+    private void useRing(IRing newRing) {
+        final IRing oldRing = hero.getRing().orElse(null);
+
+        if (oldRing != null) {
+            addItemToInventory(oldRing);
+        }
+
+        hero.setRing(newRing);
+    }
+
+    private void useWeapon(IWeapon newWeapon) {
+        final IWeapon oldWeapon = hero.getWeapon().orElse(null);
+
+        if (oldWeapon != null) {
+            addItemToInventory(oldWeapon);
+        }
+
+        hero.setWeapon(newWeapon);
+    }
+
+    private void consumeItem(IConsumableItem consumableItem) {
+        consumableItem.consume(hero);
+    }
+
+    @Override
     public void onCharacterMovedToSpecialTile(ICharacter character, Tile specialTile) {
         if (!hero.equals(character)) {
             return;
@@ -166,19 +215,38 @@ public class HeroService implements IHeroService, IHeroProvider, IItemPickUpNoti
                 final Tile destination = specialTile.getPortalDestination().get();
                 logger.info("Hero will be moved to portal destination: " + destination);
                 final MovementResult result = heroMovementService.moveElementToPositionWithinMap(GameContext.getInstance(), hero, destination.getX(), destination.getY());
-
-                if (result.hasElementMoved()) {
-                    logger.info("!!!Hero moved to new position: " + hero.getX() + ", " + hero.getY());
-                }
-                else {
-                    logger.info("???Hero did not move");
-                }
-
-                logger.info("Hero's new position: " + hero.getX() + ", " + hero.getY());
             }
             else {
                 throw new IllegalStateException("Portal destination not set");
             }
+        }
+    }
+
+    public void addItemEventListener(IItemEventListener listener) {
+        itemEventListeners.add(listener);
+    }
+
+    private void notifyItemCollected(ItemCollectedEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemCollected(event);
+        }
+    }
+
+    private void notifyItemEquipped(ItemEquippedEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemEquipped(event);
+        }
+    }
+
+    private void notifyItemAddedToInventory(ItemAddedToInventoryEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemAddedToInventory(event);
+        }
+    }
+
+    private void notifyItemConsumed(ItemConsumedEvent event) {
+        for (IItemEventListener listener : itemEventListeners) {
+            listener.onItemUsed(event);
         }
     }
 }

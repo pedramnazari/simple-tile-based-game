@@ -267,14 +267,14 @@ public class GameInitializer {
 
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
         enemyService.registerObserver(controller);
-        enemyService.addItemPickupListener(itemService);
-        heroService.addItemPickupListener(itemService);
+        enemyService.addItemEventListener(itemService);
+        heroService.addItemEventListener(itemService);
         heroService.addHeroAttackListener(enemyService);
         heroService.addHeroMovedListener(tileMapService);
         heroService.addHeroMovedListener(controller);
 
-        heroService.addItemPickupListener(controller);
-        enemyService.addItemPickupListener(controller);
+        heroService.addItemEventListener(controller);
+        enemyService.addItemEventListener(controller);
         enemyService.addHeroHitListener(controller);
         enemyService.addEnemyHitListener(controller);
 
@@ -300,7 +300,7 @@ public class GameInitializer {
         final IQuestConfig questConfig = questConfigFactory.createQuestConfig(QuestDefeatAllEnemiesAndGoToExitConfig.QUEST_ID);
         final QuestService questService = questConfig.getQuestEventDispatcher();
         enemyService.addEnemyHitListener(questService);
-        heroService.addItemPickupListener(questService);
+        heroService.addItemEventListener(questService);
         tileMapService.addCharacterMovedToSpecialTileListener(questService);
 
         gameWorldService.setQuest(questConfig.getQuest());

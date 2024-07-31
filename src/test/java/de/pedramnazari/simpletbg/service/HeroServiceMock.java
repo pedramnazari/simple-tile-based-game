@@ -51,4 +51,9 @@ public class HeroServiceMock implements IHeroService {
     public CollisionDetectionService getCollisionDetectionService() {
         return null;
     }
+
+    @Override
+    public void useItem(IItem item) {
+
+    }
 }

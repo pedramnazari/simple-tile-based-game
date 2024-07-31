@@ -1,7 +1,7 @@
 package de.pedramnazari.simpletbg.quest.service;
 
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
-import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.inventory.service.event.*;
 import de.pedramnazari.simpletbg.quest.model.IQuestEvent;
 import de.pedramnazari.simpletbg.quest.model.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.model.Quest;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class QuestService implements IEnemyHitListener, IItemPickUpListener, ICharacterMovedToSpecialTileListener {
+public class QuestService implements IEnemyHitListener, ICharacterMovedToSpecialTileListener, IItemEventListener {
     private static final Logger logger = Logger.getLogger(QuestService.class.getName());
 
     private final Map<Class<? extends IQuestEvent>, List<IQuestEventListener<? extends IQuestEvent>>> listeners = new HashMap<>();
@@ -61,12 +61,6 @@ public class QuestService implements IEnemyHitListener, IItemPickUpListener, ICh
         dispatch(new AllEnemiesDefeatedQuestEvent());
     }
 
-    @Override
-    public void onItemPickedUp(ICharacter element, IItem item) {
-        logger.info("Dispatch: Item picked up");
-        dispatch(new ItemPickUpQuestEvent(element, item));
-    }
-
     public Quest getQuest() {
         return quest;
     }
@@ -91,6 +85,27 @@ public class QuestService implements IEnemyHitListener, IItemPickUpListener, ICh
             logger.info("Dispatch: Quest completed and hero reached exit --> Stop game");
             //dispatch(new QuestCompletedEvent());
         }
+    }
+
+    @Override
+    public void onItemCollected(ItemCollectedEvent event) {
+        logger.info("Dispatch: Item picked up");
+        dispatch(new ItemPickUpQuestEvent(event.character(), event.item()));
+    }
+
+    @Override
+    public void onItemEquipped(ItemEquippedEvent event) {
+
+    }
+
+    @Override
+    public void onItemAddedToInventory(ItemAddedToInventoryEvent event) {
+
+    }
+
+    @Override
+    public void onItemUsed(ItemConsumedEvent event) {
+
     }
 }
 

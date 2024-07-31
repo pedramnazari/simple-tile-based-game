@@ -7,6 +7,7 @@ import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
+import de.pedramnazari.simpletbg.inventory.service.event.*;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroHitListener;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener{
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -87,9 +88,9 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     }
 
     @Override
-    public void onItemPickedUp(ICharacter element, IItem item) {
+    public void onItemPickedUp(ICharacter character, IItem item) {
         // GUI operations must be executed on the JavaFX application thread
-        Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(element, item));
+        Platform.runLater(() -> gameWorldVisualizer.handleItemPickedUp(character, item));
     }
 
     public void heroAttacks() {
@@ -171,5 +172,29 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void onHeroMoved(IHero hero, int oldX, int oldY) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.handleHeroMoved(hero, oldX, oldY));
+    }
+
+    public void onInventarItemClicked(IItem item) {
+        gameWorldService.onInventarItemSelected(item);
+    }
+
+    @Override
+    public void onItemCollected(ItemCollectedEvent event) {
+        onItemPickedUp(event.character(), event.item());
+    }
+
+    @Override
+    public void onItemEquipped(ItemEquippedEvent event) {
+
+    }
+
+    @Override
+    public void onItemAddedToInventory(ItemAddedToInventoryEvent event) {
+
+    }
+
+    @Override
+    public void onItemUsed(ItemConsumedEvent event) {
+
     }
 }

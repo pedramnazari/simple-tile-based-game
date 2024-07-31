@@ -90,23 +90,23 @@ public class GameWorldService {
     }
 
     // TODO: Move all moveHero* methods to HeroService
-    public MovementResult moveHeroToLeft() {
-        return moveHero(MoveDirection.LEFT);
+    public void moveHeroToLeft() {
+        moveHero(MoveDirection.LEFT);
     }
 
-    public MovementResult moveHeroToRight() {
-        return moveHero(MoveDirection.RIGHT);
+    public void moveHeroToRight() {
+        moveHero(MoveDirection.RIGHT);
     }
 
-    public MovementResult moveHeroUp() {
-        return moveHero(MoveDirection.UP);
+    public void moveHeroUp() {
+        moveHero(MoveDirection.UP);
     }
 
-    public MovementResult moveHeroDown() {
-        return moveHero(MoveDirection.DOWN);
+    public void moveHeroDown() {
+        moveHero(MoveDirection.DOWN);
     }
 
-    protected MovementResult moveHero(MoveDirection moveDirection) {
+    protected void moveHero(MoveDirection moveDirection) {
 
         final GameContext gameContext = GameContext.getInstance();
 
@@ -115,15 +115,7 @@ public class GameWorldService {
         if (result.hasElementMoved()) {
             currentMapIndex = result.getNewMapIndex();
         }
-
-        return result;
     }
-
-    public String getCurrentMapIndex() {
-        return currentMapIndex;
-    }
-
-
 
     public TileMap getTileMap() {
         return tileMapService.getTileMap();
@@ -163,5 +155,9 @@ public class GameWorldService {
 
     public void setQuest(Quest quest) {
         this.quest = quest;
+    }
+
+    public void onInventarItemSelected(IItem item) {
+        heroService.useItem(item);
     }
 }
