@@ -21,6 +21,7 @@ import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfigFactory;
 import de.pedramnazari.simpletbg.quest.service.config.QuestDefeatAllEnemiesAndGoToExitConfig;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
+import de.pedramnazari.simpletbg.tilemap.config.LabyrinthMapConfig;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -305,11 +306,11 @@ public class GameInitializer {
 
         gameWorldService.setQuest(questConfig.getQuest());
 
-        final Tile[][] tiles = new TileConfigParser().parse(mapConfig7, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(itemConfig7, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(enemyConfig7, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Tile[][] tiles = new TileConfigParser().parse(LabyrinthMapConfig.MAP, tileFactory);
+        final Collection<IItem> items = new ItemConfigParser().parse(LabyrinthMapConfig.ITEMS, itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(LabyrinthMapConfig.ENEMIES, new DefaultEnemyFactory(collisionDetectionService, heroService));
 
-        controller.startGameUsingMap(tiles, items, enemies, 0, 0);
+        controller.startGameUsingMap(tiles, items, enemies, LabyrinthMapConfig.HERO_START_ROW, LabyrinthMapConfig.HERO_START_COLUMN);
 
         return controller;
     }
