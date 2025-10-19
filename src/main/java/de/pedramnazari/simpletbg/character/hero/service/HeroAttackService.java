@@ -3,6 +3,7 @@ package de.pedramnazari.simpletbg.character.hero.service;
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
 import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.model.IRangedWeapon;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 
@@ -30,6 +31,12 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
         if (weapon instanceof BombPlacer bombPlacer) {
             bombPlacer.placeBomb(hero.getX(), hero.getY());
+            return List.of();
+        }
+
+        if (weapon instanceof IRangedWeapon rangedWeapon) {
+            int damage = calcDamage(hero);
+            rangedWeapon.shoot(hero, damage);
             return List.of();
         }
 

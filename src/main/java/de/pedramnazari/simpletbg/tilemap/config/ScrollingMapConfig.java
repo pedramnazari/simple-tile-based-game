@@ -44,7 +44,7 @@ public final class ScrollingMapConfig {
             {O, O, O, WEAPON_SWORD.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, WEAPON_LANCE.getType(), O, O, O, O, O, O, O},
             {O, O, O, O, O, HEALTH_POTION.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O},
+            {O, O, O, O, O, WEAPON_FIRE_STAFF.getType(), O, O, O, O, O, O, O, O, WEAPON_BOMB_PLACER.getType(), O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, WEAPON_DOUBLE_ENDED_LANCE.getType(), O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},

@@ -12,9 +12,11 @@ import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
 import de.pedramnazari.simpletbg.inventory.model.BombFactory;
+import de.pedramnazari.simpletbg.inventory.model.projectile.FireProjectileFactory;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.inventory.service.bomb.BombService;
+import de.pedramnazari.simpletbg.inventory.service.projectile.ProjectileService;
 import de.pedramnazari.simpletbg.quest.service.QuestService;
 import de.pedramnazari.simpletbg.quest.service.config.DefaultQuestConfigFactory;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
@@ -292,6 +294,12 @@ public class GameInitializer {
         bombService.addHeroHitListener(controller);
         bombService.addBombEventListener(tileMapService);
         bombService.addWeaponDealsDamageListener(enemyService);
+
+        ProjectileService projectileService = new ProjectileService(collisionDetectionService, tileMapService, enemyService);
+        itemFactory.setProjectileFactory(new FireProjectileFactory());
+        itemFactory.setProjectileService(projectileService);
+        projectileService.addProjectileEventListener(controller);
+        projectileService.addWeaponDealsDamageListener(enemyService);
 
 
         /**

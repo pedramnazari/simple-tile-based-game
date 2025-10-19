@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
+import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.event.*;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -160,6 +161,30 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void onBombExplosionFinished(IBomb bomb) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.bombExplosionFinished(bomb));
+    }
+
+    @Override
+    public void onProjectileCreated(IProjectile projectile) {
+        if (gameWorldVisualizer == null) {
+            return;
+        }
+        Platform.runLater(() -> gameWorldVisualizer.addProjectile(projectile));
+    }
+
+    @Override
+    public void onProjectileMoved(IProjectile projectile) {
+        if (gameWorldVisualizer == null) {
+            return;
+        }
+        Platform.runLater(() -> gameWorldVisualizer.updateProjectile(projectile));
+    }
+
+    @Override
+    public void onProjectileFinished(IProjectile projectile) {
+        if (gameWorldVisualizer == null) {
+            return;
+        }
+        Platform.runLater(() -> gameWorldVisualizer.removeProjectile(projectile));
     }
 
     @Override
