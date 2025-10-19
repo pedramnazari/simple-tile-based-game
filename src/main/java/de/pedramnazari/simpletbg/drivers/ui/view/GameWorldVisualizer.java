@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -30,6 +31,8 @@ public class GameWorldVisualizer extends Application {
     private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
 
     public static final int TILE_SIZE = 48;
+    private static final int VISIBLE_COLUMNS = 15;
+    private static final int VISIBLE_ROWS = 11;
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
@@ -43,6 +46,12 @@ public class GameWorldVisualizer extends Application {
     private TilePane inventory;
     private GameWorldController controller;
     private IHero hero;
+    private StackPane stackPane;
+    private Pane cameraViewport;
+    private double viewportWidth;
+    private double viewportHeight;
+    private double mapPixelWidth;
+    private double mapPixelHeight;
 
     private boolean right, left, down, up;
     private Map<Point, TileView> tilesView = new HashMap<>();
@@ -53,14 +62,32 @@ public class GameWorldVisualizer extends Application {
     public void start(Stage primaryStage) {
         controller = GameInitializer.initAndStartGame();
         controller.setTileMapVisualizer(this);
+
+        final TileMap tileMap = controller.getTileMap();
         hero = controller.getHero();
 
+        stackPane = new StackPane();
+        mapPixelWidth = tileMap.getWidth() * TILE_SIZE;
+        mapPixelHeight = tileMap.getHeight() * TILE_SIZE;
+        stackPane.setPrefSize(mapPixelWidth, mapPixelHeight);
 
-        final StackPane stackPane = new StackPane();
-        tilesGrid = createGridPane(controller.getTileMap());
-        itemsGrid = createGridPane(controller.getTileMap());
-        bombsGrid = createGridPane(controller.getTileMap());
-        charactersGrid = createGridPane(controller.getTileMap());
+        viewportWidth = VISIBLE_COLUMNS * TILE_SIZE;
+        viewportHeight = VISIBLE_ROWS * TILE_SIZE;
+
+        cameraViewport = new Pane(stackPane);
+        cameraViewport.setPrefSize(viewportWidth, viewportHeight);
+        cameraViewport.setMinSize(viewportWidth, viewportHeight);
+        cameraViewport.setMaxSize(viewportWidth, viewportHeight);
+
+        Rectangle clip = new Rectangle(viewportWidth, viewportHeight);
+        clip.widthProperty().bind(cameraViewport.widthProperty());
+        clip.heightProperty().bind(cameraViewport.heightProperty());
+        cameraViewport.setClip(clip);
+
+        tilesGrid = createGridPane(tileMap);
+        itemsGrid = createGridPane(tileMap);
+        bombsGrid = createGridPane(tileMap);
+        charactersGrid = createGridPane(tileMap);
 
         initFloorAndObstacleTiles(controller.getTileMap());
 
@@ -78,7 +105,9 @@ public class GameWorldVisualizer extends Application {
         stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, charactersGrid);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(stackPane);
+        StackPane viewportContainer = new StackPane(cameraViewport);
+        viewportContainer.setAlignment(Pos.CENTER);
+        borderPane.setCenter(viewportContainer);
 
         inventory = new TilePane();
         inventory.setPrefTileWidth(TILE_SIZE);
@@ -96,6 +125,8 @@ public class GameWorldVisualizer extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        updateCamera();
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> moveHero()));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -196,6 +227,8 @@ public class GameWorldVisualizer extends Application {
         charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
 
         updateHeroHealthView();
+
+        updateCamera();
 
     }
 
@@ -441,6 +474,36 @@ public class GameWorldVisualizer extends Application {
 
     public void handleHeroHit() {
         updateHeroHealthView();
+    }
+
+    private void updateCamera() {
+        if (stackPane == null || hero == null) {
+            return;
+        }
+
+        double heroPixelX = hero.getX() * TILE_SIZE + TILE_SIZE / 2.0;
+        double heroPixelY = hero.getY() * TILE_SIZE + TILE_SIZE / 2.0;
+
+        double targetTranslateX = viewportWidth / 2.0 - heroPixelX;
+        double targetTranslateY = viewportHeight / 2.0 - heroPixelY;
+
+        double minTranslateX = Math.min(0, viewportWidth - mapPixelWidth);
+        double maxTranslateX = Math.max(0, viewportWidth - mapPixelWidth);
+        double minTranslateY = Math.min(0, viewportHeight - mapPixelHeight);
+        double maxTranslateY = Math.max(0, viewportHeight - mapPixelHeight);
+
+        stackPane.setTranslateX(clamp(targetTranslateX, minTranslateX, maxTranslateX));
+        stackPane.setTranslateY(clamp(targetTranslateY, minTranslateY, maxTranslateY));
+    }
+
+    private double clamp(double value, double min, double max) {
+        if (value < min) {
+            return min;
+        }
+        if (value > max) {
+            return max;
+        }
+        return value;
     }
 
     private void removeBomb(IBomb bomb) {
