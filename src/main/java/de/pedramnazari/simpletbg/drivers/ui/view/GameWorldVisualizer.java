@@ -37,9 +37,11 @@ public class GameWorldVisualizer extends Application {
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
     private final Collection<BombView> bombsViews = new ArrayList<>();
+    private final Map<IProjectile, ProjectileView> projectileViews = new HashMap<>();
     private GridPane tilesGrid;
     private GridPane itemsGrid;
     private GridPane bombsGrid;
+    private GridPane projectilesGrid;
     private GridPane charactersGrid;
     private Scene scene;
     private HeroView heroView;
@@ -87,6 +89,7 @@ public class GameWorldVisualizer extends Application {
         tilesGrid = createGridPane(tileMap);
         itemsGrid = createGridPane(tileMap);
         bombsGrid = createGridPane(tileMap);
+        projectilesGrid = createGridPane(tileMap);
         charactersGrid = createGridPane(tileMap);
 
         initFloorAndObstacleTiles(controller.getTileMap());
@@ -102,7 +105,7 @@ public class GameWorldVisualizer extends Application {
 
         charactersGrid.add(heroView.getImageView(), hero.getX(), hero.getY());
 
-        stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, charactersGrid);
+        stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, projectilesGrid, charactersGrid);
 
         BorderPane borderPane = new BorderPane();
         StackPane viewportContainer = new StackPane(cameraViewport);
@@ -341,6 +344,7 @@ public class GameWorldVisualizer extends Application {
                 case 221 -> "/tiles/items/weapons/double_ended_lance.png";
                 case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
                 case 230 -> "/tiles/items/weapons/bomb_placer.png";
+                case 240 -> "/tiles/items/weapons/sword2.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
                 case 160 -> "/tiles/items/consumable/health_potion.png";
                 case 170 -> "/tiles/items/consumable/poison_potion.png";
@@ -405,6 +409,15 @@ public class GameWorldVisualizer extends Application {
             throw new IllegalArgumentException("Unknown enemy type: " +  enemyType);
         }
         return imagePath;
+    }
+
+
+    private String getImagePathForProjectile(int projectileType) {
+        if (projectileType == TileType.PROJECTILE_FIRE.getType()) {
+            return "/tiles/items/weapons/bomb.png";
+        }
+
+        throw new IllegalArgumentException("Unknown projectile type: " + projectileType);
     }
 
 
@@ -608,6 +621,32 @@ public class GameWorldVisualizer extends Application {
             bombsGrid.add(bombView.getImageView(), bomb.getX(), bomb.getY());
         }
 
+    }
+
+    public void addProjectile(IProjectile projectile) {
+        String imagePath = getImagePathForProjectile(projectile.getType());
+        final Image projectileImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
+        final ProjectileView projectileView = new ProjectileView(projectile, projectileImage, TILE_SIZE);
+        projectileViews.put(projectile, projectileView);
+        projectilesGrid.add(projectileView.getImageView(), projectile.getX(), projectile.getY());
+    }
+
+    public void updateProjectile(IProjectile projectile) {
+        final ProjectileView projectileView = projectileViews.get(projectile);
+        if (projectileView == null) {
+            addProjectile(projectile);
+            return;
+        }
+
+        projectilesGrid.getChildren().remove(projectileView.getImageView());
+        projectilesGrid.add(projectileView.getImageView(), projectile.getX(), projectile.getY());
+    }
+
+    public void removeProjectile(IProjectile projectile) {
+        final ProjectileView projectileView = projectileViews.remove(projectile);
+        if (projectileView != null) {
+            projectilesGrid.getChildren().remove(projectileView.getImageView());
+        }
     }
 
     public void handleTileHit(IWeapon weapon, Tile tile) {

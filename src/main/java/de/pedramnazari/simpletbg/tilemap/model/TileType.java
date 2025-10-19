@@ -33,6 +33,10 @@ public enum TileType {
     WEAPON_BOMB_PLACER(230),
     WEAPON_BOMB(231),
 
+    WEAPON_FIRE_STAFF(240),
+
+    PROJECTILE_FIRE(600),
+
     RING_MAGIC1(300),
 
     ENEMY_LR(500), // left-right,

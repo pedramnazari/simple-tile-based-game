@@ -1,12 +1,14 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
 import de.pedramnazari.simpletbg.inventory.model.ConsumableItem;
+import de.pedramnazari.simpletbg.inventory.model.FireStaff;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.model.Ring;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombService;
 import de.pedramnazari.simpletbg.inventory.service.magiceffect.HealthModifierMagicEffect;
+import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileService;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.AbstractTileMapElementFactory;
 
@@ -22,6 +24,8 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
     private IBombService bombService;
     private IBombFactory bombFactory;
+    private IProjectileFactory projectileFactory;
+    private IProjectileService projectileService;
 
     @Override
     protected IItem createNonEmptyElement(int type, int x, int y) {
@@ -115,6 +119,16 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             item = bombPlacer;
 
         }
+        else if (type == TileType.WEAPON_FIRE_STAFF.getType()) {
+            itemName = "Fire Staff";
+            itemDescription = "A staff that shoots fire over long distances.";
+            if ((projectileFactory == null) || (projectileService == null)) {
+                throw new IllegalStateException("Projectile dependencies are not configured for Fire Staff creation");
+            }
+            final FireStaff fireStaff = new FireStaff(x, y, projectileFactory, projectileService);
+            item = fireStaff;
+
+        }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
@@ -136,5 +150,13 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
     public Optional<IBombFactory> getBombFactory() {
         return Optional.ofNullable(bombFactory);
+    }
+
+    public void setProjectileFactory(IProjectileFactory projectileFactory) {
+        this.projectileFactory = projectileFactory;
+    }
+
+    public void setProjectileService(IProjectileService projectileService) {
+        this.projectileService = projectileService;
     }
 }
