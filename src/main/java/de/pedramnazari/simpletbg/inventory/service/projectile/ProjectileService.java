@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.service.projectile;
 
-import de.pedramnazari.simpletbg.character.enemy.service.IEnemyService;
+
 import de.pedramnazari.simpletbg.inventory.service.IWeaponDealsDamageListener;
 import de.pedramnazari.simpletbg.inventory.service.WeaponDealsDamageNotifier;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.tilemap.model.IProjectile;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
 import de.pedramnazari.simpletbg.tilemap.model.Point;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
+import de.pedramnazari.simpletbg.tilemap.service.IEnemyService;
 import de.pedramnazari.simpletbg.tilemap.service.ITileMapService;
 import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService;
 

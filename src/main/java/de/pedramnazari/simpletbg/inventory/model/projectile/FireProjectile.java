@@ -96,15 +96,11 @@ public class FireProjectile implements IProjectile {
         return movementStrategy;
     }
 
-    @Override
+
     public String getName() {
         return name;
     }
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
 
     @Override
     public int getX() {
