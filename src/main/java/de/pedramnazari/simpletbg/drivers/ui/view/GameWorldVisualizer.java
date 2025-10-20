@@ -59,6 +59,8 @@ public class GameWorldVisualizer extends Application {
     private Map<Point, TileView> tilesView = new HashMap<>();
     private Label healthLabel;
     private ProgressBar healthBar;
+    private Label enemyCountLabel;
+    private int currentEnemyCount;
 
     @Override
     public void start(Stage primaryStage) {
@@ -97,6 +99,7 @@ public class GameWorldVisualizer extends Application {
         updateItems(controller.getItems());
         Collection<IEnemy> enemies = controller.getEnemies();
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
+        currentEnemyCount = enemies.size();
         updateEnemies(enemies);
 
         // add hero to grid
@@ -145,7 +148,10 @@ public class GameWorldVisualizer extends Application {
         healthBar = new ProgressBar(hero.getHealth() / 100.0);
         healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
 
-        healthBox.getChildren().addAll(healthLabel, healthBar);
+        enemyCountLabel = new Label();
+        updateEnemyCountView(currentEnemyCount);
+
+        healthBox.getChildren().addAll(healthLabel, healthBar, enemyCountLabel);
 
         return healthBox;
     }
@@ -363,6 +369,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void updateEnemies(Collection<IEnemy> enemies) {
+        updateEnemyCountView(enemies.size());
         // TODO: do not delete views, instead update them
         for (IEnemy enemy : enemyViews.keySet()) {
             EnemyView enemyView = enemyViews.get(enemy);
@@ -440,11 +447,21 @@ public class GameWorldVisualizer extends Application {
             }
 
             enemyViews.remove(enemy);
+            updateEnemyCountView(controller.getEnemies().size());
         }
     }
 
     public void handleAllEnemiesDefeated() {
+    }
 
+    private void updateEnemyCountView(int enemyCount) {
+        currentEnemyCount = enemyCount;
+
+        if (enemyCountLabel == null) {
+            return;
+        }
+
+        enemyCountLabel.setText("Enemies: " + enemyCount);
     }
 
     public void handleItemPickedUp(ICharacter element, IItem item) {
