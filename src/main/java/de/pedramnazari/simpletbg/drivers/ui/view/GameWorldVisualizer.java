@@ -452,7 +452,6 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleAllEnemiesDefeated() {
-        updateEnemyCountView(0);
     }
 
     private void updateEnemyCountView(int enemyCount) {
