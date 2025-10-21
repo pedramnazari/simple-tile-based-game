@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 public class GameWorldService {
 
     private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
+    private static final long ENEMY_MOVE_INITIAL_DELAY_MS = 3000L;
+    private static final long ENEMY_MOVE_INTERVAL_MS = 1000L;
 
     private final ITileMapService tileMapService;
     private final IItemService itemService;
@@ -86,7 +88,7 @@ public class GameWorldService {
 
         // Wait 3 seconds before starting the first move to ensure that game is fully initialized
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(moveEnemiesRunner, 3000, 750, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(moveEnemiesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ENEMY_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
     // TODO: Move all moveHero* methods to HeroService
