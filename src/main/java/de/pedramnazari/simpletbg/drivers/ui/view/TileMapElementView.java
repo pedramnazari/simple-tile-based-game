@@ -8,6 +8,8 @@ public class TileMapElementView<T extends ITileMapElement> {
 
     private final T tileMapElement;
     final ImageView imageView;
+    private int tileX;
+    private int tileY;
 
     public TileMapElementView(T tileMapElement, final Image tileImage, int tileSize) {
         this.tileMapElement = tileMapElement;
@@ -15,6 +17,9 @@ public class TileMapElementView<T extends ITileMapElement> {
         imageView = new ImageView(tileImage);
         imageView.setFitWidth(tileSize);
         imageView.setFitHeight(tileSize);
+
+        tileX = tileMapElement.getX();
+        tileY = tileMapElement.getY();
     }
 
     public T getTileMapElement() {
@@ -25,20 +30,33 @@ public class TileMapElementView<T extends ITileMapElement> {
         return imageView;
     }
 
+    public void setTilePosition(int x, int y) {
+        tileX = x;
+        tileY = y;
+    }
+
+    public int getTileX() {
+        return tileX;
+    }
+
+    public int getTileY() {
+        return tileY;
+    }
+
     public void setX(int x) {
-        imageView.setX(x);
+        setTilePosition(x, tileY);
     }
 
     public void setY(int y) {
-        imageView.setY(y);
+        setTilePosition(tileX, y);
     }
 
     public int getX() {
-        return (int) imageView.getX();
+        return tileX;
     }
 
     public int getY() {
-        return (int) imageView.getY();
+        return tileY;
     }
 
 }

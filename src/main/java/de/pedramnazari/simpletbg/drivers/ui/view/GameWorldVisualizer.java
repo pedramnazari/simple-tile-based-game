@@ -31,6 +31,7 @@ public class GameWorldVisualizer extends Application {
     private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
 
     public static final int TILE_SIZE = 48;
+    private static final Duration MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;
 
@@ -61,6 +62,7 @@ public class GameWorldVisualizer extends Application {
     private ProgressBar healthBar;
     private Label enemyCountLabel;
     private int currentEnemyCount;
+    private final TileMapElementAnimator tileMapElementAnimator = new TileMapElementAnimator(MOVE_ANIMATION_DURATION, TILE_SIZE);
 
     @Override
     public void start(Stage primaryStage) {
@@ -134,7 +136,7 @@ public class GameWorldVisualizer extends Application {
 
         updateCamera();
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> moveHero()));
+        Timeline timeline = new Timeline(new KeyFrame(MOVE_ANIMATION_DURATION, e -> moveHero()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
@@ -229,11 +231,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleHeroMoved(IHero hero, int oldX, int oldY) {
-        heroView.setX(hero.getX());
-        heroView.setY(hero.getY());
-
-        charactersGrid.getChildren().remove(heroView.getImageView());
-        charactersGrid.add(heroView.getImageView(), heroView.getX(), heroView.getY());
+        tileMapElementAnimator.animateMovement(charactersGrid, heroView, hero.getX(), hero.getY());
 
         updateHeroHealthView();
 
@@ -370,30 +368,32 @@ public class GameWorldVisualizer extends Application {
 
     public void updateEnemies(Collection<IEnemy> enemies) {
         updateEnemyCountView(enemies.size());
-        // TODO: do not delete views, instead update them
-        for (IEnemy enemy : enemyViews.keySet()) {
-            EnemyView enemyView = enemyViews.get(enemy);
-            charactersGrid.getChildren().remove(enemyView.getImageView());
-        }
+
+        final Set<IEnemy> enemiesToRemove = new HashSet<>(enemyViews.keySet());
 
         for (IEnemy enemy : enemies) {
-            EnemyView enemyView = null;
-            for (EnemyView oldView : enemyViews.values()) {
-                if (oldView.getTileMapElement().equals(enemy)) {
-                    enemyView = oldView;
-                    break;
-                }
-            }
+            EnemyView enemyView = enemyViews.get(enemy);
 
             if (enemyView == null) {
                 String imagePath = getImagePathForEnemy(enemy.getType());
                 final Image enemyImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
                 enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
+                enemyView.setTilePosition(enemy.getX(), enemy.getY());
+                enemyViews.put(enemy, enemyView);
+                charactersGrid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
             }
+            else {
+                enemiesToRemove.remove(enemy);
+                tileMapElementAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+            }
+        }
 
-
-            enemyViews.put(enemy, enemyView);
-            charactersGrid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
+        for (IEnemy removedEnemy : enemiesToRemove) {
+            final EnemyView enemyView = enemyViews.remove(removedEnemy);
+            if (enemyView != null) {
+                tileMapElementAnimator.cancelAnimation(enemyView);
+                charactersGrid.getChildren().remove(enemyView.getImageView());
+            }
         }
     }
 
@@ -440,6 +440,7 @@ public class GameWorldVisualizer extends Application {
             enemyView.getImageView().setOpacity(opacity);
         }
         else {
+            tileMapElementAnimator.cancelAnimation(enemyView);
             boolean deleted = charactersGrid.getChildren().remove(enemyView.getImageView());
 
             if (!deleted) {
@@ -644,6 +645,7 @@ public class GameWorldVisualizer extends Application {
         String imagePath = getImagePathForProjectile(projectile.getType());
         final Image projectileImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
         final ProjectileView projectileView = new ProjectileView(projectile, projectileImage, TILE_SIZE);
+        projectileView.setTilePosition(projectile.getX(), projectile.getY());
         projectileViews.put(projectile, projectileView);
         projectilesGrid.add(projectileView.getImageView(), projectile.getX(), projectile.getY());
     }
@@ -655,13 +657,13 @@ public class GameWorldVisualizer extends Application {
             return;
         }
 
-        projectilesGrid.getChildren().remove(projectileView.getImageView());
-        projectilesGrid.add(projectileView.getImageView(), projectile.getX(), projectile.getY());
+        tileMapElementAnimator.animateMovement(projectilesGrid, projectileView, projectile.getX(), projectile.getY());
     }
 
     public void removeProjectile(IProjectile projectile) {
         final ProjectileView projectileView = projectileViews.remove(projectile);
         if (projectileView != null) {
+            tileMapElementAnimator.cancelAnimation(projectileView);
             projectilesGrid.getChildren().remove(projectileView.getImageView());
         }
     }
