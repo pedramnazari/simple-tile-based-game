@@ -31,7 +31,9 @@ public class GameWorldVisualizer extends Application {
     private static final Logger logger = Logger.getLogger(GameWorldVisualizer.class.getName());
 
     public static final int TILE_SIZE = 48;
-    private static final Duration MOVE_ANIMATION_DURATION = Duration.millis(90);
+    private static final Duration HERO_MOVE_ANIMATION_DURATION = Duration.millis(90);
+    private static final Duration ENEMY_MOVE_ANIMATION_DURATION = Duration.millis(1000);
+    private static final Duration PROJECTILE_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;
 
@@ -62,7 +64,9 @@ public class GameWorldVisualizer extends Application {
     private ProgressBar healthBar;
     private Label enemyCountLabel;
     private int currentEnemyCount;
-    private final TileMapElementAnimator tileMapElementAnimator = new TileMapElementAnimator(MOVE_ANIMATION_DURATION, TILE_SIZE);
+    private final TileMapElementAnimator heroAnimator = new TileMapElementAnimator(HERO_MOVE_ANIMATION_DURATION, TILE_SIZE);
+    private final TileMapElementAnimator enemyAnimator = new TileMapElementAnimator(ENEMY_MOVE_ANIMATION_DURATION, TILE_SIZE);
+    private final TileMapElementAnimator projectileAnimator = new TileMapElementAnimator(PROJECTILE_MOVE_ANIMATION_DURATION, TILE_SIZE);
 
     @Override
     public void start(Stage primaryStage) {
@@ -136,7 +140,7 @@ public class GameWorldVisualizer extends Application {
 
         updateCamera();
 
-        Timeline timeline = new Timeline(new KeyFrame(MOVE_ANIMATION_DURATION, e -> moveHero()));
+        Timeline timeline = new Timeline(new KeyFrame(HERO_MOVE_ANIMATION_DURATION, e -> moveHero()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
@@ -231,7 +235,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     public void handleHeroMoved(IHero hero, int oldX, int oldY) {
-        tileMapElementAnimator.animateMovement(charactersGrid, heroView, hero.getX(), hero.getY());
+        heroAnimator.animateMovement(charactersGrid, heroView, hero.getX(), hero.getY());
 
         updateHeroHealthView();
 
@@ -384,14 +388,14 @@ public class GameWorldVisualizer extends Application {
             }
             else {
                 enemiesToRemove.remove(enemy);
-                tileMapElementAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+                enemyAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
             }
         }
 
         for (IEnemy removedEnemy : enemiesToRemove) {
             final EnemyView enemyView = enemyViews.remove(removedEnemy);
             if (enemyView != null) {
-                tileMapElementAnimator.cancelAnimation(enemyView);
+                enemyAnimator.cancelAnimation(enemyView);
                 charactersGrid.getChildren().remove(enemyView.getImageView());
             }
         }
@@ -440,7 +444,7 @@ public class GameWorldVisualizer extends Application {
             enemyView.getImageView().setOpacity(opacity);
         }
         else {
-            tileMapElementAnimator.cancelAnimation(enemyView);
+            enemyAnimator.cancelAnimation(enemyView);
             boolean deleted = charactersGrid.getChildren().remove(enemyView.getImageView());
 
             if (!deleted) {
@@ -657,13 +661,13 @@ public class GameWorldVisualizer extends Application {
             return;
         }
 
-        tileMapElementAnimator.animateMovement(projectilesGrid, projectileView, projectile.getX(), projectile.getY());
+        projectileAnimator.animateMovement(projectilesGrid, projectileView, projectile.getX(), projectile.getY());
     }
 
     public void removeProjectile(IProjectile projectile) {
         final ProjectileView projectileView = projectileViews.remove(projectile);
         if (projectileView != null) {
-            tileMapElementAnimator.cancelAnimation(projectileView);
+            projectileAnimator.cancelAnimation(projectileView);
             projectilesGrid.getChildren().remove(projectileView.getImageView());
         }
     }
