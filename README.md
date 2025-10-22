@@ -1,9 +1,15 @@
-# simple-tile-based-game
+# Simple Tile-Based Game
 
-The following tilesets have been used in this project, all licensed under the Creative Commons Attribution 4.0 International License:
+## Description
 
+A simple tile-based 2D game developed with Java and Spring Boot.
+
+## Execution
+To run the application, execute `./gradlew run` (Linux/macOS) or `.\gradlew run` (Windows) in the project directory.
 
 ## Tileset: Floor pixel art 2D
+The following tilesets were used in this project, all licensed under the Creative Commons Attribution 4.0 International License:
+
 - Author: [NinaPixelArt](https://ninapixelart.itch.io/)
 - Copyright Notice: [NinaPixelArt](https://ninapixelart.itch.io/)
 - Link to the work: https://ninapixelart.itch.io/floor-pixel-art-2d
