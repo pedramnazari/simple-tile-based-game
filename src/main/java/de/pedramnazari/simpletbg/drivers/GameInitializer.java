@@ -23,7 +23,8 @@ import de.pedramnazari.simpletbg.quest.service.config.IQuestConfig;
 import de.pedramnazari.simpletbg.quest.service.config.IQuestConfigFactory;
 import de.pedramnazari.simpletbg.quest.service.config.QuestDefeatAllEnemiesAndGoToExitConfig;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
-import de.pedramnazari.simpletbg.tilemap.config.ScrollingMapConfig;
+import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
+import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -60,6 +61,10 @@ public class GameInitializer {
 
 
     public static GameWorldController initAndStartGame() {
+        return initAndStartGame(GameMaps.defaultMap());
+    }
+
+    public static GameWorldController initAndStartGame(GameMapDefinition mapDefinition) {
 
         // TODO: move to AllTileMapConfigData
         final int[][] mapConfig3 = new int[][]{
@@ -314,11 +319,11 @@ public class GameInitializer {
 
         gameWorldService.setQuest(questConfig.getQuest());
 
-        final Tile[][] tiles = new TileConfigParser().parse(ScrollingMapConfig.MAP, tileFactory);
-        final Collection<IItem> items = new ItemConfigParser().parse(ScrollingMapConfig.ITEMS, itemFactory);
-        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(ScrollingMapConfig.ENEMIES, new DefaultEnemyFactory(collisionDetectionService, heroService));
+        final Tile[][] tiles = new TileConfigParser().parse(mapDefinition.getMap(), tileFactory);
+        final Collection<IItem> items = new ItemConfigParser().parse(mapDefinition.getItems(), itemFactory);
+        final Collection<IEnemy> enemies = new EnemyConfigParser().parse(mapDefinition.getEnemies(), new DefaultEnemyFactory(collisionDetectionService, heroService));
 
-        controller.startGameUsingMap(tiles, items, enemies, ScrollingMapConfig.HERO_START_COLUMN, ScrollingMapConfig.HERO_START_ROW);
+        controller.startGameUsingMap(tiles, items, enemies, mapDefinition.getHeroStartColumn(), mapDefinition.getHeroStartRow());
 
         return controller;
     }

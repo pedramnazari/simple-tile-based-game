@@ -2,6 +2,8 @@ package de.pedramnazari.simpletbg.drivers.ui.view;
 
 import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
+import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
+import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -59,6 +61,7 @@ public class GameWorldVisualizer extends Application {
     private double mapPixelHeight;
 
     private boolean right, left, down, up;
+    private GameMapDefinition mapDefinition;
     private Map<Point, TileView> tilesView = new HashMap<>();
     private Label healthLabel;
     private ProgressBar healthBar;
@@ -70,7 +73,10 @@ public class GameWorldVisualizer extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        controller = GameInitializer.initAndStartGame();
+        GameMapDefinition selectedMap = mapDefinition != null ? mapDefinition : GameMaps.defaultMap();
+        this.mapDefinition = selectedMap;
+
+        controller = GameInitializer.initAndStartGame(selectedMap);
         controller.setTileMapVisualizer(this);
 
         final TileMap tileMap = controller.getTileMap();
@@ -500,6 +506,10 @@ public class GameWorldVisualizer extends Application {
 
     public static void main(String[] args) {
         StartView.main(args);
+    }
+
+    public void setMapDefinition(GameMapDefinition mapDefinition) {
+        this.mapDefinition = mapDefinition;
     }
 
     public void handleHeroDefeated() {
