@@ -32,7 +32,7 @@ public final class ArenaMapConfig {
             {W, F, F, F, G, F, F, F, F, F, F, G, F, W},
             {W, F, W, D, F, W, F, G, F, W, F, D, F, W},
             {W, F, F, F, F, F, F, F, F, F, F, F, F, W},
-            {W, G, F, W, D, F, G, F, G, F, D, W, F, W},
+            {W, G, F, W, D, F, G, PO, G, F, D, W, F, W},
             {W, F, F, F, F, F, PO, F, F, F, F, F, F, W},
             {W, F, D, F, W, F, F, F, W, F, D, F, F, W},
             {W, F, F, F, F, F, F, F, F, F, F, F, X, W},

@@ -28,7 +28,7 @@ public final class IslandMapConfig {
 
     public static final int[][] MAP = {
             {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
-            {W, G, G, G, G, G, G, G, G, G, G, G, G, G, G, W},
+            {W, G, G, G, G, G, G, PO, G, G, G, G, G, G, G, W},
             {W, G, W, W, W, G, W, W, W, G, W, W, W, G, G, W},
             {W, G, G, P, G, G, G, P, G, G, G, P, G, G, G, W},
             {W, G, W, P, W, W, G, W, G, W, W, P, W, W, G, W},

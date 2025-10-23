@@ -38,7 +38,7 @@ public final class ForestMapConfig {
             {W, G, G, F, W, W, F, G, F, F, G, W},
             {W, G, W, F, F, PO, F, G, W, F, G, W},
             {W, G, W, F, W, W, F, G, W, F, G, W},
-            {W, G, F, F, F, F, F, G, F, F, G, W},
+            {W, G, F, F, F, F, F, G, PO, F, G, W},
             {W, G, F, W, W, D, W, W, W, F, G, W},
             {W, G, F, F, F, F, F, F, F, F, G, W},
             {W, G, G, G, G, G, G, G, G, X, G, W},
