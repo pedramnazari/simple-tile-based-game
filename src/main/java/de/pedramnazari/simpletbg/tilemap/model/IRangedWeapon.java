@@ -1,5 +1,7 @@
 package de.pedramnazari.simpletbg.tilemap.model;
 
+import java.util.Optional;
+
 public interface IRangedWeapon extends IWeapon {
-    void shoot(IHero hero, int damage);
+    Optional<IProjectile> createProjectile(IHero hero, int damage);
 }
