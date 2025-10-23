@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -63,8 +62,6 @@ public class GameWorldVisualizer extends Application {
     private boolean right, left, down, up;
     private GameMapDefinition mapDefinition;
     private Map<Point, TileView> tilesView = new HashMap<>();
-    private Label healthLabel;
-    private ProgressBar healthBar;
     private Label enemyCountLabel;
     private int currentEnemyCount;
     private final TileMapElementAnimator heroAnimator = new TileMapElementAnimator(HERO_MOVE_ANIMATION_DURATION, TILE_SIZE);
@@ -118,7 +115,9 @@ public class GameWorldVisualizer extends Application {
         final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/hero.png")));
         heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
-        charactersGrid.add(heroView.getImageView(), hero.getX(), hero.getY());
+        charactersGrid.add(heroView.getDisplayNode(), hero.getX(), hero.getY());
+
+        updateHeroHealthView();
 
         stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, projectilesGrid, charactersGrid);
 
@@ -133,8 +132,8 @@ public class GameWorldVisualizer extends Application {
         inventory.setAlignment(Pos.TOP_LEFT);
         borderPane.setBottom(inventory);
 
-        VBox healthView = createHealthView();
-        borderPane.setRight(healthView);
+        VBox infoView = createInfoView();
+        borderPane.setRight(infoView);
 
         scene = new Scene(borderPane, 1100, 575);
         scene.setOnKeyPressed(this::handleKeyPressed);
@@ -151,43 +150,23 @@ public class GameWorldVisualizer extends Application {
         timeline.play();
     }
 
-    private VBox createHealthView() {
-        VBox healthBox = new VBox();
-        healthBox.setAlignment(Pos.TOP_RIGHT);
-        healthBox.setSpacing(10);
-
-        healthLabel = new Label("Health: " + hero.getHealth());
-        healthBar = new ProgressBar(hero.getHealth() / 100.0);
-        healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
+    private VBox createInfoView() {
+        VBox infoBox = new VBox();
+        infoBox.setAlignment(Pos.TOP_RIGHT);
+        infoBox.setSpacing(10);
 
         enemyCountLabel = new Label();
         updateEnemyCountView(currentEnemyCount);
 
-        healthBox.getChildren().addAll(healthLabel, healthBar, enemyCountLabel);
+        infoBox.getChildren().add(enemyCountLabel);
 
-        return healthBox;
-    }
-
-    private String getHeroHealthProgressBarColor() {
-        String color = "";
-
-        double healthPercentage = hero.getHealth() / 100.0;
-
-        if (healthPercentage < 0.5) {
-            color = "red";
-        } else if (healthPercentage < 0.8) {
-            color = "yellow";
-        } else {
-            color = "green";
-        }
-
-        return color;
+        return infoBox;
     }
 
     private void updateHeroHealthView() {
-        healthLabel.setText("Hero Health: " + hero.getHealth());
-        healthBar.setProgress(hero.getHealth() / 100.0);
-        healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
+        if (heroView != null) {
+            heroView.updateHealthBar();
+        }
     }
 
     private void handleKeyPressed(KeyEvent event) {
@@ -284,7 +263,7 @@ public class GameWorldVisualizer extends Application {
                 tileView.setImagePath(imagePath);
                 tilesView.put(new Point(tile.getX(), tile.getY()),tileView);
 
-                tilesGrid.add(tileView.getImageView(), x, y);
+                tilesGrid.add(tileView.getDisplayNode(), x, y);
             }
         }
     }
@@ -344,7 +323,7 @@ public class GameWorldVisualizer extends Application {
         // TODO: do not delete views, instead update them
         for (Point point : itemViews.keySet()) {
             ItemView itemView = itemViews.get(point);
-            itemsGrid.getChildren().remove(itemView.getImageView());
+            itemsGrid.getChildren().remove(itemView.getDisplayNode());
         }
 
         for (IItem item : items) {
@@ -371,7 +350,7 @@ public class GameWorldVisualizer extends Application {
             Point point = new Point(item.getX(), item.getY());
             itemViews.put(point, itemView);
 
-            itemsGrid.add(itemView.getImageView(), item.getX(), item.getY());
+            itemsGrid.add(itemView.getDisplayNode(), item.getX(), item.getY());
         }
 
     }
@@ -390,19 +369,20 @@ public class GameWorldVisualizer extends Application {
                 enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
                 enemyView.setTilePosition(enemy.getX(), enemy.getY());
                 enemyViews.put(enemy, enemyView);
-                charactersGrid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
+                charactersGrid.add(enemyView.getDisplayNode(), enemy.getX(), enemy.getY());
             }
             else {
                 enemiesToRemove.remove(enemy);
                 enemyAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
             }
+            enemyView.updateHealthBar();
         }
 
         for (IEnemy removedEnemy : enemiesToRemove) {
             final EnemyView enemyView = enemyViews.remove(removedEnemy);
             if (enemyView != null) {
                 enemyAnimator.cancelAnimation(enemyView);
-                charactersGrid.getChildren().remove(enemyView.getImageView());
+                charactersGrid.getChildren().remove(enemyView.getDisplayNode());
             }
         }
     }
@@ -445,13 +425,15 @@ public class GameWorldVisualizer extends Application {
             throw new IllegalArgumentException("No enemy rectangle found for enemy at position: " + enemy.getX() + ", " + enemy.getY());
         }
 
+        enemyView.updateHealthBar();
+
         if (enemy.getHealth() > 0) {
             double opacity = (double) enemy.getHealth() / 100;
-            enemyView.getImageView().setOpacity(opacity);
+            enemyView.getDisplayNode().setOpacity(opacity);
         }
         else {
             enemyAnimator.cancelAnimation(enemyView);
-            boolean deleted = charactersGrid.getChildren().remove(enemyView.getImageView());
+            boolean deleted = charactersGrid.getChildren().remove(enemyView.getDisplayNode());
 
             if (!deleted) {
                 throw new IllegalArgumentException("Enemy rectangle not found in grid");
@@ -500,7 +482,7 @@ public class GameWorldVisualizer extends Application {
             throw new IllegalArgumentException("No item rectangle found for point: " + point);
         }
 
-        itemsGrid.getChildren().remove(itemView.getImageView());
+        itemsGrid.getChildren().remove(itemView.getDisplayNode());
         return itemView;
     }
 
@@ -575,7 +557,7 @@ public class GameWorldVisualizer extends Application {
         }
 
         bombsViews.remove(bombView);
-        bombsGrid.getChildren().remove(bombView.getImageView());
+        bombsGrid.getChildren().remove(bombView.getDisplayNode());
     }
 
     public void bombExploded(IBomb bomb, List<Point> explosionPoints) {
@@ -590,7 +572,7 @@ public class GameWorldVisualizer extends Application {
         for (Point explosionPoint : explosionPoints) {
             final BombView explosionView = new BombView(bomb, attackImage, true, TILE_SIZE);
             bombsViews.add(explosionView);
-            bombsGrid.add(explosionView.getImageView(), explosionPoint.getX(), explosionPoint.getY());
+            bombsGrid.add(explosionView.getDisplayNode(), explosionPoint.getX(), explosionPoint.getY());
         }
     }
 
@@ -605,7 +587,7 @@ public class GameWorldVisualizer extends Application {
                 if (!bombView.isExplosion()) {
                     throw new IllegalArgumentException("Bomb rectangle is not an explosion: " + bombView);
                 }
-                bombsGrid.getChildren().remove(bombView.getImageView());
+                bombsGrid.getChildren().remove(bombView.getDisplayNode());
                 explosionsToRemove.add(bombView);
             }
         }
@@ -621,7 +603,7 @@ public class GameWorldVisualizer extends Application {
 
         for (BombView bombView : bombsViews) {
             if (!bombView.isExplosion()) {
-                bombsGrid.getChildren().remove(bombView.getImageView());
+                bombsGrid.getChildren().remove(bombView.getDisplayNode());
                 bombViewsToRemove.add(bombView);
             }
         }
@@ -650,7 +632,7 @@ public class GameWorldVisualizer extends Application {
             final BombView bombView = new BombView(bomb, bombImage, false, TILE_SIZE);
 
             bombsViews.add(bombView);
-            bombsGrid.add(bombView.getImageView(), bomb.getX(), bomb.getY());
+            bombsGrid.add(bombView.getDisplayNode(), bomb.getX(), bomb.getY());
         }
 
     }
@@ -661,7 +643,7 @@ public class GameWorldVisualizer extends Application {
         final ProjectileView projectileView = new ProjectileView(projectile, projectileImage, TILE_SIZE);
         projectileView.setTilePosition(projectile.getX(), projectile.getY());
         projectileViews.put(projectile, projectileView);
-        projectilesGrid.add(projectileView.getImageView(), projectile.getX(), projectile.getY());
+        projectilesGrid.add(projectileView.getDisplayNode(), projectile.getX(), projectile.getY());
     }
 
     public void updateProjectile(IProjectile projectile) {
@@ -678,7 +660,7 @@ public class GameWorldVisualizer extends Application {
         final ProjectileView projectileView = projectileViews.remove(projectile);
         if (projectileView != null) {
             projectileAnimator.cancelAnimation(projectileView);
-            projectilesGrid.getChildren().remove(projectileView.getImageView());
+            projectilesGrid.getChildren().remove(projectileView.getDisplayNode());
         }
     }
 
@@ -709,10 +691,10 @@ public class GameWorldVisualizer extends Application {
             final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
 
 
-            tilesGrid.getChildren().remove(oldTileView.getImageView());
+            tilesGrid.getChildren().remove(oldTileView.getDisplayNode());
             tilesView.remove(point);
 
-            tilesGrid.add(tileView.getImageView(), tile.getX(), tile.getY());
+            tilesGrid.add(tileView.getDisplayNode(), tile.getX(), tile.getY());
             tilesView.put(point, tileView);
         }
     }
