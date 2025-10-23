@@ -3,6 +3,7 @@ package de.pedramnazari.simpletbg.controller;
 import de.pedramnazari.simpletbg.character.enemy.model.Enemy;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
+import de.pedramnazari.simpletbg.inventory.model.Weapon;
 import de.pedramnazari.simpletbg.tilemap.model.IWeapon;
 import de.pedramnazari.simpletbg.character.hero.model.Hero;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
@@ -41,7 +42,8 @@ public class GameWorldControllerHeroHitTest {
         final Hero hero = new Hero(0, 0);
         hero.decreaseHealth(95); // leave hero with 5 health
 
-        final IWeapon weapon = new WeaponStub(20);
+        final Weapon weapon = new Weapon(0, 0, "Test Weapon", "Test Weapon", TileType.WEAPON_SWORD.getType());
+        weapon.setAttackingDamage(20);
 
         controller.onHeroHit(hero, weapon, weapon.getAttackingDamage());
 
@@ -73,72 +75,6 @@ public class GameWorldControllerHeroHitTest {
         @Override
         public void handleHeroDefeated() {
             heroDefeatedCount++;
-        }
-    }
-
-    private static class WeaponStub implements IWeapon {
-        private final int type = TileType.WEAPON_SWORD.getType();
-        private final String name = "Test Weapon";
-        private int damage;
-        private int range = 1;
-
-        private WeaponStub(int damage) {
-            this.damage = damage;
-        }
-
-        @Override
-        public int getAttackingDamage() {
-            return damage;
-        }
-
-        @Override
-        public void setAttackingDamage(int attackingDamage) {
-            this.damage = attackingDamage;
-        }
-
-        @Override
-        public int getRange() {
-            return range;
-        }
-
-        @Override
-        public void setRange(int range) {
-            this.range = range;
-        }
-
-        @Override
-        public boolean canAttackBackward() {
-            return false;
-        }
-
-        @Override
-        public boolean canAttackInAllDirections() {
-            return false;
-        }
-
-        @Override
-        public int getX() {
-            return 0;
-        }
-
-        @Override
-        public int getY() {
-            return 0;
-        }
-
-        @Override
-        public int getType() {
-            return type;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String getDescription() {
-            return name;
         }
     }
 }
