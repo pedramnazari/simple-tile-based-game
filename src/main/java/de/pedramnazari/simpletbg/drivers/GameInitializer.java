@@ -261,10 +261,11 @@ public class GameInitializer {
         final DefaultTileFactory tileFactory = new DefaultTileFactory();
         final TileMapService tileMapService = new TileMapService(tileFactory);
         final ItemService itemService = new ItemService();
+        final HeroAttackService heroAttackService = new HeroAttackService();
         final HeroService heroService = new HeroService(
                 new DefaultHeroFactory(),
                 new HeroMovementService(collisionDetectionService),
-                new HeroAttackService());
+                heroAttackService);
 
         final GameWorldService gameWorldService = new GameWorldService(
                 tileMapService,
@@ -302,7 +303,7 @@ public class GameInitializer {
 
         ProjectileService projectileService = new ProjectileService(collisionDetectionService, tileMapService, enemyService);
         itemFactory.setProjectileFactory(new FireProjectileFactory());
-        itemFactory.setProjectileService(projectileService);
+        heroAttackService.setProjectileService(projectileService);
         projectileService.addProjectileEventListener(controller);
         projectileService.addWeaponDealsDamageListener(enemyService);
 

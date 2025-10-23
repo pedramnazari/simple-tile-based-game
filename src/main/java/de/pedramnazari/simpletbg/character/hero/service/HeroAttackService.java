@@ -2,6 +2,7 @@ package de.pedramnazari.simpletbg.character.hero.service;
 
 import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.bomb.BombPlacer;
+import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileService;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.model.IRangedWeapon;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
@@ -10,6 +11,7 @@ import de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionSe
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class HeroAttackService implements IHeroAttackNotifier {
@@ -17,6 +19,15 @@ public class HeroAttackService implements IHeroAttackNotifier {
     private static final Logger logger = Logger.getLogger(HeroAttackService.class.getName());
 
     private final IHeroAttackNotifier heroAttackNotifier = new HeroAttackNotifier();
+    private Optional<IProjectileService> projectileService = Optional.empty();
+
+    public HeroAttackService() {
+        this(null);
+    }
+
+    public HeroAttackService(IProjectileService projectileService) {
+        this.projectileService = Optional.ofNullable(projectileService);
+    }
 
     public List<Point> heroAttacks(final IHero hero, final Collection<IEnemy> enemies) {
         return heroAttacksUsingWeapon(hero.getWeapon().orElse(null), hero, enemies);
@@ -36,7 +47,9 @@ public class HeroAttackService implements IHeroAttackNotifier {
 
         if (weapon instanceof IRangedWeapon rangedWeapon) {
             int damage = calcDamage(hero);
-            rangedWeapon.shoot(hero, damage);
+            projectileService.ifPresent(service ->
+                    rangedWeapon.createProjectile(hero, damage)
+                            .ifPresent(service::launchProjectile));
             return List.of();
         }
 
@@ -160,6 +173,10 @@ public class HeroAttackService implements IHeroAttackNotifier {
     @Override
     public void notifyHeroAttackCharacter(ICharacter attackedCharacter, int damage) {
         heroAttackNotifier.notifyHeroAttackCharacter(attackedCharacter, damage);
+    }
+
+    public void setProjectileService(IProjectileService projectileService) {
+        this.projectileService = Optional.ofNullable(projectileService);
     }
 
 }
