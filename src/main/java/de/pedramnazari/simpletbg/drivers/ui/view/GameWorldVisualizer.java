@@ -427,11 +427,7 @@ public class GameWorldVisualizer extends Application {
 
         enemyView.updateHealthBar();
 
-        if (enemy.getHealth() > 0) {
-            double opacity = (double) enemy.getHealth() / 100;
-            enemyView.getDisplayNode().setOpacity(opacity);
-        }
-        else {
+        if (enemy.getHealth() <= 0) {
             enemyAnimator.cancelAnimation(enemyView);
             boolean deleted = charactersGrid.getChildren().remove(enemyView.getDisplayNode());
 
