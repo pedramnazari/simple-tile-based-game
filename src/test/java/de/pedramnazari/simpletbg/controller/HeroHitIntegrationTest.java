@@ -166,6 +166,48 @@ public class HeroHitIntegrationTest {
     }
 
     @Test
+    void stationaryEnemyOnSameTileDamagesHeroEachTick() {
+        final Tile[][] tiles = new TileConfigParser().parse(
+                new int[][]{{TileType.PORTAL.getType(), TileType.PORTAL.getType()}},
+                new DefaultTileFactory());
+
+        heroService.init(0, 0);
+        final Enemy enemy = new Enemy(TileType.ENEMY_LR.getType(), 0, 0);
+        enemy.setAttackingPower(9);
+        enemy.setMovementStrategy(new StayPutStrategy());
+        enemyService.init(List.of(enemy));
+
+        tileMapService.initTileMap(tiles);
+        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, "0");
+
+        final IHero hero = heroService.getHero();
+
+        assertEquals(0, hero.getX());
+        assertEquals(0, hero.getY());
+        assertEquals(0, enemy.getX());
+        assertEquals(0, enemy.getY());
+        assertEquals(100, hero.getHealth());
+
+        enemyService.moveEnemies(GameContext.getInstance());
+
+        assertEquals(0, hero.getX());
+        assertEquals(0, hero.getY());
+        assertEquals(0, enemy.getX());
+        assertEquals(0, enemy.getY());
+        assertEquals(91, hero.getHealth());
+        assertEquals(1, visualizer.heroHitCount);
+
+        enemyService.moveEnemies(GameContext.getInstance());
+
+        assertEquals(0, hero.getX());
+        assertEquals(0, hero.getY());
+        assertEquals(0, enemy.getX());
+        assertEquals(0, enemy.getY());
+        assertEquals(82, hero.getHealth());
+        assertEquals(2, visualizer.heroHitCount);
+    }
+
+    @Test
     void heroPickingPoisonConsumableDamagesHero() {
         final Tile[][] tiles = new TileConfigParser().parse(new int[][]{{FLOOR, FLOOR}}, new DefaultTileFactory());
 
