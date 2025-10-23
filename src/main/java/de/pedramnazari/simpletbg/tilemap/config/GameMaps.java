@@ -22,6 +22,51 @@ public final class GameMaps {
                     LabyrinthMapConfig.ENEMIES,
                     LabyrinthMapConfig.HERO_START_COLUMN,
                     LabyrinthMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "arena",
+                    "Arena",
+                    ArenaMapConfig.MAP,
+                    ArenaMapConfig.ITEMS,
+                    ArenaMapConfig.ENEMIES,
+                    ArenaMapConfig.HERO_START_COLUMN,
+                    ArenaMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "forest",
+                    "Forest",
+                    ForestMapConfig.MAP,
+                    ForestMapConfig.ITEMS,
+                    ForestMapConfig.ENEMIES,
+                    ForestMapConfig.HERO_START_COLUMN,
+                    ForestMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "cavern",
+                    "Cavern",
+                    CavernMapConfig.MAP,
+                    CavernMapConfig.ITEMS,
+                    CavernMapConfig.ENEMIES,
+                    CavernMapConfig.HERO_START_COLUMN,
+                    CavernMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "island",
+                    "Island",
+                    IslandMapConfig.MAP,
+                    IslandMapConfig.ITEMS,
+                    IslandMapConfig.ENEMIES,
+                    IslandMapConfig.HERO_START_COLUMN,
+                    IslandMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "outpost",
+                    "Outpost",
+                    OutpostMapConfig.MAP,
+                    OutpostMapConfig.ITEMS,
+                    OutpostMapConfig.ENEMIES,
+                    OutpostMapConfig.HERO_START_COLUMN,
+                    OutpostMapConfig.HERO_START_ROW
             )
     );
 
