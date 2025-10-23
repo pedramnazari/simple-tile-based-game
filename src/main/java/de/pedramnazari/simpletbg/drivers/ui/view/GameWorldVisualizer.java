@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -63,8 +62,6 @@ public class GameWorldVisualizer extends Application {
     private boolean right, left, down, up;
     private GameMapDefinition mapDefinition;
     private Map<Point, TileView> tilesView = new HashMap<>();
-    private Label healthLabel;
-    private ProgressBar healthBar;
     private Label enemyCountLabel;
     private int currentEnemyCount;
     private final TileMapElementAnimator heroAnimator = new TileMapElementAnimator(HERO_MOVE_ANIMATION_DURATION, TILE_SIZE);
@@ -118,7 +115,7 @@ public class GameWorldVisualizer extends Application {
         final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/hero.png")));
         heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
-        charactersGrid.add(heroView.getImageView(), hero.getX(), hero.getY());
+        charactersGrid.add(heroView.getNode(), hero.getX(), hero.getY());
 
         stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, projectilesGrid, charactersGrid);
 
@@ -133,8 +130,8 @@ public class GameWorldVisualizer extends Application {
         inventory.setAlignment(Pos.TOP_LEFT);
         borderPane.setBottom(inventory);
 
-        VBox healthView = createHealthView();
-        borderPane.setRight(healthView);
+        VBox statusView = createStatusView();
+        borderPane.setRight(statusView);
 
         scene = new Scene(borderPane, 1100, 575);
         scene.setOnKeyPressed(this::handleKeyPressed);
@@ -151,43 +148,23 @@ public class GameWorldVisualizer extends Application {
         timeline.play();
     }
 
-    private VBox createHealthView() {
-        VBox healthBox = new VBox();
-        healthBox.setAlignment(Pos.TOP_RIGHT);
-        healthBox.setSpacing(10);
-
-        healthLabel = new Label("Health: " + hero.getHealth());
-        healthBar = new ProgressBar(hero.getHealth() / 100.0);
-        healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
+    private VBox createStatusView() {
+        VBox statusBox = new VBox();
+        statusBox.setAlignment(Pos.TOP_RIGHT);
+        statusBox.setSpacing(10);
 
         enemyCountLabel = new Label();
         updateEnemyCountView(currentEnemyCount);
 
-        healthBox.getChildren().addAll(healthLabel, healthBar, enemyCountLabel);
+        statusBox.getChildren().add(enemyCountLabel);
 
-        return healthBox;
-    }
-
-    private String getHeroHealthProgressBarColor() {
-        String color = "";
-
-        double healthPercentage = hero.getHealth() / 100.0;
-
-        if (healthPercentage < 0.5) {
-            color = "red";
-        } else if (healthPercentage < 0.8) {
-            color = "yellow";
-        } else {
-            color = "green";
-        }
-
-        return color;
+        return statusBox;
     }
 
     private void updateHeroHealthView() {
-        healthLabel.setText("Hero Health: " + hero.getHealth());
-        healthBar.setProgress(hero.getHealth() / 100.0);
-        healthBar.setStyle("-fx-accent: " + getHeroHealthProgressBarColor() + ";");
+        if (heroView != null) {
+            heroView.updateHealthBar();
+        }
     }
 
     private void handleKeyPressed(KeyEvent event) {
@@ -390,7 +367,7 @@ public class GameWorldVisualizer extends Application {
                 enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
                 enemyView.setTilePosition(enemy.getX(), enemy.getY());
                 enemyViews.put(enemy, enemyView);
-                charactersGrid.add(enemyView.getImageView(), enemy.getX(), enemy.getY());
+                charactersGrid.add(enemyView.getNode(), enemy.getX(), enemy.getY());
             }
             else {
                 enemiesToRemove.remove(enemy);
@@ -402,7 +379,7 @@ public class GameWorldVisualizer extends Application {
             final EnemyView enemyView = enemyViews.remove(removedEnemy);
             if (enemyView != null) {
                 enemyAnimator.cancelAnimation(enemyView);
-                charactersGrid.getChildren().remove(enemyView.getImageView());
+                charactersGrid.getChildren().remove(enemyView.getNode());
             }
         }
     }
@@ -448,10 +425,11 @@ public class GameWorldVisualizer extends Application {
         if (enemy.getHealth() > 0) {
             double opacity = (double) enemy.getHealth() / 100;
             enemyView.getImageView().setOpacity(opacity);
+            enemyView.updateHealthBar();
         }
         else {
             enemyAnimator.cancelAnimation(enemyView);
-            boolean deleted = charactersGrid.getChildren().remove(enemyView.getImageView());
+            boolean deleted = charactersGrid.getChildren().remove(enemyView.getNode());
 
             if (!deleted) {
                 throw new IllegalArgumentException("Enemy rectangle not found in grid");
@@ -484,10 +462,13 @@ public class GameWorldVisualizer extends Application {
                 itemImageView.setOnMouseClicked(event -> {
                     logger.info("Item in inventory clicked: " + item);
                     controller.onInventarItemClicked(item);
+                    updateHeroHealthView();
                 });
 
                 inventory.getChildren().add(itemImageView);
             }
+
+            updateHeroHealthView();
         }
 
     }
@@ -514,6 +495,7 @@ public class GameWorldVisualizer extends Application {
 
     public void handleHeroDefeated() {
         logger.log(Level.INFO, "Hero defeated! -> Stop Game");
+        updateHeroHealthView();
         scene.setOnKeyPressed(null);
     }
 

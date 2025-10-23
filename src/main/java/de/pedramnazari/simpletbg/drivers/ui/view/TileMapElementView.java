@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.drivers.ui.view;
 
 import de.pedramnazari.simpletbg.tilemap.model.ITileMapElement;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -27,6 +28,10 @@ public class TileMapElementView<T extends ITileMapElement> {
     }
 
     public ImageView getImageView() {
+        return imageView;
+    }
+
+    public Node getNode() {
         return imageView;
     }
 

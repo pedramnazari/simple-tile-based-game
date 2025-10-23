@@ -1,10 +1,9 @@
 package de.pedramnazari.simpletbg.inventory.service.projectile;
 
+import de.pedramnazari.simpletbg.inventory.model.projectile.IProjectileLauncher;
 import de.pedramnazari.simpletbg.inventory.service.IWeaponDealsDamageListener;
-import de.pedramnazari.simpletbg.tilemap.model.IProjectile;
 
-public interface IProjectileService {
-    void launchProjectile(IProjectile projectile);
+public interface IProjectileService extends IProjectileLauncher {
 
     void addProjectileEventListener(IProjectileEventListener listener);
 

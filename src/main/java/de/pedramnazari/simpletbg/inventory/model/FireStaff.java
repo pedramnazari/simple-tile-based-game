@@ -1,6 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.model;
 
-import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileService;
+import de.pedramnazari.simpletbg.inventory.model.projectile.IProjectileLauncher;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.IProjectile;
 import de.pedramnazari.simpletbg.tilemap.model.IProjectileFactory;
@@ -11,15 +11,15 @@ import de.pedramnazari.simpletbg.tilemap.model.TileType;
 public class FireStaff extends Weapon implements IRangedWeapon {
 
     private final IProjectileFactory projectileFactory;
-    private final IProjectileService projectileService;
+    private final IProjectileLauncher projectileLauncher;
 
     public FireStaff(int x,
                      int y,
                      IProjectileFactory projectileFactory,
-                     IProjectileService projectileService) {
+                     IProjectileLauncher projectileLauncher) {
         super(x, y, "Fire Staff", "A staff that shoots blazing fire.", TileType.WEAPON_FIRE_STAFF.getType());
         this.projectileFactory = projectileFactory;
-        this.projectileService = projectileService;
+        this.projectileLauncher = projectileLauncher;
         setRange(5);
         setAttackingDamage(15);
     }
@@ -31,6 +31,6 @@ public class FireStaff extends Weapon implements IRangedWeapon {
         int startY = hero.getY();
 
         IProjectile projectile = projectileFactory.createProjectile(startX, startY, direction, getRange(), this, damage);
-        projectileService.launchProjectile(projectile);
+        projectileLauncher.launchProjectile(projectile);
     }
 }
