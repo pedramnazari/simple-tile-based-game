@@ -39,6 +39,8 @@ public abstract class CharacterView<T extends ICharacter> extends TileMapElement
         healthBarFill.setArcHeight(HEALTH_BAR_HEIGHT);
 
         Pane healthBarPane = new Pane();
+        // The health bar should not intercept mouse events meant for the character sprite beneath it.
+        // These properties ensure mouse events pass through the health bar to underlying nodes.
         healthBarPane.setMouseTransparent(true);
         healthBarPane.setPickOnBounds(false);
         healthBarPane.setPrefWidth(tileSize);
