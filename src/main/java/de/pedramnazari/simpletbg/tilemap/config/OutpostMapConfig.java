@@ -42,8 +42,8 @@ public final class OutpostMapConfig {
             {O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, SW, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, BM, O, O},
-            {O, O, O, O, O, O, O, O, O, PP, O},
+            {O, O, O, O, PP, O, BM, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O},
     };
 
@@ -53,8 +53,8 @@ public final class OutpostMapConfig {
             {O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, ELR, O, O, O, O, O, EFH, O, O},
+            {O, O, O, ELR, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, EFH, O, O},
             {O, O, O, O, O, O, O, O, O, O, O},
     };
 }

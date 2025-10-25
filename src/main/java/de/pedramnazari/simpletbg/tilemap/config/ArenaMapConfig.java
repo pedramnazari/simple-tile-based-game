@@ -47,18 +47,18 @@ public final class ArenaMapConfig {
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, BM, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, SW, O, O, HP, O},
+            {O, O, O, O, O, O, O, O, O, SW, O, HP, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
     };
 
     public static final int[][] ENEMIES = {
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, ELR, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, ELR, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, ETD, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, ETD, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, EFH, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O},
     };
