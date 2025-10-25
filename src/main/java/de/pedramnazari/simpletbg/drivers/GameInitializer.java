@@ -25,6 +25,8 @@ import de.pedramnazari.simpletbg.quest.service.config.QuestDefeatAllEnemiesAndGo
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
+import de.pedramnazari.simpletbg.tilemap.config.validation.MapDesignValidator;
+import de.pedramnazari.simpletbg.tilemap.config.validation.MapValidationContext;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IItem;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
@@ -59,12 +61,20 @@ public class GameInitializer {
     private static final int PP = POISON_POTION.getType();
     private static final int WHP = WALL_HIDING_PORTAL.getType();
 
+    private static final MapDesignValidator MAP_DESIGN_VALIDATOR = MapDesignValidator.createDefault();
+
 
     public static GameWorldController initAndStartGame() {
         return initAndStartGame(GameMaps.defaultMap());
     }
 
     public static GameWorldController initAndStartGame(GameMapDefinition mapDefinition) {
+
+        MAP_DESIGN_VALIDATOR.validate(MapValidationContext.fromConfiguration(
+                mapDefinition.getMap(),
+                mapDefinition.getItems(),
+                mapDefinition.getEnemies()
+        ));
 
         // TODO: move to AllTileMapConfigData
         final int[][] mapConfig3 = new int[][]{

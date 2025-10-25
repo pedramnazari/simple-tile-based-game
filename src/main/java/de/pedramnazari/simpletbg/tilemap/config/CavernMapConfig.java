@@ -41,11 +41,11 @@ public final class CavernMapConfig {
 
     public static final int[][] ITEMS = {
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, HP, O, O, O, O, O, O, O, O, O, O, O, O, RI, O},
+            {O, O, O, HP, O, O, O, O, O, O, O, O, O, O, O, RI, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, BM, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, HP, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, HP, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, PP, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
@@ -55,13 +55,13 @@ public final class CavernMapConfig {
     public static final int[][] ENEMIES = {
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, ELR, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, ELR, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
             {O, O, O, O, O, EFH, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, E2D, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, E2D, O, O, O, O, O, O, O},
             {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
     };
 }
