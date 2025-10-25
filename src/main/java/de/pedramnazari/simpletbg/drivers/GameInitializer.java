@@ -70,7 +70,11 @@ public class GameInitializer {
 
     public static GameWorldController initAndStartGame(GameMapDefinition mapDefinition) {
 
-        MAP_DESIGN_VALIDATOR.validate(new MapValidationContext(mapDefinition.getMap(), mapDefinition.getItems(), mapDefinition.getEnemies()));
+        MAP_DESIGN_VALIDATOR.validate(MapValidationContext.fromConfiguration(
+                mapDefinition.getMap(),
+                mapDefinition.getItems(),
+                mapDefinition.getEnemies()
+        ));
 
         // TODO: move to AllTileMapConfigData
         final int[][] mapConfig3 = new int[][]{

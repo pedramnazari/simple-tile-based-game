@@ -29,33 +29,8 @@ class ExitConstraint implements MapConstraint {
                                                MapValidationContext.MapPosition position,
                                                String label,
                                                List<String> violations) {
-        if (isFullySurroundedByDestructibleWalls(context, position)) {
-            violations.add(label + " at (" + position.column() + "," + position.row() + ") must not be fully surrounded by destroyable walls");
+        if (ConstraintUtils.isFullySurroundedByNonWalkableTiles(context, position)) {
+            violations.add(label + " at (" + position.column() + "," + position.row() + ") must not be fully surrounded by destructible or other non-walkable tiles");
         }
-    }
-
-    private boolean isFullySurroundedByDestructibleWalls(MapValidationContext context, MapValidationContext.MapPosition position) {
-        final int[][] directions = new int[][]{
-                {-1, 0},
-                {1, 0},
-                {0, -1},
-                {0, 1}
-        };
-
-        int consideredNeighbors = 0;
-
-        for (int[] direction : directions) {
-            int neighborRow = position.row() + direction[0];
-            int neighborCol = position.column() + direction[1];
-
-            if (context.isWithinBounds(neighborRow, neighborCol)) {
-                consideredNeighbors++;
-                if (!TileTypeClassifier.isDestructibleWall(context.getMapTileType(neighborRow, neighborCol))) {
-                    return false;
-                }
-            }
-        }
-
-        return consideredNeighbors > 0;
     }
 }

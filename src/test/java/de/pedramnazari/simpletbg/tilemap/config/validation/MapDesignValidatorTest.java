@@ -6,6 +6,8 @@ import de.pedramnazari.simpletbg.tilemap.model.TileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -21,7 +23,7 @@ class MapDesignValidatorTest {
     @Test
     void validate_acceptsAllAvailableGameMaps() {
         for (GameMapDefinition definition : GameMaps.availableMaps()) {
-            MapValidationContext context = new MapValidationContext(
+            MapValidationContext context = MapValidationContext.fromConfiguration(
                     definition.getMap(),
                     definition.getItems(),
                     definition.getEnemies()
@@ -34,7 +36,7 @@ class MapDesignValidatorTest {
 
     @Test
     void validate_allowsMapWithoutPortals() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.FLOOR1.getType(), TileType.FLOOR1.getType()},
                         {TileType.FLOOR1.getType(), TileType.EXIT.getType()}
@@ -48,7 +50,7 @@ class MapDesignValidatorTest {
 
     @Test
     void validate_rejectsInvalidPortalCount() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.FLOOR1.getType(), TileType.PORTAL.getType()},
                         {TileType.FLOOR1.getType(), TileType.FLOOR1.getType()}
@@ -57,12 +59,14 @@ class MapDesignValidatorTest {
                 emptyElements()
         );
 
+        MapDesignValidator validator = createValidator(new PortalConstraint());
+
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
 
     @Test
     void validate_rejectsPortalSurroundedByDestructibleWalls() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.EXIT.getType(), TileType.DESTRUCTIBLE_WALL.getType(), TileType.DESTRUCTIBLE_WALL.getType(), TileType.DESTRUCTIBLE_WALL.getType()},
                         {TileType.DESTRUCTIBLE_WALL.getType(), TileType.PORTAL.getType(), TileType.DESTRUCTIBLE_WALL.getType(), TileType.FLOOR1.getType()},
@@ -73,12 +77,14 @@ class MapDesignValidatorTest {
                 emptyElements(4)
         );
 
+        MapDesignValidator validator = createValidator(new PortalConstraint());
+
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
 
     @Test
     void validate_rejectsMissingExit() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.FLOOR1.getType(), TileType.FLOOR1.getType()},
                         {TileType.FLOOR1.getType(), TileType.FLOOR1.getType()}
@@ -87,12 +93,14 @@ class MapDesignValidatorTest {
                 emptyElements()
         );
 
+        MapDesignValidator validator = createValidator(new ExitConstraint());
+
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
 
     @Test
     void validate_rejectsExitSurroundedByDestructibleWalls() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.DESTRUCTIBLE_WALL.getType(), TileType.DESTRUCTIBLE_WALL.getType(), TileType.DESTRUCTIBLE_WALL.getType()},
                         {TileType.DESTRUCTIBLE_WALL.getType(), TileType.EXIT.getType(), TileType.DESTRUCTIBLE_WALL.getType()},
@@ -101,6 +109,8 @@ class MapDesignValidatorTest {
                 emptyElements(3),
                 emptyElements(3)
         );
+
+        MapDesignValidator validator = createValidator(new ExitConstraint());
 
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
@@ -116,7 +126,7 @@ class MapDesignValidatorTest {
                 {TileType.EMPTY.getType(), TileType.EMPTY.getType()}
         };
 
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.FLOOR1.getType(), TileType.FLOOR1.getType()},
                         {TileType.FLOOR1.getType(), TileType.EXIT.getType()}
@@ -124,6 +134,8 @@ class MapDesignValidatorTest {
                 items,
                 enemies
         );
+
+        MapDesignValidator validator = createValidator(new ElementOverlapConstraint());
 
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
@@ -135,7 +147,7 @@ class MapDesignValidatorTest {
                 {TileType.EMPTY.getType(), TileType.EMPTY.getType()}
         };
 
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.FLOOR1.getType(), TileType.PORTAL.getType()},
                         {TileType.FLOOR1.getType(), TileType.PORTAL.getType()}
@@ -143,6 +155,8 @@ class MapDesignValidatorTest {
                 items,
                 emptyElements()
         );
+
+        MapDesignValidator validator = createValidator(new ElementOverlapConstraint());
 
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
@@ -154,7 +168,7 @@ class MapDesignValidatorTest {
                 {TileType.EMPTY.getType(), TileType.EMPTY.getType()}
         };
 
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.FLOOR1.getType(), TileType.WALL.getType()},
                         {TileType.FLOOR1.getType(), TileType.EXIT.getType()}
@@ -163,12 +177,14 @@ class MapDesignValidatorTest {
                 emptyElements()
         );
 
+        MapDesignValidator validator = createValidator(new ElementOverlapConstraint());
+
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
 
     @Test
     void validate_rejectsHorizontalEnemyBlockedByWalls() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.EXIT.getType(), TileType.WALL.getType(), TileType.FLOOR1.getType(), TileType.WALL.getType()}
                 },
@@ -176,12 +192,14 @@ class MapDesignValidatorTest {
                 new int[][]{{TileType.EMPTY.getType(), TileType.EMPTY.getType(), TileType.ENEMY_LR.getType(), TileType.EMPTY.getType()}}
         );
 
+        MapDesignValidator validator = createValidator(new HorizontalEnemyMovementConstraint());
+
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
 
     @Test
     void validate_rejectsVerticalEnemyBlockedByWalls() {
-        MapValidationContext context = new MapValidationContext(
+        MapValidationContext context = MapValidationContext.fromConfiguration(
                 new int[][]{
                         {TileType.EXIT.getType()},
                         {TileType.WALL.getType()},
@@ -201,6 +219,8 @@ class MapDesignValidatorTest {
                         {TileType.EMPTY.getType()}
                 }
         );
+
+        MapDesignValidator validator = createValidator(new VerticalEnemyMovementConstraint());
 
         assertThrows(IllegalStateException.class, () -> validator.validate(context));
     }
@@ -225,9 +245,13 @@ class MapDesignValidatorTest {
                 {TileType.EMPTY.getType(), TileType.EMPTY.getType(), TileType.EMPTY.getType()}
         };
 
-        MapValidationContext context = new MapValidationContext(map, items, enemies);
+        MapValidationContext context = MapValidationContext.fromConfiguration(map, items, enemies);
 
         assertDoesNotThrow(() -> validator.validate(context));
+    }
+
+    private MapDesignValidator createValidator(MapConstraint... constraints) {
+        return new MapDesignValidator(List.of(constraints));
     }
 
     private static int[][] emptyElements() {
