@@ -80,7 +80,7 @@ public abstract class Character implements ICharacter {
             throw new IllegalArgumentException("Health must be positive");
         }
 
-        this.health += health;
+        this.health = Math.min(100, this.health + health);
 
         return getHealth();
     }
