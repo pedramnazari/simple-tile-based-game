@@ -67,6 +67,96 @@ public final class GameMaps {
                     OutpostMapConfig.ENEMIES,
                     OutpostMapConfig.HERO_START_COLUMN,
                     OutpostMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "desert",
+                    "Desert",
+                    DesertMapConfig.MAP,
+                    DesertMapConfig.ITEMS,
+                    DesertMapConfig.ENEMIES,
+                    DesertMapConfig.HERO_START_COLUMN,
+                    DesertMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "glacier",
+                    "Glacier",
+                    GlacierMapConfig.MAP,
+                    GlacierMapConfig.ITEMS,
+                    GlacierMapConfig.ENEMIES,
+                    GlacierMapConfig.HERO_START_COLUMN,
+                    GlacierMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "citadel",
+                    "Citadel",
+                    CitadelMapConfig.MAP,
+                    CitadelMapConfig.ITEMS,
+                    CitadelMapConfig.ENEMIES,
+                    CitadelMapConfig.HERO_START_COLUMN,
+                    CitadelMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "swamp",
+                    "Swamp",
+                    SwampMapConfig.MAP,
+                    SwampMapConfig.ITEMS,
+                    SwampMapConfig.ENEMIES,
+                    SwampMapConfig.HERO_START_COLUMN,
+                    SwampMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "volcano",
+                    "Volcano",
+                    VolcanoMapConfig.MAP,
+                    VolcanoMapConfig.ITEMS,
+                    VolcanoMapConfig.ENEMIES,
+                    VolcanoMapConfig.HERO_START_COLUMN,
+                    VolcanoMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "meadow",
+                    "Meadow",
+                    MeadowMapConfig.MAP,
+                    MeadowMapConfig.ITEMS,
+                    MeadowMapConfig.ENEMIES,
+                    MeadowMapConfig.HERO_START_COLUMN,
+                    MeadowMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "temple",
+                    "Temple",
+                    TempleMapConfig.MAP,
+                    TempleMapConfig.ITEMS,
+                    TempleMapConfig.ENEMIES,
+                    TempleMapConfig.HERO_START_COLUMN,
+                    TempleMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "canyon",
+                    "Canyon",
+                    CanyonMapConfig.MAP,
+                    CanyonMapConfig.ITEMS,
+                    CanyonMapConfig.ENEMIES,
+                    CanyonMapConfig.HERO_START_COLUMN,
+                    CanyonMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "ruins",
+                    "Ruins",
+                    RuinsMapConfig.MAP,
+                    RuinsMapConfig.ITEMS,
+                    RuinsMapConfig.ENEMIES,
+                    RuinsMapConfig.HERO_START_COLUMN,
+                    RuinsMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
+                    "stronghold",
+                    "Stronghold",
+                    StrongholdMapConfig.MAP,
+                    StrongholdMapConfig.ITEMS,
+                    StrongholdMapConfig.ENEMIES,
+                    StrongholdMapConfig.HERO_START_COLUMN,
+                    StrongholdMapConfig.HERO_START_ROW
             )
     );
 
