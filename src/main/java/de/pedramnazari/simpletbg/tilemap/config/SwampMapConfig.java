@@ -7,8 +7,8 @@ public final class SwampMapConfig {
     private SwampMapConfig() {
     }
 
-    public static final int HERO_START_ROW = 6;
-    public static final int HERO_START_COLUMN = 6;
+    public static final int HERO_START_ROW = 1;
+    public static final int HERO_START_COLUMN = 1;
 
     private static final int W = WALL.getType();
     private static final int G = GRASS.getType();
@@ -29,44 +29,47 @@ public final class SwampMapConfig {
     private static final int E2D = ENEMY_2D.getType();
 
     public static final int[][] MAP = {
-            {W, W, W, W, W, W, W, W, W, W, W, W, W},
-            {W, G, G, P, P, G, G, G, M, M, G, G, W},
-            {W, G, W, W, P, G, W, G, M, W, G, G, W},
-            {W, G, G, G, P, G, W, G, M, W, G, X, W},
-            {W, M, M, G, P, G, G, G, M, G, G, G, W},
-            {W, M, W, W, P, W, W, G, W, G, W, G, W},
-            {W, G, G, G, G, G, P, G, G, G, W, G, W},
-            {W, G, W, M, M, G, P, M, M, G, W, G, W},
-            {W, G, G, G, W, G, P, G, G, G, G, G, W},
-            {W, G, W, G, W, G, G, G, W, W, G, G, W},
-            {W, W, W, W, W, W, W, W, W, W, W, W, W},
+            {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
+            {W, G, G, G, P, P, G, G, M, M, M, G, G, G, G, W},
+            {W, G, W, M, P, P, G, W, M, M, G, W, M, G, G, W},
+            {W, G, M, M, M, G, G, W, P, P, G, G, X, G, G, W},
+            {W, G, W, M, M, G, G, W, P, P, G, G, M, G, G, W},
+            {W, G, M, G, P, P, G, G, M, M, M, G, G, G, G, W},
+            {W, G, M, G, W, M, M, M, W, G, G, W, G, G, G, W},
+            {W, G, P, P, G, G, G, P, P, G, G, M, G, M, G, W},
+            {W, G, M, M, M, M, M, G, G, G, G, M, G, M, G, W},
+            {W, G, W, G, G, W, G, G, W, G, G, W, G, G, G, W},
+            {W, G, G, G, G, P, P, G, G, G, G, G, G, G, G, W},
+            {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
     };
 
     public static final int[][] ITEMS = {
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, HP, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, BM, O, O, O, O, O, O, O, O},
-            {O, O, O, HP, O, O, O, O, O, O, SW, O, O},
-            {O, O, O, O, O, O, O, O, O, HP, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, PP, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, RI, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, HP, O, O, O, O, O, O, PP, O, O, O, O, O, O, O},
+            {O, O, O, O, BM, O, O, O, O, O, O, O, O, O, HP, O},
+            {O, O, O, O, O, O, O, O, O, O, RI, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, PP, O, O, O, O, O},
+            {O, O, HP, O, O, O, O, O, O, O, O, SW, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, PP, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, HP, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, SW, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
     };
 
     public static final int[][] ENEMIES = {
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, ELR, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, E2D, O, O, O, O},
-            {O, O, O, O, O, O, O, O, EFH, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, ELR, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, ETD, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
-            {O, O, O, O, O, O, O, O, O, O, ETD, O, O},
-            {O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, ELR, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, ETD, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, ELR, O, O, O},
+            {O, O, O, O, ETD, O, O, O, E2D, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, ELR, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, ETD, O, O, EFH, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, ELR, O, O, O, O, O, O, O, O},
+            {O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O},
     };
 }
