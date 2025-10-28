@@ -7,6 +7,27 @@ A simple tile-based 2D game developed with Java and Spring Boot.
 ## Execution
 To run the application, execute `./gradlew run` (Linux/macOS) or `.\gradlew run` (Windows) in the project directory.
 
+## Map configuration
+
+Maps can be supplied either through the existing programmatic configuration classes or as standalone JSON files. Each JSON file must follow the structure below and be placed under `src/main/resources/maps` (for built-in maps) or in a directory referenced by the `simpletbg.maps.dir` system property for external maps.
+
+```json
+{
+  "id": "example-id",
+  "displayName": "Example",
+  "heroStart": { "column": 1, "row": 1 },
+  "tiles": [[3, 3], [3, 999]],
+  "items": [[0, 0], [0, 0]],
+  "enemies": [[0, 0], [0, 0]]
+}
+```
+
+- `tiles` defines the terrain using the numeric values from `TileType`.
+- `items` and `enemies` matrices default to empty cells when omitted but must match the `tiles` dimensions when provided.
+- `heroStart` uses zero-based coordinates and must reference a walkable tile.
+
+At runtime the repository automatically combines programmatic maps and all discovered JSON files. When the `simpletbg.maps.dir` property contains multiple paths they should be separated using the platform-specific path separator (e.g. `:` on Linux/macOS or `;` on Windows).
+
 ## Tileset: Floor pixel art 2D
 The following tilesets were used in this project, all licensed under the Creative Commons Attribution 4.0 International License:
 

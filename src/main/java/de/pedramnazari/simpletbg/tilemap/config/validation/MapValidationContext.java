@@ -69,6 +69,10 @@ public class MapValidationContext {
         return enemyTypes[row][column];
     }
 
+    public boolean isWalkable(int row, int column) {
+        return TileTypeClassifier.isWalkable(map[row][column].getType());
+    }
+
     public List<MapPosition> findMapTiles(int tileType) {
         final List<MapPosition> positions = new ArrayList<>();
 
