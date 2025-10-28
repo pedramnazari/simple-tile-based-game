@@ -30,7 +30,7 @@ public final class GameMapRepository {
         );
     }
 
-    public synchronized void reload() {
+    public void reload() {
         Map<String, GameMapDefinition> aggregated = new LinkedHashMap<>();
         for (GameMapSource source : sources) {
             for (GameMapDefinition definition : source.load()) {
