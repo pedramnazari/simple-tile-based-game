@@ -73,7 +73,9 @@ public class GameInitializer {
         MAP_DESIGN_VALIDATOR.validate(MapValidationContext.fromConfiguration(
                 mapDefinition.getMap(),
                 mapDefinition.getItems(),
-                mapDefinition.getEnemies()
+                mapDefinition.getEnemies(),
+                mapDefinition.getHeroStartRow(),
+                mapDefinition.getHeroStartColumn()
         ));
 
         // TODO: move to AllTileMapConfigData
