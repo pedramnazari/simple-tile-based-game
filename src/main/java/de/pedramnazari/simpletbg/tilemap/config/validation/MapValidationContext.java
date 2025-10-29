@@ -21,16 +21,20 @@ public class MapValidationContext {
     private final List<IEnemy> enemies;
     private final int[][] itemTypes;
     private final int[][] enemyTypes;
+    private final int heroStartRow;
+    private final int heroStartColumn;
 
-    public MapValidationContext(Tile[][] map, Collection<IItem> items, Collection<IEnemy> enemies) {
+    public MapValidationContext(Tile[][] map, Collection<IItem> items, Collection<IEnemy> enemies, int heroStartRow, int heroStartColumn) {
         this.map = requireMatrix(map, "map");
         this.items = List.copyOf(requireCollection(items, "items"));
         this.enemies = List.copyOf(requireCollection(enemies, "enemies"));
         this.itemTypes = createElementMatrix(getHeight(), getWidth(), this.items);
         this.enemyTypes = createElementMatrix(getHeight(), getWidth(), this.enemies);
+        this.heroStartRow = heroStartRow;
+        this.heroStartColumn = heroStartColumn;
     }
 
-    public static MapValidationContext fromConfiguration(int[][] map, int[][] items, int[][] enemies) {
+    public static MapValidationContext fromConfiguration(int[][] map, int[][] items, int[][] enemies, int heroStartRow, int heroStartColumn) {
         final int[][] validatedMap = requireMatrix(map, "map");
         final int[][] validatedItems = requireMatrix(items, "items");
         final int[][] validatedEnemies = requireMatrix(enemies, "enemies");
@@ -41,7 +45,9 @@ public class MapValidationContext {
         return new MapValidationContext(
                 createTiles(validatedMap),
                 createItems(validatedItems),
-                createEnemies(validatedEnemies)
+                createEnemies(validatedEnemies),
+                heroStartRow,
+                heroStartColumn
         );
     }
 
@@ -71,6 +77,14 @@ public class MapValidationContext {
 
     public boolean isWalkable(int row, int column) {
         return TileTypeClassifier.isWalkable(map[row][column].getType());
+    }
+
+    public int getHeroStartRow() {
+        return heroStartRow;
+    }
+
+    public int getHeroStartColumn() {
+        return heroStartColumn;
     }
 
     public List<MapPosition> findMapTiles(int tileType) {

@@ -13,6 +13,7 @@ public class MapDesignValidator {
 
     public static MapDesignValidator createDefault() {
         return new MapDesignValidator(List.of(
+                new HeroStartConstraint(),
                 new PortalConstraint(),
                 new ExitConstraint(),
                 new ElementOverlapConstraint(),

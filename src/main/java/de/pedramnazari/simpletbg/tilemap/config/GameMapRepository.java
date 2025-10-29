@@ -61,22 +61,11 @@ public final class GameMapRepository {
         MapValidationContext context = MapValidationContext.fromConfiguration(
                 definition.getMap(),
                 definition.getItems(),
-                definition.getEnemies()
+                definition.getEnemies(),
+                definition.getHeroStartRow(),
+                definition.getHeroStartColumn()
         );
 
         validator.validate(context);
-
-        int heroRow = definition.getHeroStartRow();
-        int heroColumn = definition.getHeroStartColumn();
-        if (!context.isWithinBounds(heroRow, heroColumn)) {
-            throw new IllegalStateException("Hero start position (" + heroColumn + "," + heroRow + ") is outside of map bounds for map '"
-                    + definition.getId() + "'");
-        }
-
-        if (!context.isWalkable(heroRow, heroColumn)) {
-            throw new IllegalStateException("Hero start position (" + heroColumn + "," + heroRow + ") must be walkable for map '"
-                    + definition.getId() + "'");
-        }
-
     }
 }

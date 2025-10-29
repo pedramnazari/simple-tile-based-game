@@ -27,29 +27,25 @@ import java.util.stream.Stream;
 final class MapJsonLoader implements GameMapSource {
 
     static final String DEFAULT_RESOURCE_DIRECTORY = "maps";
-    static final String EXTERNAL_DIRECTORY_PROPERTY = "simpletbg.maps.dir";
 
     private final ObjectMapper objectMapper;
     private final ClassLoader classLoader;
     private final String resourceDirectory;
-    private final String externalDirectoryProperty;
 
     MapJsonLoader() {
-        this(createObjectMapper(), Thread.currentThread().getContextClassLoader(), DEFAULT_RESOURCE_DIRECTORY, EXTERNAL_DIRECTORY_PROPERTY);
+        this(createObjectMapper(), Thread.currentThread().getContextClassLoader(), DEFAULT_RESOURCE_DIRECTORY);
     }
 
-    MapJsonLoader(ObjectMapper objectMapper, ClassLoader classLoader, String resourceDirectory, String externalDirectoryProperty) {
+    MapJsonLoader(ObjectMapper objectMapper, ClassLoader classLoader, String resourceDirectory) {
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper must not be null");
         this.classLoader = Objects.requireNonNullElse(classLoader, MapJsonLoader.class.getClassLoader());
         this.resourceDirectory = Objects.requireNonNull(resourceDirectory, "resourceDirectory must not be null");
-        this.externalDirectoryProperty = Objects.requireNonNull(externalDirectoryProperty, "externalDirectoryProperty must not be null");
     }
 
     @Override
     public List<GameMapDefinition> load() {
         List<GameMapDefinition> definitions = new ArrayList<>();
         definitions.addAll(loadFromResources());
-        definitions.addAll(loadFromExternalDirectories());
         return definitions;
     }
 
@@ -92,24 +88,6 @@ final class MapJsonLoader implements GameMapSource {
         }
 
         throw new IllegalStateException("Unsupported protocol '" + protocol + "' for map resource " + url);
-    }
-
-    private List<GameMapDefinition> loadFromExternalDirectories() {
-        String configuredDirectories = System.getProperty(externalDirectoryProperty);
-        if (configuredDirectories == null || configuredDirectories.isBlank()) {
-            return List.of();
-        }
-
-        String[] directories = configuredDirectories.split(java.io.File.pathSeparator);
-        List<GameMapDefinition> result = new ArrayList<>();
-        for (String directory : directories) {
-            if (directory == null || directory.isBlank()) {
-                continue;
-            }
-            Path path = Paths.get(directory.trim());
-            result.addAll(readAll(path));
-        }
-        return result;
     }
 
     private List<GameMapDefinition> readAll(Path root) {
@@ -159,8 +137,6 @@ final class MapJsonLoader implements GameMapSource {
                 : copyAndValidateOptionalMatrix(json.enemies(), height, width, "enemies", source);
         validateTileValues(enemies, "enemies", source);
 
-        ensureHeroWithinBounds(heroStart, height, width, source);
-
         return new GameMapDefinition(
                 id,
                 displayName,
@@ -170,13 +146,6 @@ final class MapJsonLoader implements GameMapSource {
                 heroStart.column(),
                 heroStart.row()
         );
-    }
-
-    private static void ensureHeroWithinBounds(JsonHeroStart heroStart, int height, int width, String source) {
-        if (heroStart.row() < 0 || heroStart.column() < 0 || heroStart.row() >= height || heroStart.column() >= width) {
-            throw new IllegalStateException("Hero start position (" + heroStart.column() + "," + heroStart.row()
-                    + ") is outside of the map bounds in " + source);
-        }
     }
 
     private static void validateTileValues(int[][] matrix, String name, String source) {

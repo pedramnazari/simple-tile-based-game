@@ -1,10 +1,12 @@
 package de.pedramnazari.simpletbg.tilemap.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.pedramnazari.simpletbg.tilemap.model.TileType;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -14,14 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MapJsonLoaderTest {
 
-    @AfterEach
-    void clearSystemProperty() {
-        System.clearProperty(MapJsonLoader.EXTERNAL_DIRECTORY_PROPERTY);
-    }
-
     @Test
-    void load_includesMapsFromExternalDirectory() throws IOException {
-        Path directory = Files.createTempDirectory("map-json-loader-test");
+    void load_includesMapsFromCustomResourceDirectory() throws IOException {
+        Path root = Files.createTempDirectory("map-json-loader-test");
+        Path directory = Files.createDirectory(root.resolve("maps"));
         Path file = directory.resolve("custom-map.json");
         Files.writeString(file, """
                 {
@@ -34,23 +32,24 @@ class MapJsonLoaderTest {
                 }
                 """.formatted(TileType.FLOOR1.getType(), TileType.EXIT.getType(), TileType.FLOOR1.getType(), TileType.FLOOR1.getType()));
 
-        System.setProperty(MapJsonLoader.EXTERNAL_DIRECTORY_PROPERTY, directory.toString());
+        try (URLClassLoader classLoader = new URLClassLoader(new java.net.URL[]{root.toUri().toURL()})) {
+            MapJsonLoader loader = new MapJsonLoader(objectMapper(), classLoader, "maps");
+            List<GameMapDefinition> definitions = loader.load();
 
-        MapJsonLoader loader = new MapJsonLoader();
-        List<GameMapDefinition> definitions = loader.load();
+            boolean containsCustomMap = definitions.stream()
+                    .anyMatch(definition -> "custom-map".equals(definition.getId())
+                            && "Custom Map".equals(definition.getDisplayName())
+                            && definition.getHeroStartColumn() == 0
+                            && definition.getHeroStartRow() == 0);
 
-        boolean containsCustomMap = definitions.stream()
-                .anyMatch(definition -> "custom-map".equals(definition.getId())
-                        && "Custom Map".equals(definition.getDisplayName())
-                        && definition.getHeroStartColumn() == 0
-                        && definition.getHeroStartRow() == 0);
-
-        assertTrue(containsCustomMap, "Loaded map definitions should include the custom map");
+            assertTrue(containsCustomMap, "Loaded map definitions should include the custom map");
+        }
     }
 
     @Test
     void load_rejectsMatricesWithDifferentDimensions() throws IOException {
-        Path directory = Files.createTempDirectory("map-json-loader-invalid");
+        Path root = Files.createTempDirectory("map-json-loader-invalid");
+        Path directory = Files.createDirectory(root.resolve("maps"));
         Path file = directory.resolve("invalid-map.json");
         Files.writeString(file, """
                 {
@@ -63,11 +62,18 @@ class MapJsonLoaderTest {
                 }
                 """.formatted(TileType.EXIT.getType()));
 
-        System.setProperty(MapJsonLoader.EXTERNAL_DIRECTORY_PROPERTY, directory.toString());
+        try (URLClassLoader classLoader = new URLClassLoader(new java.net.URL[]{root.toUri().toURL()})) {
+            MapJsonLoader loader = new MapJsonLoader(objectMapper(), classLoader, "maps");
 
-        MapJsonLoader loader = new MapJsonLoader();
+            IllegalStateException exception = assertThrows(IllegalStateException.class, loader::load);
+            assertTrue(exception.getMessage().contains("items matrix must have the same dimensions"));
+        }
+    }
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, loader::load);
-        assertTrue(exception.getMessage().contains("items matrix must have the same dimensions"));
+    private static ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        return mapper;
     }
 }

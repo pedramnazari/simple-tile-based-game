@@ -9,7 +9,7 @@ To run the application, execute `./gradlew run` (Linux/macOS) or `.\gradlew run`
 
 ## Map configuration
 
-Maps can be supplied either through the existing programmatic configuration classes or as standalone JSON files. Each JSON file must follow the structure below and be placed under `src/main/resources/maps` (for built-in maps) or in a directory referenced by the `simpletbg.maps.dir` system property for external maps.
+Maps can be supplied either through the existing programmatic configuration classes or as standalone JSON files. Each JSON file must follow the structure below and be placed under `src/main/resources/maps`.
 
 ```json
 {
@@ -26,7 +26,7 @@ Maps can be supplied either through the existing programmatic configuration clas
 - `items` and `enemies` matrices default to empty cells when omitted but must match the `tiles` dimensions when provided.
 - `heroStart` uses zero-based coordinates and must reference a walkable tile.
 
-At runtime the repository automatically combines programmatic maps and all discovered JSON files. When the `simpletbg.maps.dir` property contains multiple paths they should be separated using the platform-specific path separator (e.g. `:` on Linux/macOS or `;` on Windows).
+At runtime the repository automatically combines programmatic maps and all JSON resources discovered on the classpath.
 
 ## Tileset: Floor pixel art 2D
 The following tilesets were used in this project, all licensed under the Creative Commons Attribution 4.0 International License:

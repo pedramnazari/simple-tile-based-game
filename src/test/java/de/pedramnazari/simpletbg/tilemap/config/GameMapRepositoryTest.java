@@ -46,7 +46,7 @@ class GameMapRepositoryTest {
                 List.of(() -> List.of(invalidHeroPosition)),
                 MapDesignValidator.createDefault()
         ));
-        assertEquals("Hero start position (0,5) is outside of map bounds for map 'invalid-hero'", exception.getMessage());
+        assertEquals("Map validation failed:\n - Hero start position (0,5) is outside of map bounds", exception.getMessage());
     }
 
     @Test
