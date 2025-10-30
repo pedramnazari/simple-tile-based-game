@@ -28,6 +28,7 @@ public class MapDesignValidator {
             violations.addAll(constraint.validate(context));
         }
 
+        // TODO: Return result instead of throwing exception
         if (!violations.isEmpty()) {
             throw new IllegalStateException("Map validation failed:\n - " + String.join("\n - ", violations));
         }

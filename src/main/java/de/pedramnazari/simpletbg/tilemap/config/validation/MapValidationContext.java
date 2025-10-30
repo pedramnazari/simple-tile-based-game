@@ -19,6 +19,7 @@ public class MapValidationContext {
     private final Tile[][] map;
     private final List<IItem> items;
     private final List<IEnemy> enemies;
+    // TODO: remove itemTypes and enemyTypes. Validation should be done based on the items and enemies lists.
     private final int[][] itemTypes;
     private final int[][] enemyTypes;
     private final int heroStartRow;

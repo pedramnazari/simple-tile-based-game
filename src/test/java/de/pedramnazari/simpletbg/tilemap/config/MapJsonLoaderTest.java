@@ -31,7 +31,7 @@ class MapJsonLoaderTest {
                   "enemies": [[0, 0], [0, 0]]
                 }
                 """.formatted(TileType.FLOOR1.getType(), TileType.EXIT.getType(), TileType.FLOOR1.getType(), TileType.FLOOR1.getType()));
-
+        // TODO: simplify
         try (URLClassLoader classLoader = new URLClassLoader(new java.net.URL[]{root.toUri().toURL()})) {
             MapJsonLoader loader = new MapJsonLoader(objectMapper(), classLoader, "maps");
             List<GameMapDefinition> definitions = loader.load();
@@ -61,7 +61,7 @@ class MapJsonLoaderTest {
                   "enemies": [[0, 0], [0, 0]]
                 }
                 """.formatted(TileType.EXIT.getType()));
-
+        // TODO: simplify
         try (URLClassLoader classLoader = new URLClassLoader(new java.net.URL[]{root.toUri().toURL()})) {
             MapJsonLoader loader = new MapJsonLoader(objectMapper(), classLoader, "maps");
 
