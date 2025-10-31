@@ -4,6 +4,9 @@
 
 A simple tile-based 2D game developed with Java and Spring Boot.
 
+## Requirements
+Java 17 (JDK 17) or newer is required to build and run this project. The project toolchain is configured for Java 17.
+
 ## Execution
 To run the application, execute `./gradlew run` (Linux/macOS) or `.\gradlew run` (Windows) in the project directory.
 
