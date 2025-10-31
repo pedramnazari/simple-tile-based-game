@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'maven-publish'
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
@@ -36,4 +37,22 @@ javafx {
 
 application {
     mainClassName = 'de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/pedramnazari/simple-tile-based-game")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
