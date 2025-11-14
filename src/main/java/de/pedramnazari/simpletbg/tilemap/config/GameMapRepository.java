@@ -57,6 +57,12 @@ public final class GameMapRepository {
         return cachedMaps.get(0);
     }
 
+    public java.util.Optional<GameMapDefinition> findById(String id) {
+        return cachedMaps.stream()
+                .filter(definition -> definition.getId().equals(id))
+                .findFirst();
+    }
+
     private void validate(GameMapDefinition definition) {
         MapValidationContext context = MapValidationContext.fromConfiguration(
                 definition.getMap(),

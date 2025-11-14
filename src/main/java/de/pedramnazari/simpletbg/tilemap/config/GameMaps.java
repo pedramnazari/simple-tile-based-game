@@ -20,4 +20,8 @@ public final class GameMaps {
     public static void reload() {
         REPOSITORY.reload();
     }
+
+    public static java.util.Optional<GameMapDefinition> findById(String id) {
+        return REPOSITORY.findById(id);
+    }
 }

@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
+import de.pedramnazari.simpletbg.drivers.GameApplication;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.adapters.ItemConfigParser;
@@ -331,12 +332,13 @@ public class GameInitializer {
         tileMapService.addCharacterMovedToSpecialTileListener(questService);
 
         gameWorldService.setQuest(questConfig.getQuest());
+        GameApplication.wireRuntime(gameWorldService, questService);
 
         final Tile[][] tiles = new TileConfigParser().parse(mapDefinition.getMap(), tileFactory);
         final Collection<IItem> items = new ItemConfigParser().parse(mapDefinition.getItems(), itemFactory);
         final Collection<IEnemy> enemies = new EnemyConfigParser().parse(mapDefinition.getEnemies(), new DefaultEnemyFactory(collisionDetectionService, heroService));
 
-        controller.startGameUsingMap(tiles, items, enemies, mapDefinition.getHeroStartColumn(), mapDefinition.getHeroStartRow());
+        controller.startGameUsingMap(tiles, items, enemies, mapDefinition.getHeroStartColumn(), mapDefinition.getHeroStartRow(), mapDefinition.getId());
 
         return controller;
     }

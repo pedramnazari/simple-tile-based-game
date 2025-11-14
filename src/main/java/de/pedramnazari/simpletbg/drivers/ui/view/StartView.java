@@ -1,6 +1,8 @@
 // StartView.java
 package de.pedramnazari.simpletbg.drivers.ui.view;
 
+import de.pedramnazari.simpletbg.drivers.GameApplication;
+import de.pedramnazari.simpletbg.savegame.application.LoadedGame;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import javafx.application.Application;
@@ -61,7 +63,14 @@ public class StartView extends Application {
             }
         });
 
-        vbox.getChildren().addAll(mapSelectionLabel, mapListView, playButton);
+        Button continueButton = new Button("Continue");
+        continueButton.setStyle("-fx-font-size: 18px; -fx-padding: 8px 30px;");
+        continueButton.setDisable(!GameApplication.getHasSavedGameUseCase().hasSave());
+        continueButton.setOnAction(event -> {
+            GameApplication.getLoadGameUseCase().loadMostRecentGame().ifPresent(loadedGame -> launchRestoredGame(primaryStage, loadedGame));
+        });
+
+        vbox.getChildren().addAll(mapSelectionLabel, mapListView, playButton, continueButton);
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(backgroundImageView, vbox);
@@ -74,5 +83,15 @@ public class StartView extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void launchRestoredGame(Stage primaryStage, LoadedGame loadedGame) {
+        GameWorldVisualizer gameWorldVisualizer = new GameWorldVisualizer();
+        gameWorldVisualizer.setRestoredGame(loadedGame);
+        try {
+            gameWorldVisualizer.start(primaryStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

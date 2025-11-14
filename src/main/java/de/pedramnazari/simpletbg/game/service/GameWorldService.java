@@ -28,6 +28,7 @@ public class GameWorldService {
     private boolean initialized = false;
 
     private Quest quest;
+    private ScheduledExecutorService scheduler;
 
 
     public GameWorldService(ITileMapService tileMapService, IItemService itemService, IHeroService heroService, IEnemyService enemyService) {
@@ -87,8 +88,14 @@ public class GameWorldService {
         };
 
         // Wait 3 seconds before starting the first move to ensure that game is fully initialized
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ENEMY_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
+    }
+
+    public void stop() {
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+        }
     }
 
     // TODO: Move all moveHero* methods to HeroService
@@ -114,7 +121,7 @@ public class GameWorldService {
 
         final MovementResult result = heroService.moveHero(moveDirection, gameContext);
 
-        if (result.hasElementMoved()) {
+        if (result.hasElementMoved() && result.getNewMapIndex() != null) {
             currentMapIndex = result.getNewMapIndex();
         }
     }
@@ -157,6 +164,18 @@ public class GameWorldService {
 
     public void setQuest(Quest quest) {
         this.quest = quest;
+    }
+
+    public Quest getQuest() {
+        return quest;
+    }
+
+    public String getCurrentMapIndex() {
+        return currentMapIndex;
+    }
+
+    public void setCurrentMapIndex(String currentMapIndex) {
+        this.currentMapIndex = currentMapIndex;
     }
 
     public void onInventarItemSelected(IItem item) {

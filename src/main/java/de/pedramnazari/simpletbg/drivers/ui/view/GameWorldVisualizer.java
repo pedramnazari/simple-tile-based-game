@@ -1,15 +1,19 @@
 package de.pedramnazari.simpletbg.drivers.ui.view;
 
+import de.pedramnazari.simpletbg.drivers.GameApplication;
 import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
+import de.pedramnazari.simpletbg.savegame.application.LoadedGame;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.*;
+import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -54,6 +58,7 @@ public class GameWorldVisualizer extends Application {
     private IHero hero;
     private StackPane stackPane;
     private Pane cameraViewport;
+    private Stage primaryStage;
     private double viewportWidth;
     private double viewportHeight;
     private double mapPixelWidth;
@@ -61,6 +66,7 @@ public class GameWorldVisualizer extends Application {
 
     private boolean right, left, down, up;
     private GameMapDefinition mapDefinition;
+    private LoadedGame restoredGame;
     private Map<Point, TileView> tilesView = new HashMap<>();
     private Label enemyCountLabel;
     private int currentEnemyCount;
@@ -70,10 +76,18 @@ public class GameWorldVisualizer extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GameMapDefinition selectedMap = mapDefinition != null ? mapDefinition : GameMaps.defaultMap();
+        this.primaryStage = primaryStage;
+        GameMapDefinition selectedMap;
+        if (restoredGame != null) {
+            controller = restoredGame.controller();
+            selectedMap = restoredGame.mapDefinition();
+        } else {
+            selectedMap = mapDefinition != null ? mapDefinition : GameMaps.defaultMap();
+            this.mapDefinition = selectedMap;
+            controller = GameInitializer.initAndStartGame(selectedMap);
+        }
         this.mapDefinition = selectedMap;
-
-        controller = GameInitializer.initAndStartGame(selectedMap);
+        this.restoredGame = null;
         controller.setTileMapVisualizer(this);
 
         final TileMap tileMap = controller.getTileMap();
@@ -110,6 +124,7 @@ public class GameWorldVisualizer extends Application {
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
         currentEnemyCount = enemies.size();
         updateEnemies(enemies);
+        refreshInventory();
 
         // add hero to grid
         final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/hero.png")));
@@ -160,7 +175,28 @@ public class GameWorldVisualizer extends Application {
 
         infoBox.getChildren().add(enemyCountLabel);
 
+        Button saveAndExit = new Button("Save & Exit");
+        saveAndExit.setOnAction(event -> handleSaveAndExit());
+        infoBox.getChildren().add(saveAndExit);
+
         return infoBox;
+    }
+
+    private void handleSaveAndExit() {
+        GameApplication.getSaveGameUseCase().saveCurrentGame();
+        controller.getGameWorldService().stop();
+        GameContext.resetInstance();
+        StartView startView = new StartView();
+        try {
+            startView.start(primaryStage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setRestoredGame(LoadedGame restoredGame) {
+        this.restoredGame = restoredGame;
+        this.mapDefinition = restoredGame.mapDefinition();
     }
 
     private void updateHeroHealthView() {
@@ -328,23 +364,7 @@ public class GameWorldVisualizer extends Application {
 
         for (IItem item : items) {
 
-            String imagePath = switch (item.getType()) {
-                case 100 -> "/tiles/items/yellow_key.png";
-                case 101 -> "/tiles/items/yellow_key_stone.png";
-                case 200 -> "/tiles/items/weapons/sword.png";
-                case 201 -> "/tiles/items/weapons/sword2.png";
-                case 220 -> "/tiles/items/weapons/lance.png";
-                case 221 -> "/tiles/items/weapons/double_ended_lance.png";
-                case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
-                case 230 -> "/tiles/items/weapons/bomb_placer.png";
-                case 240 -> "/tiles/items/weapons/sword2.png";
-                case 300 -> "/tiles/items/rings/magic_ring1.png";
-                case 160 -> "/tiles/items/consumable/health_potion.png";
-                case 170 -> "/tiles/items/consumable/poison_potion.png";
-                default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
-            };
-
-            final Image itemImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
+            final Image itemImage = loadItemImage(item);
             final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
 
             Point point = new Point(item.getX(), item.getY());
@@ -468,6 +488,40 @@ public class GameWorldVisualizer extends Application {
             }
         }
 
+    }
+
+    private void refreshInventory() {
+        inventory.getChildren().clear();
+        if (hero == null) {
+            return;
+        }
+        hero.getInventory().getItems().forEach(item -> {
+            Image itemImage = loadItemImage(item);
+            ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
+            ImageView imageView = itemView.getImageView();
+            imageView.setOnMouseClicked(event -> controller.onInventarItemClicked(item));
+            inventory.getChildren().add(imageView);
+        });
+    }
+
+    private Image loadItemImage(IItem item) {
+        String imagePath = switch (item.getType()) {
+            case 100 -> "/tiles/items/yellow_key.png";
+            case 101 -> "/tiles/items/yellow_key_stone.png";
+            case 200 -> "/tiles/items/weapons/sword.png";
+            case 201 -> "/tiles/items/weapons/sword2.png";
+            case 220 -> "/tiles/items/weapons/lance.png";
+            case 221 -> "/tiles/items/weapons/double_ended_lance.png";
+            case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
+            case 230 -> "/tiles/items/weapons/bomb_placer.png";
+            case 240 -> "/tiles/items/weapons/sword2.png";
+            case 300 -> "/tiles/items/rings/magic_ring1.png";
+            case 160 -> "/tiles/items/consumable/health_potion.png";
+            case 170 -> "/tiles/items/consumable/poison_potion.png";
+            default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
+        };
+
+        return new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
     }
 
     private ItemView removeItem(IItem item) {

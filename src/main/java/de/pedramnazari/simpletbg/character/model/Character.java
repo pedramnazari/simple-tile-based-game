@@ -75,6 +75,15 @@ public abstract class Character implements ICharacter {
     }
 
     @Override
+    public void setHealth(int health) {
+        if (health < 0) {
+            throw new IllegalArgumentException("Health must be positive");
+        }
+
+        this.health = Math.min(100, health);
+    }
+
+    @Override
     public int increaseHealth(int health) {
         if (health < 0) {
             throw new IllegalArgumentException("Health must be positive");

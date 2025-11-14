@@ -41,12 +41,17 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         return gameWorldService.createAndInitMap(tiles, List.of(), List.of(), heroX, heroY);
     }
 
-    public void startGameUsingMap(final Tile[][] tiles, Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
+    public void startGameUsingMap(final Tile[][] tiles, Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY, String mapId) {
         gameWorldService.createAndInitMap(tiles, items, enemiesConfig, heroX, heroY);
 
-        GameContext.initialize(gameWorldService.getTileMap(), gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "0");
+        GameContext.initialize(gameWorldService.getTileMap(), gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), mapId);
+        gameWorldService.setCurrentMapIndex(mapId);
 
         gameWorldService.start();
+    }
+
+    public GameWorldService getGameWorldService() {
+        return gameWorldService;
     }
 
     public void moveHeroToRight() {

@@ -46,6 +46,14 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
     }
 
     @Override
+    public void reset(Collection<IEnemy> enemies) {
+        this.enemies.clear();
+        this.enemies.addAll(enemies);
+        initialized = true;
+        notifyObservers();
+    }
+
+    @Override
     public List<MovementResult> moveEnemies(final GameContext gameContext) {
         final List<MovementResult> movementResults = new ArrayList<>();
 

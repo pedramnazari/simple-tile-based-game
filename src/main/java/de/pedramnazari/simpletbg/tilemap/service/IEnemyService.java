@@ -9,6 +9,8 @@ import java.util.List;
 public interface IEnemyService {
     void init(Collection<IEnemy> enemies);
 
+    void reset(Collection<IEnemy> enemies);
+
     List<MovementResult> moveEnemies(GameContext gameContext);
 
     Collection<IEnemy> getEnemies();
