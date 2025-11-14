@@ -1,8 +1,7 @@
-// StartView.java
 package de.pedramnazari.simpletbg.drivers.ui.view;
 
 import de.pedramnazari.simpletbg.drivers.GameApplication;
-import de.pedramnazari.simpletbg.savegame.application.LoadedGame;
+import de.pedramnazari.simpletbg.drivers.GameSession;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import javafx.application.Application;
@@ -25,8 +24,21 @@ public class StartView extends Application {
     private static final int SCENE_WIDTH = 1100;
     private static final int SCENE_HEIGHT = 575;
 
+    private GameApplication gameApplication;
+
+    public StartView() {
+    }
+
+    public StartView(GameApplication gameApplication) {
+        this.gameApplication = Objects.requireNonNull(gameApplication, "gameApplication");
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        if (gameApplication == null) {
+            gameApplication = new GameApplication();
+        }
+
         Image backgroundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/start_view_background.png")));
         ImageView backgroundImageView = new ImageView(backgroundImage);
         backgroundImageView.setFitWidth(SCENE_WIDTH);
@@ -50,25 +62,19 @@ public class StartView extends Application {
         Button playButton = new Button("Start Game");
         playButton.setStyle("-fx-font-size: 24px; -fx-padding: 10px 50px;");
         playButton.setOnAction(event -> {
-            GameWorldVisualizer gameWorldVisualizer = new GameWorldVisualizer();
             GameMapDefinition selectedMap = mapListView.getSelectionModel().getSelectedItem();
             if (selectedMap == null) {
                 selectedMap = GameMaps.defaultMap();
             }
-            gameWorldVisualizer.setMapDefinition(selectedMap);
-            try {
-                gameWorldVisualizer.start(primaryStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            GameSession session = gameApplication.startNewSession(selectedMap);
+            launchGame(primaryStage, session);
         });
 
         Button continueButton = new Button("Continue");
         continueButton.setStyle("-fx-font-size: 18px; -fx-padding: 8px 30px;");
-        continueButton.setDisable(!GameApplication.getHasSavedGameUseCase().hasSave());
-        continueButton.setOnAction(event -> {
-            GameApplication.getLoadGameUseCase().loadMostRecentGame().ifPresent(loadedGame -> launchRestoredGame(primaryStage, loadedGame));
-        });
+        continueButton.setDisable(!gameApplication.hasSavedGame());
+        continueButton.setOnAction(event -> gameApplication.loadMostRecentSession()
+                .ifPresent(session -> launchGame(primaryStage, session)));
 
         vbox.getChildren().addAll(mapSelectionLabel, mapListView, playButton, continueButton);
 
@@ -85,13 +91,13 @@ public class StartView extends Application {
         launch(args);
     }
 
-    private void launchRestoredGame(Stage primaryStage, LoadedGame loadedGame) {
-        GameWorldVisualizer gameWorldVisualizer = new GameWorldVisualizer();
-        gameWorldVisualizer.setRestoredGame(loadedGame);
+    private void launchGame(Stage primaryStage, GameSession session) {
+        GameWorldVisualizer gameWorldVisualizer = new GameWorldVisualizer(gameApplication);
+        gameWorldVisualizer.setSession(session);
         try {
             gameWorldVisualizer.start(primaryStage);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to launch game", e);
         }
     }
 }

@@ -1,13 +1,14 @@
 package de.pedramnazari.simpletbg.savegame.adapters.game;
 
-import de.pedramnazari.simpletbg.savegame.application.port.ActiveGameStateReader;
-import de.pedramnazari.simpletbg.savegame.domain.*;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.model.QuestObjective;
 import de.pedramnazari.simpletbg.quest.service.QuestService;
-import de.pedramnazari.simpletbg.tilemap.model.*;
-import de.pedramnazari.simpletbg.tilemap.service.GameContext;
+import de.pedramnazari.simpletbg.savegame.application.port.ActiveGameStateReader;
+import de.pedramnazari.simpletbg.savegame.domain.*;
+import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
+import de.pedramnazari.simpletbg.tilemap.model.IHero;
+import de.pedramnazari.simpletbg.tilemap.model.IItem;
 
 import java.time.Instant;
 import java.util.List;
@@ -26,8 +27,7 @@ public class GameWorldStateReaderAdapter implements ActiveGameStateReader {
 
     @Override
     public GameSnapshot capture() {
-        GameContext context = GameContext.getInstance();
-        IHero hero = context.getHero();
+        IHero hero = gameWorldService.getHero();
 
         HeroState heroState = new HeroState(
                 hero.getX(),
@@ -44,12 +44,12 @@ public class GameWorldStateReaderAdapter implements ActiveGameStateReader {
                         .collect(Collectors.toList())
         );
 
-        List<WorldItemState> worldItems = context.getItemService().getItems().stream()
+        List<WorldItemState> worldItems = gameWorldService.getItemService().getItems().stream()
                 .map(item -> new WorldItemState(item.getType(), item.getX(), item.getY()))
                 .collect(Collectors.toList());
 
-        List<EnemyState> enemies = context.getEnemies().stream()
-                .map(enemy -> new EnemyState(enemy.getType(), enemy.getX(), enemy.getY(), enemy.getHealth(), enemy.getAttackingPower()))
+        List<EnemyState> enemies = gameWorldService.getEnemies().stream()
+                .map(this::toEnemyState)
                 .collect(Collectors.toList());
 
         Quest quest = questService.getQuest();
@@ -66,11 +66,12 @@ public class GameWorldStateReaderAdapter implements ActiveGameStateReader {
         );
 
         SnapshotMetadata metadata = new SnapshotMetadata(1, Instant.now());
+        String mapId = Objects.requireNonNull(gameWorldService.getCurrentMapIndex(), "mapId");
 
         return new GameSnapshot(
                 metadata,
-                Objects.requireNonNullElse(gameWorldService.getCurrentMapIndex(), context.getCurrentMapIndex()),
-                context.getCurrentMapIndex(),
+                mapId,
+                mapId,
                 heroState,
                 inventoryState,
                 worldItems,
@@ -79,5 +80,9 @@ public class GameWorldStateReaderAdapter implements ActiveGameStateReader {
                 0,
                 false
         );
+    }
+
+    private EnemyState toEnemyState(IEnemy enemy) {
+        return new EnemyState(enemy.getType(), enemy.getX(), enemy.getY(), enemy.getHealth(), enemy.getAttackingPower());
     }
 }

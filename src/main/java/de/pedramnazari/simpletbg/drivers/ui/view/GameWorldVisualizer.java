@@ -1,11 +1,9 @@
 package de.pedramnazari.simpletbg.drivers.ui.view;
 
 import de.pedramnazari.simpletbg.drivers.GameApplication;
-import de.pedramnazari.simpletbg.drivers.GameInitializer;
+import de.pedramnazari.simpletbg.drivers.GameSession;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
-import de.pedramnazari.simpletbg.savegame.application.LoadedGame;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
-import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import javafx.animation.KeyFrame;
@@ -54,6 +52,8 @@ public class GameWorldVisualizer extends Application {
     private Scene scene;
     private HeroView heroView;
     private TilePane inventory;
+    private final GameApplication gameApplication;
+    private GameSession session;
     private GameWorldController controller;
     private IHero hero;
     private StackPane stackPane;
@@ -66,7 +66,6 @@ public class GameWorldVisualizer extends Application {
 
     private boolean right, left, down, up;
     private GameMapDefinition mapDefinition;
-    private LoadedGame restoredGame;
     private Map<Point, TileView> tilesView = new HashMap<>();
     private Label enemyCountLabel;
     private int currentEnemyCount;
@@ -74,20 +73,28 @@ public class GameWorldVisualizer extends Application {
     private final TileMapElementAnimator enemyAnimator = new TileMapElementAnimator(ENEMY_MOVE_ANIMATION_DURATION, TILE_SIZE);
     private final TileMapElementAnimator projectileAnimator = new TileMapElementAnimator(PROJECTILE_MOVE_ANIMATION_DURATION, TILE_SIZE);
 
+    public GameWorldVisualizer(GameApplication gameApplication) {
+        this.gameApplication = Objects.requireNonNull(gameApplication, "gameApplication");
+    }
+
+    public GameWorldVisualizer() {
+        this(new GameApplication());
+    }
+
+    public void setSession(GameSession session) {
+        this.session = Objects.requireNonNull(session, "session");
+        this.mapDefinition = session.mapDefinition();
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        GameMapDefinition selectedMap;
-        if (restoredGame != null) {
-            controller = restoredGame.controller();
-            selectedMap = restoredGame.mapDefinition();
-        } else {
-            selectedMap = mapDefinition != null ? mapDefinition : GameMaps.defaultMap();
-            this.mapDefinition = selectedMap;
-            controller = GameInitializer.initAndStartGame(selectedMap);
+        if (session == null) {
+            throw new IllegalStateException("Game session must be set before starting the visualizer");
         }
-        this.mapDefinition = selectedMap;
-        this.restoredGame = null;
+        this.primaryStage = primaryStage;
+        controller = session.controller();
+        this.mapDefinition = session.mapDefinition();
+        tilesView = new HashMap<>();
         controller.setTileMapVisualizer(this);
 
         final TileMap tileMap = controller.getTileMap();
@@ -183,20 +190,15 @@ public class GameWorldVisualizer extends Application {
     }
 
     private void handleSaveAndExit() {
-        GameApplication.getSaveGameUseCase().saveCurrentGame();
+        session.saveGame().saveCurrentGame();
         controller.getGameWorldService().stop();
         GameContext.resetInstance();
-        StartView startView = new StartView();
+        StartView startView = new StartView(gameApplication);
         try {
             startView.start(primaryStage);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void setRestoredGame(LoadedGame restoredGame) {
-        this.restoredGame = restoredGame;
-        this.mapDefinition = restoredGame.mapDefinition();
     }
 
     private void updateHeroHealthView() {
@@ -538,10 +540,6 @@ public class GameWorldVisualizer extends Application {
 
     public static void main(String[] args) {
         StartView.main(args);
-    }
-
-    public void setMapDefinition(GameMapDefinition mapDefinition) {
-        this.mapDefinition = mapDefinition;
     }
 
     public void handleHeroDefeated() {
