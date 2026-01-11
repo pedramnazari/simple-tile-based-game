@@ -37,6 +37,21 @@ public class DefaultTileFactory extends AbstractTileMapElementFactory<Tile> impl
         else if (type == TileType.EXIT.getType()) {
             tile = new Tile(type, x, y);
         }
+        else if (type == TileType.MAGIC_CRYSTAL.getType()) {
+            tile = new Tile(type, x, y);
+        }
+        else if (type == TileType.MAGIC_RUNE_STONE.getType()) {
+            tile = new Tile(type, x, y);
+        }
+        else if (type == TileType.MAGIC_SPELL_ALTAR.getType()) {
+            tile = new Tile(type, x, y);
+        }
+        else if (type == TileType.MAGIC_MANA_FOUNTAIN.getType()) {
+            tile = new Tile(type, x, y);
+        }
+        else if (type == TileType.MAGIC_BARRIER.getType()) {
+            tile = new Tile(type, x, y);
+        }
         else {
             throw new IllegalArgumentException("Unknown tile type: " + type);
         }
