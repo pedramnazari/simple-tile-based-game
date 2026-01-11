@@ -55,6 +55,10 @@ public class HeroView extends CharacterView<IHero> {
     }
 
     public void updateManaBar() {
+        // Check if mana bar is initialized (may be called from parent constructor before child initialization)
+        if (manaBarFill == null) {
+            return;
+        }
         IHero hero = getTileMapElement();
         double percentage = Math.max(0, Math.min(1, (double) hero.getMana() / hero.getMaxMana()));
         manaBarFill.setWidth(manaBarWidth * percentage);
