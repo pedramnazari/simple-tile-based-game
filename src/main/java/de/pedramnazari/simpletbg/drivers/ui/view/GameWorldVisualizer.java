@@ -112,7 +112,7 @@ public class GameWorldVisualizer extends Application {
         updateEnemies(enemies);
 
         // add hero to grid
-        final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/hero.png")));
+        final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/sorcerer.png")));
         heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
         charactersGrid.add(heroView.getDisplayNode(), hero.getX(), hero.getY());
@@ -312,6 +312,21 @@ public class GameWorldVisualizer extends Application {
         }
         else if (tileType == TileType.WALL_HIDING_EXIT.getType()) {
             imagePath = "/tiles/obstacles/wall.png";
+        }
+        else if (tileType == TileType.MAGIC_CRYSTAL.getType()) {
+            imagePath = "/tiles/magic/magic_crystal.png";
+        }
+        else if (tileType == TileType.MAGIC_RUNE_STONE.getType()) {
+            imagePath = "/tiles/magic/magic_rune_stone.png";
+        }
+        else if (tileType == TileType.MAGIC_SPELL_ALTAR.getType()) {
+            imagePath = "/tiles/magic/spell_altar.png";
+        }
+        else if (tileType == TileType.MAGIC_MANA_FOUNTAIN.getType()) {
+            imagePath = "/tiles/magic/mana_fountain.png";
+        }
+        else if (tileType == TileType.MAGIC_BARRIER.getType()) {
+            imagePath = "/tiles/magic/magic_barrier.png";
         }
         else {
             throw new IllegalArgumentException("Unknown tile type: " + tileType);

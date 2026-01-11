@@ -353,5 +353,29 @@ public class MapValidationContext {
         public int getAttackingPower() {
             return attackingPower;
         }
+
+        @Override
+        public int getMana() {
+            return 0;
+        }
+
+        @Override
+        public int increaseMana(int mana) {
+            return 0;
+        }
+
+        @Override
+        public int decreaseMana(int mana) {
+            return 0;
+        }
+
+        @Override
+        public void setMaxMana(int maxMana) {
+        }
+
+        @Override
+        public int getMaxMana() {
+            return 0;
+        }
     }
 }

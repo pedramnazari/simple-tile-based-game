@@ -13,6 +13,8 @@ public abstract class Character implements ICharacter {
     private int y;
     private int health = 100;
     private int attackingPower = 10;
+    private int mana = 100;
+    private int maxMana = 100;
     private MoveDirection moveDirection;
     private IMovementStrategy movementStrategy;
 
@@ -104,5 +106,42 @@ public abstract class Character implements ICharacter {
     @Override
     public int getAttackingPower() {
         return attackingPower;
+    }
+
+    @Override
+    public int getMana() {
+        return mana;
+    }
+
+    @Override
+    public int increaseMana(int mana) {
+        if (mana < 0) {
+            throw new IllegalArgumentException("Mana must be positive");
+        }
+
+        this.mana = Math.min(maxMana, this.mana + mana);
+
+        return getMana();
+    }
+
+    @Override
+    public int decreaseMana(int mana) {
+        if (mana < 0) {
+            throw new IllegalArgumentException("Mana must be positive");
+        }
+
+        this.mana = Math.max(0, this.mana - mana);
+
+        return getMana();
+    }
+
+    @Override
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+    }
+
+    @Override
+    public int getMaxMana() {
+        return maxMana;
     }
 }

@@ -33,4 +33,14 @@ public interface ICharacter extends IMovableTileElement {
     void setAttackingPower(int attackingPower);
 
     int getAttackingPower();
+
+    int getMana();
+
+    int increaseMana(int mana);
+
+    int decreaseMana(int mana);
+
+    void setMaxMana(int maxMana);
+
+    int getMaxMana();
 }

@@ -39,6 +39,12 @@ public enum TileType {
 
     RING_MAGIC1(300),
 
+    MAGIC_CRYSTAL(310),
+    MAGIC_RUNE_STONE(311),
+    MAGIC_SPELL_ALTAR(312),
+    MAGIC_MANA_FOUNTAIN(313),
+    MAGIC_BARRIER(314),
+
     ENEMY_LR(500), // left-right,
     ENEMY_TD(510), // top-down
     ENEMY_2D(520), // two-dimensional

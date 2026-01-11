@@ -37,6 +37,14 @@ final class TileTypeClassifier {
         if (isPortal(tileType) || isExit(tileType)) {
             return false;
         }
+        // Magic tiles are special walkable tiles
+        if (tileType == TileType.MAGIC_CRYSTAL.getType() 
+            || tileType == TileType.MAGIC_RUNE_STONE.getType()
+            || tileType == TileType.MAGIC_SPELL_ALTAR.getType()
+            || tileType == TileType.MAGIC_MANA_FOUNTAIN.getType()
+            || tileType == TileType.MAGIC_BARRIER.getType()) {
+            return false;
+        }
         return tileType >= TileType.WALL.getType();
     }
 
