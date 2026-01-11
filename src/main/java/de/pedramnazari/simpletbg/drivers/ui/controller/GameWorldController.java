@@ -104,6 +104,14 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
             boolean success = sorcerer.castFireball();
             if (success) {
                 logger.info("Sorcerer cast Fireball! Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+                
+                // Get fireball spell details
+                de.pedramnazari.simpletbg.character.hero.model.spell.FireballSpell fireballSpell = 
+                    (de.pedramnazari.simpletbg.character.hero.model.spell.FireballSpell) sorcerer.getSpells().get(0);
+                
+                // Damage enemies in front of hero in the facing direction
+                gameWorldService.heroCastFireballDamageEnemies(fireballSpell.getDamage(), fireballSpell.getRange());
+                
                 // Update UI to reflect mana change
                 Platform.runLater(() -> gameWorldVisualizer.updateHeroHealthView());
             }
@@ -128,6 +136,14 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
             boolean success = sorcerer.castTeleport();
             if (success) {
                 logger.info("Sorcerer cast Teleport! Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+                
+                // Get teleport spell details
+                de.pedramnazari.simpletbg.character.hero.model.spell.TeleportSpell teleportSpell = 
+                    (de.pedramnazari.simpletbg.character.hero.model.spell.TeleportSpell) sorcerer.getSpells().get(2);
+                
+                // Teleport hero in facing direction
+                gameWorldService.heroTeleport(teleportSpell.getMaxDistance());
+                
                 // Update UI to reflect mana change
                 Platform.runLater(() -> gameWorldVisualizer.updateHeroHealthView());
             }

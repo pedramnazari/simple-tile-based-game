@@ -220,6 +220,46 @@ public class HeroService implements IHeroService, IHeroProvider, IHeroAttackNoti
                 throw new IllegalStateException("Portal destination not set");
             }
         }
+        // Magic tile interactions
+        else if (specialTile.getType() == TileType.MAGIC_CRYSTAL.getType()) {
+            logger.info("Hero stepped on Magic Crystal - Mana regeneration increased!");
+            if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+                int manaRestored = 20;
+                sorcerer.increaseMana(manaRestored);
+                logger.info("Magic Crystal restored " + manaRestored + " mana. Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+            }
+        }
+        else if (specialTile.getType() == TileType.MAGIC_RUNE_STONE.getType()) {
+            logger.info("Hero stepped on Rune Stone - Temporary power boost!");
+            if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+                int powerBoost = 5;
+                sorcerer.setAttackingPower(sorcerer.getAttackingPower() + powerBoost);
+                logger.info("Rune Stone boosted attacking power by " + powerBoost + ". Attack: " + sorcerer.getAttackingPower());
+            }
+        }
+        else if (specialTile.getType() == TileType.MAGIC_SPELL_ALTAR.getType()) {
+            logger.info("Hero stepped on Spell Altar - Max mana increased!");
+            if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+                int maxManaIncrease = 25;
+                sorcerer.setMaxMana(sorcerer.getMaxMana() + maxManaIncrease);
+                sorcerer.increaseMana(maxManaIncrease); // Also restore some mana
+                logger.info("Spell Altar increased max mana by " + maxManaIncrease + ". Max Mana: " + sorcerer.getMaxMana());
+            }
+        }
+        else if (specialTile.getType() == TileType.MAGIC_MANA_FOUNTAIN.getType()) {
+            logger.info("Hero stepped on Mana Fountain - Mana fully restored!");
+            if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+                int manaRestored = sorcerer.getMaxMana() - sorcerer.getMana();
+                sorcerer.increaseMana(manaRestored);
+                logger.info("Mana Fountain fully restored mana. Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+            }
+        }
+        else if (specialTile.getType() == TileType.MAGIC_BARRIER.getType()) {
+            logger.info("Hero stepped on Magic Barrier - Health penalty!");
+            int damageTaken = 10;
+            hero.decreaseHealth(damageTaken);
+            logger.info("Magic Barrier dealt " + damageTaken + " damage. Health: " + hero.getHealth());
+        }
     }
 
     public void addItemEventListener(IItemEventListener listener) {
