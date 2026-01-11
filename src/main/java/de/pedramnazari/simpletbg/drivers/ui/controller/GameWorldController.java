@@ -98,6 +98,42 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
         gameWorldService.heroAttacks();
     }
 
+    public void heroCastFireball() {
+        IHero hero = gameWorldService.getHero();
+        if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+            boolean success = sorcerer.castFireball();
+            if (success) {
+                logger.info("Sorcerer cast Fireball! Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+                // Update UI to reflect mana change
+                Platform.runLater(() -> gameWorldVisualizer.updateHeroHealthView());
+            }
+        }
+    }
+
+    public void heroCastHeal() {
+        IHero hero = gameWorldService.getHero();
+        if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+            boolean success = sorcerer.castHeal();
+            if (success) {
+                logger.info("Sorcerer cast Heal! Health: " + sorcerer.getHealth() + ", Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+                // Update UI to reflect health and mana change
+                Platform.runLater(() -> gameWorldVisualizer.updateHeroHealthView());
+            }
+        }
+    }
+
+    public void heroCastTeleport() {
+        IHero hero = gameWorldService.getHero();
+        if (hero instanceof de.pedramnazari.simpletbg.character.hero.model.Sorcerer sorcerer) {
+            boolean success = sorcerer.castTeleport();
+            if (success) {
+                logger.info("Sorcerer cast Teleport! Mana: " + sorcerer.getMana() + "/" + sorcerer.getMaxMana());
+                // Update UI to reflect mana change
+                Platform.runLater(() -> gameWorldVisualizer.updateHeroHealthView());
+            }
+        }
+    }
+
     @Override
     public void onEnemyHit(IEnemy enemy, int damage) {
         // GUI operations must be executed on the JavaFX application thread

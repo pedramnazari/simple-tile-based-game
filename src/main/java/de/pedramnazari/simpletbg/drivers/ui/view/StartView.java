@@ -61,7 +61,10 @@ public class StartView extends Application {
             }
         });
 
-        vbox.getChildren().addAll(mapSelectionLabel, mapListView, playButton);
+        Label helpHint = new Label("💡 Press 'H' in-game for controls and help");
+        helpHint.setStyle("-fx-font-size: 14px; -fx-text-fill: #3498db; -fx-font-weight: bold;");
+
+        vbox.getChildren().addAll(mapSelectionLabel, mapListView, playButton, helpHint);
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(backgroundImageView, vbox);

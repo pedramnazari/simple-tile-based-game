@@ -163,7 +163,7 @@ public class GameWorldVisualizer extends Application {
         return infoBox;
     }
 
-    private void updateHeroHealthView() {
+    public void updateHeroHealthView() {
         if (heroView != null) {
             heroView.updateHealthBar();
         }
@@ -172,7 +172,23 @@ public class GameWorldVisualizer extends Application {
     private void handleKeyPressed(KeyEvent event) {
         if (event.isControlDown()) {
             controller.heroAttacks();
-            logger.info("Control key pressed");
+            logger.info("Control key pressed - Hero attacks");
+        }
+
+        // Spell casting keys
+        if (event.getCode() == KeyCode.DIGIT1 || event.getCode() == KeyCode.NUMPAD1) {
+            controller.heroCastFireball();
+        }
+        if (event.getCode() == KeyCode.DIGIT2 || event.getCode() == KeyCode.NUMPAD2) {
+            controller.heroCastHeal();
+        }
+        if (event.getCode() == KeyCode.DIGIT3 || event.getCode() == KeyCode.NUMPAD3) {
+            controller.heroCastTeleport();
+        }
+
+        // Help key
+        if (event.getCode() == KeyCode.H) {
+            showHelpDialog();
         }
 
         if (event.getCode() == KeyCode.RIGHT) {
@@ -495,6 +511,91 @@ public class GameWorldVisualizer extends Application {
 
         itemsGrid.getChildren().remove(itemView.getDisplayNode());
         return itemView;
+    }
+
+    private void showHelpDialog() {
+        logger.info("Showing help dialog");
+        
+        javafx.stage.Stage helpStage = new javafx.stage.Stage();
+        helpStage.setTitle("How To Play - Sorcerer Controls");
+        
+        VBox content = new VBox(15);
+        content.setStyle("-fx-padding: 20; -fx-background-color: #2c3e50;");
+        
+        Label title = new Label("🧙 SORCERER CONTROLS");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ecf0f1;");
+        
+        Label movementTitle = new Label("Movement:");
+        movementTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3498db;");
+        
+        Label movement = new Label(
+            "  ↑ UP Arrow    - Move Up\n" +
+            "  ↓ DOWN Arrow  - Move Down\n" +
+            "  ← LEFT Arrow  - Move Left\n" +
+            "  → RIGHT Arrow - Move Right"
+        );
+        movement.setStyle("-fx-font-size: 14px; -fx-text-fill: #ecf0f1; -fx-font-family: monospace;");
+        
+        Label combatTitle = new Label("Combat:");
+        combatTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;");
+        
+        Label combat = new Label("  CTRL - Attack with equipped weapon");
+        combat.setStyle("-fx-font-size: 14px; -fx-text-fill: #ecf0f1; -fx-font-family: monospace;");
+        
+        Label spellsTitle = new Label("Sorcerer Spells:");
+        spellsTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #9b59b6;");
+        
+        Label spells = new Label(
+            "  1 - 🔥 Fireball (30 mana)  - Magic attack dealing 25 damage\n" +
+            "  2 - 💚 Heal (40 mana)      - Restore 50 health points\n" +
+            "  3 - ✨ Teleport (50 mana)  - Teleport up to 3 tiles"
+        );
+        spells.setStyle("-fx-font-size: 14px; -fx-text-fill: #ecf0f1; -fx-font-family: monospace;");
+        
+        Label otherTitle = new Label("Other:");
+        otherTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f39c12;");
+        
+        Label other = new Label("  H - Show this help dialog");
+        other.setStyle("-fx-font-size: 14px; -fx-text-fill: #ecf0f1; -fx-font-family: monospace;");
+        
+        Label statsTitle = new Label("Sorcerer Stats:");
+        statsTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1abc9c;");
+        
+        Label stats = new Label(
+            "  Max Mana:   150 (blue bar below health)\n" +
+            "  Max Health: 100 (green/yellow/red bar)\n" +
+            "  Attack:     15 base damage"
+        );
+        stats.setStyle("-fx-font-size: 14px; -fx-text-fill: #ecf0f1; -fx-font-family: monospace;");
+        
+        javafx.scene.control.Button closeButton = new javafx.scene.control.Button("Close");
+        closeButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 30px;");
+        closeButton.setOnAction(e -> helpStage.close());
+        
+        content.getChildren().addAll(
+            title,
+            new Label(""), // spacer
+            movementTitle, movement,
+            new Label(""), // spacer
+            combatTitle, combat,
+            new Label(""), // spacer
+            spellsTitle, spells,
+            new Label(""), // spacer
+            otherTitle, other,
+            new Label(""), // spacer
+            statsTitle, stats,
+            new Label(""), // spacer
+            closeButton
+        );
+        content.setAlignment(Pos.TOP_LEFT);
+        
+        javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(content);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: #2c3e50; -fx-background-color: #2c3e50;");
+        
+        javafx.scene.Scene helpScene = new javafx.scene.Scene(scrollPane, 500, 650);
+        helpStage.setScene(helpScene);
+        helpStage.show();
     }
 
     public static void main(String[] args) {
