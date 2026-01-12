@@ -413,6 +413,12 @@ public class GameWorldVisualizer extends Application {
         if (projectileType == TileType.PROJECTILE_FIRE.getType()) {
             return "/tiles/items/weapons/bomb.png";
         }
+        else if (projectileType == TileType.PROJECTILE_ICE.getType()) {
+            return "/tiles/items/weapons/bomb.png"; // Using same image for now
+        }
+        else if (projectileType == TileType.PROJECTILE_LIGHTNING.getType()) {
+            return "/tiles/items/weapons/bomb.png"; // Using same image for now
+        }
 
         throw new IllegalArgumentException("Unknown projectile type: " + projectileType);
     }
