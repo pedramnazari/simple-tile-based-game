@@ -50,20 +50,6 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
         final List<MovementResult> movementResults = new ArrayList<>();
 
         for (IEnemy enemy : enemies) {
-            // Check if enemy is frozen
-            if (enemy.getFrozenTurns() > 0) {
-                enemy.decrementFrozenTurns();
-                // Enemy skips its turn - create an empty movement result
-                MovementResult frozenResult = new MovementResult();
-                frozenResult.setOldX(enemy.getX());
-                frozenResult.setOldY(enemy.getY());
-                frozenResult.setNewX(enemy.getX());
-                frozenResult.setNewY(enemy.getY());
-                frozenResult.setHasElementMoved(false);
-                movementResults.add(frozenResult);
-                continue;
-            }
-
             final Point newPosition = enemyMovementService.calcNextMove(gameContext.getTileMap(), enemy);
 
             final MovementResult result = enemyMovementService

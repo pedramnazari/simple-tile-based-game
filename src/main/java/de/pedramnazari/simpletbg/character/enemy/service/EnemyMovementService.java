@@ -66,6 +66,13 @@ public class EnemyMovementService extends MovementService {
     }
 
     public Point calcNextMove(TileMap tileMap, IMovableTileElement element) {
+        // Check if enemy is frozen
+        if (element instanceof IEnemy enemy && enemy.getFrozenTurns() > 0) {
+            enemy.decrementFrozenTurns();
+            // Return current position - enemy doesn't move
+            return new Point(enemy.getX(), enemy.getY());
+        }
+        
         final IMovementStrategy strategy = element.getMovementStrategy();
         return strategy.calcNextMove(tileMap, element);
     }
