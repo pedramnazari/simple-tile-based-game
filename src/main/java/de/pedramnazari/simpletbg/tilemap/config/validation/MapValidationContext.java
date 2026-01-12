@@ -353,5 +353,20 @@ public class MapValidationContext {
         public int getAttackingPower() {
             return attackingPower;
         }
+
+        @Override
+        public void setFrozenTurns(int turns) {
+            // Not needed for config validation
+        }
+
+        @Override
+        public int getFrozenTurns() {
+            return 0; // Not needed for config validation
+        }
+
+        @Override
+        public int decrementFrozenTurns() {
+            return 0; // Not needed for config validation
+        }
     }
 }

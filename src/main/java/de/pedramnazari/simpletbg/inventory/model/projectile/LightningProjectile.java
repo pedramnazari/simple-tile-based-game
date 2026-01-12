@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.inventory.model.projectile;
 
 import de.pedramnazari.simpletbg.tilemap.model.IProjectile;
+import de.pedramnazari.simpletbg.tilemap.model.IProjectileEffect;
 import de.pedramnazari.simpletbg.tilemap.model.IWeapon;
 import de.pedramnazari.simpletbg.tilemap.model.IMovementStrategy;
 import de.pedramnazari.simpletbg.tilemap.model.MoveDirection;
@@ -14,6 +15,7 @@ public class LightningProjectile implements IProjectile {
     private final String description = "An electric projectile shot from a lightning rod.";
     private final IWeapon weapon;
     private final int damage;
+    private final IProjectileEffect effect = new ChainEffect();
 
     private int x;
     private int y;
@@ -113,5 +115,10 @@ public class LightningProjectile implements IProjectile {
     @Override
     public int getType() {
         return TileType.PROJECTILE_LIGHTNING.getType();
+    }
+
+    @Override
+    public Optional<IProjectileEffect> getEffect() {
+        return Optional.of(effect);
     }
 }

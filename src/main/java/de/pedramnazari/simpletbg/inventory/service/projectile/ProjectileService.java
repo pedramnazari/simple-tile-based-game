@@ -149,6 +149,17 @@ public class ProjectileService implements Runnable, IProjectileService {
             if ((enemy.getX() == projectile.getX()) && (enemy.getY() == projectile.getY())) {
                 logger.info("Projectile hit enemy at position: " + projectile.getX() + ", " + projectile.getY());
                 weaponDealsDamageNotifier.notifyWeaponDealsDamage(projectile.getWeapon(), enemy, projectile.getDamage());
+                
+                // Apply projectile effect (freeze, chain, etc.)
+                projectile.getEffect().ifPresent(effect -> {
+                    Collection<IEnemy> chainTargets = effect.apply(enemy, enemies);
+                    // Deal damage to chain targets
+                    for (IEnemy chainTarget : chainTargets) {
+                        logger.info("Chain effect hits enemy at position: " + chainTarget.getX() + ", " + chainTarget.getY());
+                        weaponDealsDamageNotifier.notifyWeaponDealsDamage(projectile.getWeapon(), chainTarget, projectile.getDamage());
+                    }
+                });
+                
                 hit = true;
             }
         }
