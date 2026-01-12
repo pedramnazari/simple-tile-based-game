@@ -662,8 +662,116 @@ public class GameWorldVisualizer extends Application {
         final ProjectileView projectileView = projectileViews.remove(projectile);
         if (projectileView != null) {
             projectileAnimator.cancelAnimation(projectileView);
+            
+            // Show impact effect before removing
+            showProjectileImpactEffect(projectile, projectileView);
+            
             projectilesGrid.getChildren().remove(projectileView.getDisplayNode());
         }
+    }
+
+    /**
+     * Show impact visual effect when projectile hits or expires
+     */
+    private void showProjectileImpactEffect(IProjectile projectile, ProjectileView projectileView) {
+        int projectileType = projectile.getType();
+        int x = projectile.getX();
+        int y = projectile.getY();
+        
+        if (projectileType == TileType.PROJECTILE_ICE.getType()) {
+            showIceImpactEffect(x, y);
+        } else if (projectileType == TileType.PROJECTILE_LIGHTNING.getType()) {
+            showLightningImpactEffect(x, y);
+        }
+    }
+
+    /**
+     * Show ice impact: frost burst effect
+     */
+    private void showIceImpactEffect(int tileX, int tileY) {
+        javafx.scene.shape.Circle frostBurst = new javafx.scene.shape.Circle(TILE_SIZE / 2, javafx.scene.paint.Color.CYAN);
+        frostBurst.setOpacity(0.6);
+        projectilesGrid.add(frostBurst, tileX, tileY);
+        
+        // Animate the burst - expand and fade
+        javafx.animation.ScaleTransition scale = new javafx.animation.ScaleTransition(javafx.util.Duration.millis(300), frostBurst);
+        scale.setFromX(0.5);
+        scale.setFromY(0.5);
+        scale.setToX(2.0);
+        scale.setToY(2.0);
+        
+        javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(300), frostBurst);
+        fade.setFromValue(0.6);
+        fade.setToValue(0.0);
+        
+        // Clean up after animation
+        fade.setOnFinished(event -> projectilesGrid.getChildren().remove(frostBurst));
+        
+        scale.play();
+        fade.play();
+    }
+
+    /**
+     * Show lightning impact: spark burst effect
+     */
+    private void showLightningImpactEffect(int tileX, int tileY) {
+        javafx.scene.shape.Circle sparkBurst = new javafx.scene.shape.Circle(TILE_SIZE / 3, javafx.scene.paint.Color.YELLOW);
+        sparkBurst.setOpacity(0.9);
+        
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(1.0);
+        sparkBurst.setEffect(glow);
+        
+        projectilesGrid.add(sparkBurst, tileX, tileY);
+        
+        // Animate the burst - quick flash
+        javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(200), sparkBurst);
+        fade.setFromValue(0.9);
+        fade.setToValue(0.0);
+        fade.setCycleCount(2);
+        fade.setAutoReverse(true);
+        
+        // Clean up after animation
+        fade.setOnFinished(event -> projectilesGrid.getChildren().remove(sparkBurst));
+        
+        fade.play();
+    }
+
+    /**
+     * Show chain lightning arc from one enemy to another
+     */
+    public void showChainLightningArc(int fromX, int fromY, int toX, int toY) {
+        // Create a line representing the lightning arc
+        javafx.scene.shape.Line lightningArc = new javafx.scene.shape.Line();
+        lightningArc.setStartX(fromX * TILE_SIZE + TILE_SIZE / 2.0);
+        lightningArc.setStartY(fromY * TILE_SIZE + TILE_SIZE / 2.0);
+        lightningArc.setEndX(toX * TILE_SIZE + TILE_SIZE / 2.0);
+        lightningArc.setEndY(toY * TILE_SIZE + TILE_SIZE / 2.0);
+        lightningArc.setStroke(javafx.scene.paint.Color.YELLOW);
+        lightningArc.setStrokeWidth(3);
+        lightningArc.setOpacity(0.9);
+        
+        // Add glow effect
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(1.0);
+        javafx.scene.effect.DropShadow dropShadow = new javafx.scene.effect.DropShadow();
+        dropShadow.setColor(javafx.scene.paint.Color.YELLOW);
+        dropShadow.setRadius(10);
+        glow.setInput(dropShadow);
+        lightningArc.setEffect(glow);
+        
+        // Add to the projectiles grid (or could use a separate effects layer)
+        stackPane.getChildren().add(lightningArc);
+        
+        // Animate the arc - flicker and fade
+        javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), lightningArc);
+        fade.setFromValue(0.9);
+        fade.setToValue(0.0);
+        fade.setCycleCount(3);
+        fade.setAutoReverse(true);
+        
+        // Clean up after animation
+        fade.setOnFinished(event -> stackPane.getChildren().remove(lightningArc));
+        
+        fade.play();
     }
 
     public void handleTileHit(IWeapon weapon, Tile tile) {

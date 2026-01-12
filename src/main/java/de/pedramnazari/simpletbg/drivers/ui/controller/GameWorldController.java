@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
 import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
+import de.pedramnazari.simpletbg.inventory.service.projectile.IChainEffectListener;
 import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.event.*;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener {
+public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -185,6 +186,14 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
             return;
         }
         Platform.runLater(() -> gameWorldVisualizer.removeProjectile(projectile));
+    }
+
+    @Override
+    public void onChainEffect(IProjectile projectile, IEnemy fromEnemy, IEnemy toEnemy) {
+        if (gameWorldVisualizer == null) {
+            return;
+        }
+        Platform.runLater(() -> gameWorldVisualizer.showChainLightningArc(fromEnemy.getX(), fromEnemy.getY(), toEnemy.getX(), toEnemy.getY()));
     }
 
     @Override

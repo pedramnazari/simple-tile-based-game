@@ -321,6 +321,7 @@ public class GameInitializer {
         itemFactory.setLightningProjectileFactory(new LightningProjectileFactory());
         heroAttackService.setProjectileService(projectileService);
         projectileService.addProjectileEventListener(controller);
+        projectileService.addChainEffectListener(controller);
         projectileService.addWeaponDealsDamageListener(enemyService);
 
 
