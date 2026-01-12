@@ -135,7 +135,7 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             itemName = "Ice Wand";
             itemDescription = "A wand that shoots freezing ice.";
             if (iceProjectileFactory == null) {
-                throw new IllegalStateException("Ice projectile factory is not configured for Ice Wand creation");
+                throw new IllegalStateException("Ice projectile factory not configured");
             }
             final IceWand iceWand = new IceWand(x, y, iceProjectileFactory);
             item = iceWand;
@@ -145,7 +145,7 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             itemName = "Lightning Rod";
             itemDescription = "A rod that shoots chaining lightning.";
             if (lightningProjectileFactory == null) {
-                throw new IllegalStateException("Lightning projectile factory is not configured for Lightning Rod creation");
+                throw new IllegalStateException("Lightning projectile factory not configured");
             }
             final LightningRod lightningRod = new LightningRod(x, y, lightningProjectileFactory);
             item = lightningRod;
