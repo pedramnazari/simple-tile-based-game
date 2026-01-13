@@ -47,6 +47,7 @@ public class GameWorldVisualizer extends Application {
     private GridPane bombsGrid;
     private GridPane projectilesGrid;
     private GridPane charactersGrid;
+    private Pane effectsLayer;
     private Scene scene;
     private HeroView heroView;
     private TilePane inventory;
@@ -102,6 +103,11 @@ public class GameWorldVisualizer extends Application {
         bombsGrid = createGridPane(tileMap);
         projectilesGrid = createGridPane(tileMap);
         charactersGrid = createGridPane(tileMap);
+        
+        // Create effects layer for visual effects like lightning bolts
+        effectsLayer = new Pane();
+        effectsLayer.setPrefSize(mapPixelWidth, mapPixelHeight);
+        effectsLayer.setMouseTransparent(true); // Don't intercept mouse events
 
         initFloorAndObstacleTiles(controller.getTileMap());
 
@@ -119,7 +125,7 @@ public class GameWorldVisualizer extends Application {
 
         updateHeroHealthView();
 
-        stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, projectilesGrid, charactersGrid);
+        stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, projectilesGrid, charactersGrid, effectsLayer);
 
         BorderPane borderPane = new BorderPane();
         StackPane viewportContainer = new StackPane(cameraViewport);
@@ -764,15 +770,15 @@ public class GameWorldVisualizer extends Application {
         glow.setInput(dropShadow);
         lightningPath.setEffect(glow);
         
-        // Add to the stack pane
-        stackPane.getChildren().add(lightningPath);
+        // Add to the effects layer (not stackPane directly)
+        effectsLayer.getChildren().add(lightningPath);
         
         // Create a traveling spark effect
         javafx.scene.shape.Circle travelingSpark = new javafx.scene.shape.Circle(6, javafx.scene.paint.Color.WHITE);
         travelingSpark.setOpacity(0.0);
         javafx.scene.effect.Glow sparkGlow = new javafx.scene.effect.Glow(1.0);
         travelingSpark.setEffect(sparkGlow);
-        stackPane.getChildren().add(travelingSpark);
+        effectsLayer.getChildren().add(travelingSpark);
         
         // Animate: First make the bolt appear quickly
         javafx.animation.FadeTransition boltAppear = new javafx.animation.FadeTransition(javafx.util.Duration.millis(50), lightningPath);
@@ -813,8 +819,8 @@ public class GameWorldVisualizer extends Application {
         
         // Clean up after animation
         boltFadeOut.setOnFinished(event -> {
-            stackPane.getChildren().remove(lightningPath);
-            stackPane.getChildren().remove(travelingSpark);
+            effectsLayer.getChildren().remove(lightningPath);
+            effectsLayer.getChildren().remove(travelingSpark);
         });
         
         // Play animations in sequence
