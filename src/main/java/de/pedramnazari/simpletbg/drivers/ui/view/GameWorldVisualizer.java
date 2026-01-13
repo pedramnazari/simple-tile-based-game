@@ -337,9 +337,9 @@ public class GameWorldVisualizer extends Application {
                 case 221 -> "/tiles/items/weapons/double_ended_lance.png";
                 case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
                 case 230 -> "/tiles/items/weapons/bomb_placer.png";
-                case 240 -> "/tiles/items/weapons/sword2.png";  // Fire Staff
-                case 241 -> "/tiles/items/weapons/lance.png";   // Ice Wand (placeholder)
-                case 242 -> "/tiles/items/weapons/double_ended_lance.png";  // Lightning Rod (placeholder)
+                case 240 -> "/tiles/items/weapons/fire_staff.png";
+                case 241 -> "/tiles/items/weapons/ice_wand.png";
+                case 242 -> "/tiles/items/weapons/lightning_rod.png";
                 case 300 -> "/tiles/items/rings/magic_ring1.png";
                 case 160 -> "/tiles/items/consumable/health_potion.png";
                 case 170 -> "/tiles/items/consumable/poison_potion.png";
