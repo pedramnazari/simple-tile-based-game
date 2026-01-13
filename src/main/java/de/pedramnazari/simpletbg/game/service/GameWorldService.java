@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.game.service;
 
+import de.pedramnazari.simpletbg.character.companion.model.Husky;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.*;
@@ -53,8 +54,7 @@ public class GameWorldService {
         enemyService.init(enemiesConfig);
         
         // Initialize companion (husky) near the hero
-        de.pedramnazari.simpletbg.character.companion.model.Husky husky = 
-            new de.pedramnazari.simpletbg.character.companion.model.Husky(heroX + 1, heroY);
+        Husky husky = new Husky(heroX + 1, heroY);
         companionService.init(husky);
 
         initialized = true;

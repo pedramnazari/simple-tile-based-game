@@ -1,6 +1,5 @@
 package de.pedramnazari.simpletbg.character.companion.service;
 
-import de.pedramnazari.simpletbg.character.service.IHeroAttackListener;
 import de.pedramnazari.simpletbg.inventory.model.projectile.WindProjectile;
 import de.pedramnazari.simpletbg.character.companion.model.Husky;
 import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileService;
@@ -21,6 +20,8 @@ public class CompanionService implements ICompanionService, Runnable {
     private static final int MELEE_ATTACK_RANGE = 1;
     private static final int PROJECTILE_RANGE = 5;
     private static final int PROJECTILE_DAMAGE = 5;
+    private static final int MAX_ENEMY_CHASE_DISTANCE = 4;
+    private static final double BARK_ATTACK_PROBABILITY = 0.3;
     
     private final List<ICompanion> companions = new ArrayList<>();
     private final CollisionDetectionService collisionDetectionService;
@@ -96,7 +97,7 @@ public class CompanionService implements ICompanionService, Runnable {
                     performMeleeAttack(husky, nearestEnemy);
                 } 
                 // Ranged bark attack at random intervals
-                else if (husky.canBark() && random.nextDouble() < 0.3) {
+                else if (husky.canBark() && random.nextDouble() < BARK_ATTACK_PROBABILITY) {
                     performBarkAttack(husky, nearestEnemy);
                 }
             }
@@ -115,7 +116,7 @@ public class CompanionService implements ICompanionService, Runnable {
             int distanceToEnemy = calculateDistance(husky.getX(), husky.getY(), 
                                                    nearestEnemy.getX(), nearestEnemy.getY());
             // If enemy is close and we're near hero, move towards enemy
-            if (distanceToEnemy <= 4 && distanceToEnemy > MELEE_ATTACK_RANGE) {
+            if (distanceToEnemy <= MAX_ENEMY_CHASE_DISTANCE && distanceToEnemy > MELEE_ATTACK_RANGE) {
                 targetX = nearestEnemy.getX();
                 targetY = nearestEnemy.getY();
             } else {
