@@ -69,7 +69,7 @@ public class SummonerEnemyTest {
         assertEquals(1, enemies.size());
         assertTrue(enemies.stream().anyMatch(e -> e instanceof SummonerEnemy));
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), new HeroServiceMock(), enemyService, "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), new HeroServiceMock(), enemyService, new CompanionServiceMock(), "map");
         final GameContext gameContext = GameContext.getInstance();
 
         // Move enemies for several turns to trigger spawning

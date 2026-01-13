@@ -42,6 +42,7 @@ public class GameWorldVisualizer extends Application {
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
+    private final Map<ICompanion, CompanionView> companionViews = new HashMap<>();
     private final Collection<BombView> bombsViews = new ArrayList<>();
     private final Map<IProjectile, ProjectileView> projectileViews = new HashMap<>();
     private GridPane tilesGrid;
@@ -123,6 +124,11 @@ public class GameWorldVisualizer extends Application {
         logger.log(Level.INFO, "Enemies: {0}", enemies.size());
         currentEnemyCount = enemies.size();
         updateEnemies(enemies);
+        
+        // Initialize companions
+        Collection<ICompanion> companions = controller.getCompanions();
+        logger.log(Level.INFO, "Companions: {0}", companions.size());
+        updateCompanions(companions);
 
         // add hero to grid
         final Image heroImage = getCachedImage("/tiles/hero/hero.png");
@@ -499,6 +505,48 @@ public class GameWorldVisualizer extends Application {
         }
     }
 
+    public void updateCompanions(Collection<ICompanion> companions) {
+        final Set<ICompanion> companionsToRemove = new HashSet<>(companionViews.keySet());
+        
+        for (ICompanion companion : companions) {
+            CompanionView companionView = companionViews.get(companion);
+            
+            if (companionView == null) {
+                String imagePath = getImagePathForCompanion(companion.getType());
+                final Image companionImage = getCachedImage(imagePath);
+                companionView = new CompanionView(companion, companionImage, TILE_SIZE);
+                companionView.setTilePosition(companion.getX(), companion.getY());
+                companionViews.put(companion, companionView);
+                charactersGrid.add(companionView.getDisplayNode(), companion.getX(), companion.getY());
+            } else {
+                companionsToRemove.remove(companion);
+                
+                final CompanionView finalCompanionView = companionView;
+                final int finalX = companion.getX();
+                final int finalY = companion.getY();
+                
+                // Animate companion movement with rush creature animator for fast, fluid movement
+                rushCreatureAnimator.animateMovement(charactersGrid, finalCompanionView, finalX, finalY);
+            }
+            companionView.updateHealthBar();
+        }
+        
+        for (ICompanion removedCompanion : companionsToRemove) {
+            final CompanionView companionView = companionViews.remove(removedCompanion);
+            if (companionView != null) {
+                rushCreatureAnimator.cancelAnimation(companionView);
+                charactersGrid.getChildren().remove(companionView.getDisplayNode());
+            }
+        }
+    }
+    
+    private String getImagePathForCompanion(final int companionType) {
+        if (companionType == TileType.COMPANION_HUSKY.getType()) {
+            return "/tiles/companions/husky.png";
+        }
+        throw new IllegalArgumentException("Unknown companion type: " + companionType);
+    }
+
     private String getImagePathForEnemy(final int enemyType) {
         String imagePath;
 
@@ -536,6 +584,9 @@ public class GameWorldVisualizer extends Application {
         }
         else if (projectileType == TileType.PROJECTILE_LIGHTNING.getType()) {
             return "/tiles/items/weapons/bomb.png"; // Using same image for now
+        }
+        else if (projectileType == TileType.PROJECTILE_WIND.getType()) {
+            return "/tiles/projectiles/wind_projectile.png";
         }
 
         throw new IllegalArgumentException("Unknown projectile type: " + projectileType);

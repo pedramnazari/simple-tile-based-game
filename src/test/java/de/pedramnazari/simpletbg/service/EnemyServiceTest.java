@@ -108,7 +108,7 @@ public class EnemyServiceTest {
         final IEnemy aEnemy = enemies.stream().filter(e -> e.getX() == 1 && e.getY() == 0).findFirst().orElse(null);
         assertNotNull(aEnemy);
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), new HeroServiceMock(), enemyService, "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), new HeroServiceMock(), enemyService, new CompanionServiceMock(), "map");
         final GameContext gameContext = GameContext.getInstance();
 
         for (int i = 0; i < 20; i++) {

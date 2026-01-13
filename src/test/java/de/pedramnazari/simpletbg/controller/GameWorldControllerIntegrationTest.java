@@ -9,6 +9,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
+import de.pedramnazari.simpletbg.service.CompanionServiceMock;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.Tile;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
@@ -40,7 +41,8 @@ public class GameWorldControllerIntegrationTest {
                 new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService), new HeroAttackService()),
-                new EnemyService(enemyMovementService));
+                new EnemyService(enemyMovementService),
+                new CompanionServiceMock());
 
 
         controller = new GameWorldController(gameWorldService);

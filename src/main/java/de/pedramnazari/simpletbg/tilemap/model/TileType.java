@@ -40,6 +40,7 @@ public enum TileType {
     PROJECTILE_FIRE(600),
     PROJECTILE_ICE(601),
     PROJECTILE_LIGHTNING(602),
+    PROJECTILE_WIND(603),
 
     RING_MAGIC1(300),
 
@@ -49,6 +50,8 @@ public enum TileType {
     ENEMY_FH(530), // follow hero,
     ENEMY_SUMMONER(540), // summoner that spawns rush creatures
     ENEMY_RUSH_CREATURE(541), // fast, fragile rush creature
+
+    COMPANION_HUSKY(800),
 
     PORTAL(900),
     EXIT(999),

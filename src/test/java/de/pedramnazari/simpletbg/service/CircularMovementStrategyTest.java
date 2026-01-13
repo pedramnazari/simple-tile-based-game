@@ -47,7 +47,8 @@ public class CircularMovementStrategyTest {
                 new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
-                new EnemyService(enemyMovementService));
+                new EnemyService(enemyMovementService),
+                new CompanionServiceMock());
     }
 
     @Test
