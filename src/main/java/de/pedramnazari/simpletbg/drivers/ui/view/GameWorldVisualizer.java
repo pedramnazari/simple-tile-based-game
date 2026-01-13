@@ -35,6 +35,7 @@ public class GameWorldVisualizer extends Application {
     public static final int TILE_SIZE = 48;
     private static final Duration HERO_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final Duration ENEMY_MOVE_ANIMATION_DURATION = Duration.millis(1000);
+    private static final Duration RUSH_CREATURE_MOVE_ANIMATION_DURATION = Duration.millis(150);
     private static final Duration PROJECTILE_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;
@@ -68,6 +69,7 @@ public class GameWorldVisualizer extends Application {
     private int currentEnemyCount;
     private final TileMapElementAnimator heroAnimator = new TileMapElementAnimator(HERO_MOVE_ANIMATION_DURATION, TILE_SIZE);
     private final TileMapElementAnimator enemyAnimator = new TileMapElementAnimator(ENEMY_MOVE_ANIMATION_DURATION, TILE_SIZE);
+    private final TileMapElementAnimator rushCreatureAnimator = new TileMapElementAnimator(RUSH_CREATURE_MOVE_ANIMATION_DURATION, TILE_SIZE);
     private final TileMapElementAnimator projectileAnimator = new TileMapElementAnimator(PROJECTILE_MOVE_ANIMATION_DURATION, TILE_SIZE);
     private CameraController cameraController;
     
@@ -430,10 +432,20 @@ public class GameWorldVisualizer extends Application {
                 enemyView.setTilePosition(enemy.getX(), enemy.getY());
                 enemyViews.put(enemy, enemyView);
                 charactersGrid.add(enemyView.getDisplayNode(), enemy.getX(), enemy.getY());
+                
+                // Add spawn effect for rush creatures
+                if (enemy.getType() == TileType.ENEMY_RUSH_CREATURE.getType()) {
+                    addSpawnEffect(enemy.getX(), enemy.getY());
+                }
             }
             else {
                 enemiesToRemove.remove(enemy);
-                enemyAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+                // Use faster animation for rush creatures
+                if (enemy.getType() == TileType.ENEMY_RUSH_CREATURE.getType()) {
+                    rushCreatureAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+                } else {
+                    enemyAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+                }
             }
             enemyView.updateHealthBar();
         }
@@ -441,7 +453,12 @@ public class GameWorldVisualizer extends Application {
         for (IEnemy removedEnemy : enemiesToRemove) {
             final EnemyView enemyView = enemyViews.remove(removedEnemy);
             if (enemyView != null) {
-                enemyAnimator.cancelAnimation(enemyView);
+                // Cancel animation with appropriate animator
+                if (removedEnemy.getType() == TileType.ENEMY_RUSH_CREATURE.getType()) {
+                    rushCreatureAnimator.cancelAnimation(enemyView);
+                } else {
+                    enemyAnimator.cancelAnimation(enemyView);
+                }
                 charactersGrid.getChildren().remove(enemyView.getDisplayNode());
             }
         }
@@ -924,6 +941,55 @@ public class GameWorldVisualizer extends Application {
         
         path.getElements().add(new javafx.scene.shape.LineTo(endX, endY));
         return path;
+    }
+
+    /**
+     * Show spawn effect when a summoner creates a rush creature
+     */
+    private void addSpawnEffect(int tileX, int tileY) {
+        // Calculate pixel coordinates
+        double centerX = tileX * TILE_SIZE + TILE_SIZE / 2.0;
+        double centerY = tileY * TILE_SIZE + TILE_SIZE / 2.0;
+        
+        // Create a magic circle effect
+        javafx.scene.shape.Circle outerCircle = new javafx.scene.shape.Circle(TILE_SIZE / 4, javafx.scene.paint.Color.PURPLE);
+        outerCircle.setOpacity(0.0);
+        outerCircle.setFill(null);
+        outerCircle.setStroke(javafx.scene.paint.Color.PURPLE);
+        outerCircle.setStrokeWidth(3);
+        outerCircle.setCenterX(centerX);
+        outerCircle.setCenterY(centerY);
+        
+        // Add glow effect
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(0.8);
+        outerCircle.setEffect(glow);
+        
+        effectsLayer.getChildren().add(outerCircle);
+        
+        // Animate: expand and fade
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(100), outerCircle);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(0.8);
+        
+        javafx.animation.ScaleTransition expand = new javafx.animation.ScaleTransition(javafx.util.Duration.millis(200), outerCircle);
+        expand.setFromX(0.5);
+        expand.setFromY(0.5);
+        expand.setToX(2.0);
+        expand.setToY(2.0);
+        
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), outerCircle);
+        fadeOut.setFromValue(0.8);
+        fadeOut.setToValue(0.0);
+        
+        // Clean up after animation
+        fadeOut.setOnFinished(event -> effectsLayer.getChildren().remove(outerCircle));
+        
+        // Play animations in sequence
+        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition(
+            new javafx.animation.ParallelTransition(fadeIn, expand),
+            fadeOut
+        );
+        sequence.play();
     }
 
     public void handleTileHit(IWeapon weapon, Tile tile) {
