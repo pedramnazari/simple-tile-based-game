@@ -15,6 +15,15 @@ final class ProgrammaticGameMapSource implements GameMapSource {
                     ScrollingMapConfig.HERO_START_ROW
             ),
             new GameMapDefinition(
+                    "elemental-arena",
+                    "Elemental Arena",
+                    ElementalArenaMapConfig.MAP,
+                    ElementalArenaMapConfig.ITEMS,
+                    ElementalArenaMapConfig.ENEMIES,
+                    ElementalArenaMapConfig.HERO_START_COLUMN,
+                    ElementalArenaMapConfig.HERO_START_ROW
+            ),
+            new GameMapDefinition(
                     "labyrinth",
                     "Labyrinth",
                     LabyrinthMapConfig.MAP,

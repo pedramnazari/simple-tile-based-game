@@ -2,6 +2,8 @@ package de.pedramnazari.simpletbg.inventory.service;
 
 import de.pedramnazari.simpletbg.inventory.model.ConsumableItem;
 import de.pedramnazari.simpletbg.inventory.model.FireStaff;
+import de.pedramnazari.simpletbg.inventory.model.IceWand;
+import de.pedramnazari.simpletbg.inventory.model.LightningRod;
 import de.pedramnazari.simpletbg.inventory.model.Item;
 import de.pedramnazari.simpletbg.inventory.model.Ring;
 import de.pedramnazari.simpletbg.inventory.model.Weapon;
@@ -24,6 +26,8 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
     private IBombService bombService;
     private IBombFactory bombFactory;
     private IProjectileFactory projectileFactory;
+    private IProjectileFactory iceProjectileFactory;
+    private IProjectileFactory lightningProjectileFactory;
 
     @Override
     protected IItem createNonEmptyElement(int type, int x, int y) {
@@ -127,6 +131,26 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             item = fireStaff;
 
         }
+        else if (type == TileType.WEAPON_ICE_WAND.getType()) {
+            itemName = "Ice Wand";
+            itemDescription = "A wand that shoots freezing ice.";
+            if (iceProjectileFactory == null) {
+                throw new IllegalStateException("Ice projectile factory not configured");
+            }
+            final IceWand iceWand = new IceWand(x, y, iceProjectileFactory);
+            item = iceWand;
+
+        }
+        else if (type == TileType.WEAPON_LIGHTNING_ROD.getType()) {
+            itemName = "Lightning Rod";
+            itemDescription = "A rod that shoots chaining lightning.";
+            if (lightningProjectileFactory == null) {
+                throw new IllegalStateException("Lightning projectile factory not configured");
+            }
+            final LightningRod lightningRod = new LightningRod(x, y, lightningProjectileFactory);
+            item = lightningRod;
+
+        }
         else {
             throw new IllegalArgumentException("Unknown item type: " + type);
         }
@@ -152,5 +176,13 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
     public void setProjectileFactory(IProjectileFactory projectileFactory) {
         this.projectileFactory = projectileFactory;
+    }
+
+    public void setIceProjectileFactory(IProjectileFactory iceProjectileFactory) {
+        this.iceProjectileFactory = iceProjectileFactory;
+    }
+
+    public void setLightningProjectileFactory(IProjectileFactory lightningProjectileFactory) {
+        this.lightningProjectileFactory = lightningProjectileFactory;
     }
 }

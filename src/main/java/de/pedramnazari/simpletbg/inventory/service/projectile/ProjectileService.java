@@ -24,6 +24,7 @@ public class ProjectileService implements Runnable, IProjectileService {
     private static final Logger logger = Logger.getLogger(ProjectileService.class.getName());
 
     private final List<IProjectileEventListener> projectileEventListeners = new ArrayList<>();
+    private final List<IChainEffectListener> chainEffectListeners = new ArrayList<>();
     private final WeaponDealsDamageNotifier weaponDealsDamageNotifier = new WeaponDealsDamageNotifier();
     private final List<IProjectile> projectiles = new CopyOnWriteArrayList<>();
 
@@ -65,6 +66,10 @@ public class ProjectileService implements Runnable, IProjectileService {
     @Override
     public void addProjectileEventListener(IProjectileEventListener listener) {
         projectileEventListeners.add(listener);
+    }
+
+    public void addChainEffectListener(IChainEffectListener listener) {
+        chainEffectListeners.add(listener);
     }
 
     @Override
@@ -149,10 +154,27 @@ public class ProjectileService implements Runnable, IProjectileService {
             if ((enemy.getX() == projectile.getX()) && (enemy.getY() == projectile.getY())) {
                 logger.info("Projectile hit enemy at position: " + projectile.getX() + ", " + projectile.getY());
                 weaponDealsDamageNotifier.notifyWeaponDealsDamage(projectile.getWeapon(), enemy, projectile.getDamage());
+                
+                // Apply projectile effect (freeze, chain, etc.)
+                projectile.getEffect().ifPresent(effect -> {
+                    Collection<IEnemy> chainTargets = effect.apply(enemy, enemies);
+                    // Deal damage to chain targets
+                    for (IEnemy chainTarget : chainTargets) {
+                        logger.info("Chain effect hits enemy at position: " + chainTarget.getX() + ", " + chainTarget.getY());
+                        weaponDealsDamageNotifier.notifyWeaponDealsDamage(projectile.getWeapon(), chainTarget, projectile.getDamage());
+                        // Notify chain effect listeners for visual effects
+                        notifyChainEffect(projectile, enemy, chainTarget);
+                    }
+                });
+                
                 hit = true;
             }
         }
         return hit;
+    }
+
+    private void notifyChainEffect(IProjectile projectile, IEnemy fromEnemy, IEnemy toEnemy) {
+        chainEffectListeners.forEach(listener -> listener.onChainEffect(projectile, fromEnemy, toEnemy));
     }
 
     private Point calcNextPoint(int x, int y, MoveDirection direction) {
