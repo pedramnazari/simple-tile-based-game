@@ -156,7 +156,6 @@ Use the Elemental Arena map which provides all three weapons. Try each against t
 - Fire Staff: Highest single-target damage (15)
 - Ice Wand: Medium damage (12) but provides crowd control
 - Lightning Rod: Lower per-hit damage (10) but can hit many enemies at once for massive total damage
-- Lightning Rod: Lower damage (10) but hits two enemies for 20 total damage
 
 ## Advanced Techniques
 

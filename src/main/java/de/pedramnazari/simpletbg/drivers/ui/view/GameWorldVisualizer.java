@@ -827,7 +827,10 @@ public class GameWorldVisualizer extends Application {
     }
     
     /**
-     * Create a jagged lightning path between two points for realistic lightning appearance
+     * Create a jagged lightning path between two points for realistic lightning appearance.
+     * Note: Uses Math.random() for visual variety. The randomness is intentional - 
+     * each lightning bolt should look unique. This doesn't affect gameplay logic
+     * and is purely cosmetic.
      */
     private javafx.scene.shape.Path createJaggedLightningPath(double startX, double startY, double endX, double endY) {
         javafx.scene.shape.Path path = new javafx.scene.shape.Path();
