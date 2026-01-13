@@ -47,11 +47,13 @@ public class RushCreatureMovementStrategy extends AbstractMovementStrategy {
         movementCounter++;
         
         // Apply behavior variations
+        // Note: Rush creatures should always move, so we don't allow them to stay still
         switch (behaviorVariation) {
             case HESITANT:
-                // Occasionally skip a turn (hesitate)
+                // Occasionally hesitate but still move (just in a more random direction)
                 if (movementCounter % 4 == 0 && random.nextDouble() < 0.3) {
-                    return new Point(element.getX(), element.getY());
+                    // Instead of stopping, move in a slightly random direction
+                    // This will be handled by the jitter logic below
                 }
                 break;
             case DASH:
@@ -107,6 +109,17 @@ public class RushCreatureMovementStrategy extends AbstractMovementStrategy {
             }
         }
 
+        // If still blocked, try all remaining directions to keep moving
+        if (newPosition == null) {
+            for (MoveDirection direction : MoveDirection.values()) {
+                newPosition = calcValidMovePositionWithinMapForDirection(tileMap, currentX, currentY, direction).orElse(null);
+                if (newPosition != null) {
+                    break; // Found a valid direction, use it
+                }
+            }
+        }
+
+        // Only as last resort, stay in place (e.g., completely surrounded)
         if (newPosition == null) {
             newPosition = new Point(currentX, currentY);
         }

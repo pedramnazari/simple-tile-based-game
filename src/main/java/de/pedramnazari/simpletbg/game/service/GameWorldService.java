@@ -18,6 +18,7 @@ public class GameWorldService {
     private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
     private static final long ENEMY_MOVE_INITIAL_DELAY_MS = 3000L;
     private static final long ENEMY_MOVE_INTERVAL_MS = 1000L;
+    private static final long RUSH_CREATURE_MOVE_INTERVAL_MS = 250L; // Rush creatures move 4x faster
 
     private final ITileMapService tileMapService;
     private final IItemService itemService;
@@ -87,8 +88,21 @@ public class GameWorldService {
         };
 
         // Wait 3 seconds before starting the first move to ensure that game is fully initialized
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2); // Pool size 2: one for regular enemies, one for rush creatures
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ENEMY_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
+        
+        // Separate faster scheduler for rush creatures to keep them constantly moving
+        Runnable moveRushCreaturesRunner = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    enemyService.moveRushCreatures(GameContext.getInstance());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        scheduler.scheduleAtFixedRate(moveRushCreaturesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, RUSH_CREATURE_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
     // TODO: Move all moveHero* methods to HeroService

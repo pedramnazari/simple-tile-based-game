@@ -108,6 +108,43 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
         return movementResults;
     }
 
+    @Override
+    public List<MovementResult> moveRushCreatures(final GameContext gameContext) {
+        final List<MovementResult> movementResults = new ArrayList<>();
+
+        for (IEnemy enemy : enemies) {
+            // Only move rush creatures
+            if (enemy.getType() != TileType.ENEMY_RUSH_CREATURE.getType()) {
+                continue;
+            }
+
+            // Check if enemy is frozen
+            if (enemy.getFrozenTurns() > 0) {
+                continue; // Skip frozen rush creatures
+            }
+
+            final Point newPosition = enemyMovementService.calcNextMove(gameContext.getTileMap(), enemy);
+
+            final MovementResult result = enemyMovementService
+                    .moveElementToPositionWithinMap(gameContext, enemy, newPosition.getX(), newPosition.getY());
+
+            handleItemIfCollected(result);
+
+            if (!result.getCollidingElements().isEmpty()) {
+                final IHero hero = (IHero) result.getCollidingElements().iterator().next();
+                heroHitNotifier.notifyHeroHit(hero, enemy, enemy.getAttackingPower());
+            }
+
+            movementResults.add(result);
+        }
+
+        if (!movementResults.isEmpty()) {
+            notifyObservers();
+        }
+
+        return movementResults;
+    }
+
     private void handleItemIfCollected(MovementResult result) {
         if (result.getCollectedItem().isPresent()) {
             final IItem item = result.getCollectedItem().get();
