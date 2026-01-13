@@ -2,6 +2,7 @@ package de.pedramnazari.simpletbg.drivers.ui.view;
 
 import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
+import de.pedramnazari.simpletbg.drivers.ui.controller.InputState;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -60,7 +61,7 @@ public class GameWorldVisualizer extends Application {
     private double mapPixelWidth;
     private double mapPixelHeight;
 
-    private boolean right, left, down, up;
+    private final InputState inputState = new InputState();
     private GameMapDefinition mapDefinition;
     private Map<Point, TileView> tilesView = new HashMap<>();
     private Label enemyCountLabel;
@@ -68,6 +69,10 @@ public class GameWorldVisualizer extends Application {
     private final TileMapElementAnimator heroAnimator = new TileMapElementAnimator(HERO_MOVE_ANIMATION_DURATION, TILE_SIZE);
     private final TileMapElementAnimator enemyAnimator = new TileMapElementAnimator(ENEMY_MOVE_ANIMATION_DURATION, TILE_SIZE);
     private final TileMapElementAnimator projectileAnimator = new TileMapElementAnimator(PROJECTILE_MOVE_ANIMATION_DURATION, TILE_SIZE);
+    private CameraController cameraController;
+    
+    // Image cache to avoid reloading resources
+    private final Map<String, Image> imageCache = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -118,7 +123,7 @@ public class GameWorldVisualizer extends Application {
         updateEnemies(enemies);
 
         // add hero to grid
-        final Image heroImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/hero/hero.png")));
+        final Image heroImage = getCachedImage("/tiles/hero/hero.png");
         heroView = new HeroView(hero, heroImage, TILE_SIZE);
 
         charactersGrid.add(heroView.getDisplayNode(), hero.getX(), hero.getY());
@@ -149,7 +154,14 @@ public class GameWorldVisualizer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        updateCamera();
+        // Initialize camera controller for smooth tracking
+        cameraController = new CameraController(stackPane, viewportWidth, viewportHeight, mapPixelWidth, mapPixelHeight);
+        cameraController.initializeCameraPosition(heroView.getDisplayNode(), hero.getX(), hero.getY(), TILE_SIZE);
+
+        // Setup continuous camera update for smooth scrolling during animations
+        Timeline cameraTimeline = new Timeline(new KeyFrame(Duration.millis(16), e -> updateCamera())); // ~60fps
+        cameraTimeline.setCycleCount(Timeline.INDEFINITE);
+        cameraTimeline.play();
 
         Timeline timeline = new Timeline(new KeyFrame(HERO_MOVE_ANIMATION_DURATION, e -> moveHero()));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -182,56 +194,65 @@ public class GameWorldVisualizer extends Application {
         }
 
         if (event.getCode() == KeyCode.RIGHT) {
-            right = true;
+            inputState.setRight(true);
         }
         if (event.getCode() == KeyCode.LEFT) {
-            left = true;
+            inputState.setLeft(true);
         }
         if (event.getCode() == KeyCode.DOWN) {
-            down = true;
+            inputState.setDown(true);
         }
         if (event.getCode() == KeyCode.UP) {
-            up = true;
+            inputState.setUp(true);
         }
     }
 
     private void handleKeyReleased(KeyEvent event) {
         if (event.getCode() == KeyCode.UP) {
-            up = false;
+            inputState.setUp(false);
         }
         if (event.getCode() == KeyCode.DOWN) {
-            down = false;
+            inputState.setDown(false);
         }
         if (event.getCode() == KeyCode.LEFT) {
-            left = false;
+            inputState.setLeft(false);
         }
         if (event.getCode() == KeyCode.RIGHT) {
-            right = false;
+            inputState.setRight(false);
         }
     }
 
+    // Execute at most one movement command per tick
+    // Priority: vertical over horizontal (for consistent diagonal feel)
     private void moveHero() {
-        if (right) {
-            controller.moveHeroToRight();
+        if (!inputState.hasMovementInput()) {
+            return;
         }
-        if (left) {
-            controller.moveHeroToLeft();
-        }
-        if (down) {
-            controller.moveHeroDown();
-        }
-        if (up) {
-            controller.moveHeroUp();
+
+        int[] movement = inputState.getDiscreteMovement();
+        int dx = movement[0];
+        int dy = movement[1];
+
+        // Execute one move per tick - prioritize vertical for consistent diagonal
+        if (dy != 0) {
+            if (dy > 0) {
+                controller.moveHeroDown();
+            } else {
+                controller.moveHeroUp();
+            }
+        } else if (dx != 0) {
+            if (dx > 0) {
+                controller.moveHeroToRight();
+            } else {
+                controller.moveHeroToLeft();
+            }
         }
     }
 
     public void handleHeroMoved(IHero hero, int oldX, int oldY) {
         heroAnimator.animateMovement(charactersGrid, heroView, hero.getX(), hero.getY());
-
         updateHeroHealthView();
-
-        updateCamera();
-
+        // Camera updates continuously in its own timeline
     }
 
     private GridPane createGridPane(final TileMap tileMap) {
@@ -263,7 +284,7 @@ public class GameWorldVisualizer extends Application {
 
                 String imagePath = getImagePathForTile(tile.getType());
 
-                Image tileImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
+                Image tileImage = getCachedImage(imagePath);
 
                 final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
                 tileView.setImagePath(imagePath);
@@ -325,42 +346,73 @@ public class GameWorldVisualizer extends Application {
         return imagePath;
     }
 
+    // Helper to load and cache images
+    private Image getCachedImage(String imagePath) {
+        return imageCache.computeIfAbsent(imagePath, path -> 
+            new Image(requireNonNull(getClass().getResourceAsStream(path)))
+        );
+    }
+
     public void updateItems(final Collection<IItem> items) {
-        // TODO: do not delete views, instead update them
-        for (Point point : itemViews.keySet()) {
-            ItemView itemView = itemViews.get(point);
-            itemsGrid.getChildren().remove(itemView.getDisplayNode());
-        }
-
+        // Incremental update: reuse existing views, only create new ones as needed
+        Set<Point> currentPositions = new HashSet<>();
+        int reusedCount = 0;
+        int createdCount = 0;
+        
         for (IItem item : items) {
-
-            String imagePath = switch (item.getType()) {
-                case 100 -> "/tiles/items/yellow_key.png";
-                case 101 -> "/tiles/items/yellow_key_stone.png";
-                case 200 -> "/tiles/items/weapons/sword.png";
-                case 201 -> "/tiles/items/weapons/sword2.png";
-                case 220 -> "/tiles/items/weapons/lance.png";
-                case 221 -> "/tiles/items/weapons/double_ended_lance.png";
-                case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
-                case 230 -> "/tiles/items/weapons/bomb_placer.png";
-                case 240 -> "/tiles/items/weapons/fire_staff.png";
-                case 241 -> "/tiles/items/weapons/ice_wand.png";
-                case 242 -> "/tiles/items/weapons/lightning_rod.png";
-                case 300 -> "/tiles/items/rings/magic_ring1.png";
-                case 160 -> "/tiles/items/consumable/health_potion.png";
-                case 170 -> "/tiles/items/consumable/poison_potion.png";
-                default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
-            };
-
-            final Image itemImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
-            final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
-
             Point point = new Point(item.getX(), item.getY());
-            itemViews.put(point, itemView);
+            currentPositions.add(point);
+            
+            ItemView existingView = itemViews.get(point);
+            
+            // Only create new view if one doesn't exist at this position
+            if (existingView == null) {
+                String imagePath = switch (item.getType()) {
+                    case 100 -> "/tiles/items/yellow_key.png";
+                    case 101 -> "/tiles/items/yellow_key_stone.png";
+                    case 200 -> "/tiles/items/weapons/sword.png";
+                    case 201 -> "/tiles/items/weapons/sword2.png";
+                    case 220 -> "/tiles/items/weapons/lance.png";
+                    case 221 -> "/tiles/items/weapons/double_ended_lance.png";
+                    case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
+                    case 230 -> "/tiles/items/weapons/bomb_placer.png";
+                    case 240 -> "/tiles/items/weapons/fire_staff.png";
+                    case 241 -> "/tiles/items/weapons/ice_wand.png";
+                    case 242 -> "/tiles/items/weapons/lightning_rod.png";
+                    case 300 -> "/tiles/items/rings/magic_ring1.png";
+                    case 160 -> "/tiles/items/consumable/health_potion.png";
+                    case 170 -> "/tiles/items/consumable/poison_potion.png";
+                    default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
+                };
 
-            itemsGrid.add(itemView.getDisplayNode(), item.getX(), item.getY());
+                final Image itemImage = getCachedImage(imagePath);
+                final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
+
+                itemViews.put(point, itemView);
+                itemsGrid.add(itemView.getDisplayNode(), item.getX(), item.getY());
+                createdCount++;
+            } else {
+                reusedCount++;
+            }
         }
-
+        
+        // Remove views for items that no longer exist
+        Set<Point> toRemove = new HashSet<>();
+        for (Point point : itemViews.keySet()) {
+            if (!currentPositions.contains(point)) {
+                ItemView itemView = itemViews.get(point);
+                itemsGrid.getChildren().remove(itemView.getDisplayNode());
+                toRemove.add(point);
+            }
+        }
+        int removedCount = toRemove.size();
+        toRemove.forEach(itemViews::remove);
+        
+        // Log stats for verification (only when changes occur)
+        if (createdCount > 0 || removedCount > 0) {
+            logger.log(Level.FINE, "Item update: reused={0}, created={1}, removed={2}", 
+                new Object[]{reusedCount, createdCount, removedCount});
+        }
     }
 
     public void updateEnemies(Collection<IEnemy> enemies) {
@@ -373,7 +425,7 @@ public class GameWorldVisualizer extends Application {
 
             if (enemyView == null) {
                 String imagePath = getImagePathForEnemy(enemy.getType());
-                final Image enemyImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
+                final Image enemyImage = getCachedImage(imagePath);
                 enemyView = new EnemyView(enemy, enemyImage, TILE_SIZE);
                 enemyView.setTilePosition(enemy.getX(), enemy.getY());
                 enemyViews.put(enemy, enemyView);
@@ -514,33 +566,11 @@ public class GameWorldVisualizer extends Application {
     }
 
     private void updateCamera() {
-        if (stackPane == null || hero == null) {
+        if (cameraController == null || hero == null || heroView == null) {
             return;
         }
-
-        double heroPixelX = hero.getX() * TILE_SIZE + TILE_SIZE / 2.0;
-        double heroPixelY = hero.getY() * TILE_SIZE + TILE_SIZE / 2.0;
-
-        double targetTranslateX = viewportWidth / 2.0 - heroPixelX;
-        double targetTranslateY = viewportHeight / 2.0 - heroPixelY;
-
-        double minTranslateX = Math.min(0, viewportWidth - mapPixelWidth);
-        double maxTranslateX = Math.max(0, viewportWidth - mapPixelWidth);
-        double minTranslateY = Math.min(0, viewportHeight - mapPixelHeight);
-        double maxTranslateY = Math.max(0, viewportHeight - mapPixelHeight);
-
-        stackPane.setTranslateX(clamp(targetTranslateX, minTranslateX, maxTranslateX));
-        stackPane.setTranslateY(clamp(targetTranslateY, minTranslateY, maxTranslateY));
-    }
-
-    private double clamp(double value, double min, double max) {
-        if (value < min) {
-            return min;
-        }
-        if (value > max) {
-            return max;
-        }
-        return value;
+        // Track hero's actual rendered position including animation translate
+        cameraController.updateCameraToFollowNode(heroView.getDisplayNode(), hero.getX(), hero.getY(), TILE_SIZE);
     }
 
     private void removeBomb(IBomb bomb) {
@@ -578,7 +608,7 @@ public class GameWorldVisualizer extends Application {
     }
 
     private void addExplosionForBomb(IBomb bomb, List<Point> explosionPoints) {
-        final Image attackImage = new Image(requireNonNull(getClass().getResourceAsStream("/tiles/items/weapons/bomb_explosion.png")));
+        final Image attackImage = getCachedImage("/tiles/items/weapons/bomb_explosion.png");
         for (Point explosionPoint : explosionPoints) {
             final BombView explosionView = new BombView(bomb, attackImage, true, TILE_SIZE);
             bombsViews.add(explosionView);
@@ -606,50 +636,63 @@ public class GameWorldVisualizer extends Application {
     }
 
     public synchronized void updateBombs(Collection<IBomb> bombs) {
-        logger.info("Update bombs");
-
-        // TODO: do not delete views, instead update them
-        final Collection<BombView> bombViewsToRemove = new ArrayList<>();
-
+        // Incremental update: only remove non-explosion bomb views that aren't in the current bomb list
+        Set<IBomb> currentBombs = new HashSet<>(bombs);
+        Collection<BombView> toRemove = new ArrayList<>();
+        int reusedCount = 0;
+        int createdCount = 0;
+        
         for (BombView bombView : bombsViews) {
-            if (!bombView.isExplosion()) {
+            if (!bombView.isExplosion() && !currentBombs.contains(bombView.getTileMapElement())) {
                 bombsGrid.getChildren().remove(bombView.getDisplayNode());
-                bombViewsToRemove.add(bombView);
+                toRemove.add(bombView);
+            } else if (!bombView.isExplosion()) {
+                reusedCount++;
             }
         }
+        int removedCount = toRemove.size();
+        bombsViews.removeAll(toRemove);
 
-        bombsViews.removeAll(bombViewsToRemove);
-
+        // Add new bombs (skip those that already have views or are exploding)
         for (IBomb bomb : bombs) {
-            if (!bomb.isExplosionOngoing()) {
-                for (BombView bombView : bombsViews) {
-                    if (bombView.getTileMapElement().equals(bomb)) {
-                        throw new IllegalArgumentException("Bomb rectangle already exists for bomb: " + bomb);
-                    }
+            if (bomb.isExplosionOngoing()) {
+                continue; // Skip bombs that are currently exploding
+            }
+            
+            // Check if view already exists
+            boolean viewExists = false;
+            for (BombView bombView : bombsViews) {
+                if (bombView.getTileMapElement().equals(bomb)) {
+                    viewExists = true;
+                    break;
                 }
             }
-            else {
-                // Skip bombs that are currently exploding
-                continue;
+            
+            if (!viewExists) {
+                String imagePath = switch (bomb.getType()) {
+                    case 231 -> "/tiles/items/weapons/bomb.png";
+                    default -> throw new IllegalArgumentException("Unknown bomb type: " + bomb.getType());
+                };
+
+                final Image bombImage = getCachedImage(imagePath);
+                final BombView bombView = new BombView(bomb, bombImage, false, TILE_SIZE);
+
+                bombsViews.add(bombView);
+                bombsGrid.add(bombView.getDisplayNode(), bomb.getX(), bomb.getY());
+                createdCount++;
             }
-
-            String imagePath = switch (bomb.getType()) {
-                case 231 -> "/tiles/items/weapons/bomb.png";
-                default -> throw new IllegalArgumentException("Unknown bomb type: " + bomb.getType());
-            };
-
-            final Image bombImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
-            final BombView bombView = new BombView(bomb, bombImage, false, TILE_SIZE);
-
-            bombsViews.add(bombView);
-            bombsGrid.add(bombView.getDisplayNode(), bomb.getX(), bomb.getY());
         }
-
+        
+        // Log stats for verification (only when changes occur)
+        if (createdCount > 0 || removedCount > 0) {
+            logger.log(Level.INFO, "Bomb update: reused={0}, created={1}, removed={2}", 
+                new Object[]{reusedCount, createdCount, removedCount});
+        }
     }
 
     public void addProjectile(IProjectile projectile) {
         String imagePath = getImagePathForProjectile(projectile.getType());
-        final Image projectileImage = new Image(requireNonNull(getClass().getResourceAsStream(imagePath)));
+        final Image projectileImage = getCachedImage(imagePath);
         final ProjectileView projectileView = new ProjectileView(projectile, projectileImage, TILE_SIZE);
         projectileView.setTilePosition(projectile.getX(), projectile.getY());
         projectileViews.put(projectile, projectileView);
@@ -900,7 +943,7 @@ public class GameWorldVisualizer extends Application {
             }
 
 
-            final Image tileImage = new Image(requireNonNull(getClass().getResourceAsStream(destroyedImagePath)));
+            final Image tileImage = getCachedImage(destroyedImagePath);
             final TileView tileView = new TileView(tile, tileImage, TILE_SIZE);
 
 
