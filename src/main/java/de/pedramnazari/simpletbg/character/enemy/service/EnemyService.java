@@ -120,6 +120,7 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
 
             // Check if enemy is frozen
             if (enemy.getFrozenTurns() > 0) {
+                enemy.decrementFrozenTurns(); // Decrement frozen counter
                 continue; // Skip frozen rush creatures
             }
 

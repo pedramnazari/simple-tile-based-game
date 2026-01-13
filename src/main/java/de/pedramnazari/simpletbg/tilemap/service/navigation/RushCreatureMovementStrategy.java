@@ -47,14 +47,11 @@ public class RushCreatureMovementStrategy extends AbstractMovementStrategy {
         movementCounter++;
         
         // Apply behavior variations
-        // Note: Rush creatures should always move, so we don't allow them to stay still
+        // Note: Rush creatures should always move, so HESITANT doesn't stop them
         switch (behaviorVariation) {
             case HESITANT:
-                // Occasionally hesitate but still move (just in a more random direction)
-                if (movementCounter % 4 == 0 && random.nextDouble() < 0.3) {
-                    // Instead of stopping, move in a slightly random direction
-                    // This will be handled by the jitter logic below
-                }
+                // Hesitant creatures still move but might choose less optimal paths
+                // The jitter behavior below will handle this
                 break;
             case DASH:
                 // Occasionally move is processed elsewhere (represents faster movement)
