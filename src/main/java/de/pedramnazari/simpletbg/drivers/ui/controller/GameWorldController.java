@@ -3,6 +3,7 @@ package de.pedramnazari.simpletbg.drivers.ui.controller;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyHitListener;
 import de.pedramnazari.simpletbg.character.enemy.service.IEnemyObserver;
+import de.pedramnazari.simpletbg.character.companion.service.ICompanionObserver;
 import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener {
+public class GameWorldController implements IEnemyObserver, ICompanionObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -91,6 +92,12 @@ public class GameWorldController implements IEnemyObserver, IItemPickUpListener,
     public void update(Collection<IEnemy> enemies) {
         // GUI operations must be executed on the JavaFX application thread
         Platform.runLater(() -> gameWorldVisualizer.updateEnemies(enemies));
+    }
+    
+    @Override
+    public void updateCompanions(Collection<ICompanion> companions) {
+        // GUI operations must be executed on the JavaFX application thread
+        Platform.runLater(() -> gameWorldVisualizer.updateCompanions(companions));
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-public class CompanionService implements ICompanionService, Runnable {
+public class CompanionService implements ICompanionService, ICompanionSubject, Runnable {
     private static final Logger logger = Logger.getLogger(CompanionService.class.getName());
     private static final int MAX_DISTANCE_FROM_HERO = 3;
     private static final int MELEE_ATTACK_RANGE = 1;
@@ -24,6 +24,7 @@ public class CompanionService implements ICompanionService, Runnable {
     private static final double BARK_ATTACK_PROBABILITY = 0.3;
     
     private final List<ICompanion> companions = new ArrayList<>();
+    private final List<ICompanionObserver> observers = new ArrayList<>();
     private final CollisionDetectionService collisionDetectionService;
     private final IProjectileService projectileService;
     private final Random random = new Random();
@@ -104,6 +105,26 @@ public class CompanionService implements ICompanionService, Runnable {
 
             // Move towards hero if too far away, or towards nearest enemy if close
             moveCompanion(husky, hero, nearestEnemy, tileMap);
+        }
+        
+        // Notify observers about companion position changes
+        notifyObservers();
+    }
+
+    @Override
+    public void registerObserver(ICompanionObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(ICompanionObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (ICompanionObserver observer : observers) {
+            observer.updateCompanions(List.copyOf(companions));
         }
     }
 

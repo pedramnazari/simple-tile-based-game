@@ -297,6 +297,7 @@ public class GameInitializer {
 
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
         enemyService.registerObserver(controller);
+        companionService.registerObserver(controller);
         enemyService.addItemEventListener(itemService);
         heroService.addItemEventListener(itemService);
         heroService.addHeroAttackListener(enemyService);
