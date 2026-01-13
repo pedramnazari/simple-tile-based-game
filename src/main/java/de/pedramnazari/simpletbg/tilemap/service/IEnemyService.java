@@ -10,6 +10,8 @@ public interface IEnemyService {
     void init(Collection<IEnemy> enemies);
 
     List<MovementResult> moveEnemies(GameContext gameContext);
+    
+    List<MovementResult> moveRushCreatures(GameContext gameContext);
 
     Collection<IEnemy> getEnemies();
 

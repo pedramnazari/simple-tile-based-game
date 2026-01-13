@@ -26,6 +26,7 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
     private final EnemyMovementService enemyMovementService;
 
     private final Collection<IEnemy> enemies = new ArrayList<>();
+    private final List<IEnemy> enemiesToAdd = new ArrayList<>();
     private boolean initialized = false;
 
     private final List<IEnemyObserver> observers = new ArrayList<>();
@@ -49,7 +50,21 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
     public List<MovementResult> moveEnemies(final GameContext gameContext) {
         final List<MovementResult> movementResults = new ArrayList<>();
 
+        // Add any newly spawned enemies to the main collection
+        if (!enemiesToAdd.isEmpty()) {
+            enemies.addAll(enemiesToAdd);
+            enemiesToAdd.clear();
+            notifyObservers();
+        }
+
         for (IEnemy enemy : enemies) {
+            // Check for summoner spawn logic
+            if (enemy instanceof de.pedramnazari.simpletbg.character.enemy.model.SummonerEnemy summoner) {
+                if (summoner.shouldSpawn()) {
+                    spawnRushCreature(gameContext, summoner);
+                }
+            }
+
             // Check if enemy is frozen
             if (enemy.getFrozenTurns() > 0) {
                 enemy.decrementFrozenTurns();
@@ -81,6 +96,44 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
 
                 heroHitNotifier.notifyHeroHit(hero, enemy, enemy.getAttackingPower());
 
+            }
+
+            movementResults.add(result);
+        }
+
+        if (!movementResults.isEmpty()) {
+            notifyObservers();
+        }
+
+        return movementResults;
+    }
+
+    @Override
+    public List<MovementResult> moveRushCreatures(final GameContext gameContext) {
+        final List<MovementResult> movementResults = new ArrayList<>();
+
+        for (IEnemy enemy : enemies) {
+            // Only move rush creatures
+            if (enemy.getType() != TileType.ENEMY_RUSH_CREATURE.getType()) {
+                continue;
+            }
+
+            // Check if enemy is frozen
+            if (enemy.getFrozenTurns() > 0) {
+                enemy.decrementFrozenTurns(); // Decrement frozen counter
+                continue; // Skip frozen rush creatures
+            }
+
+            final Point newPosition = enemyMovementService.calcNextMove(gameContext.getTileMap(), enemy);
+
+            final MovementResult result = enemyMovementService
+                    .moveElementToPositionWithinMap(gameContext, enemy, newPosition.getX(), newPosition.getY());
+
+            handleItemIfCollected(result);
+
+            if (!result.getCollidingElements().isEmpty()) {
+                final IHero hero = (IHero) result.getCollidingElements().iterator().next();
+                heroHitNotifier.notifyHeroHit(hero, enemy, enemy.getAttackingPower());
             }
 
             movementResults.add(result);
@@ -195,5 +248,77 @@ public class EnemyService implements IEnemyService, IEnemySubject, IHeroAttackLi
         for (IItemEventListener listener : itemEventListeners) {
             listener.onItemUsed(event);
         }
+    }
+
+    private void spawnRushCreature(GameContext gameContext, de.pedramnazari.simpletbg.character.enemy.model.SummonerEnemy summoner) {
+        // Try to spawn adjacent to summoner
+        int summonerX = summoner.getX();
+        int summonerY = summoner.getY();
+        
+        // Try all four directions to find a valid spawn position
+        int[][] offsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}}; // up, down, left, right
+        
+        for (int[] offset : offsets) {
+            int spawnX = summonerX + offset[0];
+            int spawnY = summonerY + offset[1];
+            
+            // Check if position is valid
+            if (isValidSpawnPosition(gameContext, spawnX, spawnY)) {
+                de.pedramnazari.simpletbg.character.enemy.model.RushCreature rushCreature = 
+                    new de.pedramnazari.simpletbg.character.enemy.model.RushCreature(
+                        TileType.ENEMY_RUSH_CREATURE.getType(), spawnX, spawnY);
+                
+                // Create a character provider for the hero
+                de.pedramnazari.simpletbg.tilemap.model.ICharacterProvider<de.pedramnazari.simpletbg.tilemap.model.ICharacter> heroProvider = 
+                    () -> gameContext.getHero();
+                
+                // Set up the rush creature with unique movement strategy
+                rushCreature.setMovementStrategy(
+                    new de.pedramnazari.simpletbg.tilemap.service.navigation.RushCreatureMovementStrategy(
+                        new de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService(),
+                        heroProvider,
+                        summoner.getNextSpawnSeed()
+                    )
+                );
+                rushCreature.setAttackingPower(5);
+                
+                enemiesToAdd.add(rushCreature);
+                
+                logger.log(Level.INFO, "Summoner spawned rush creature at position: {0}, {1}", 
+                    new Object[]{spawnX, spawnY});
+                break; // Only spawn one per turn
+            }
+        }
+    }
+
+    private boolean isValidSpawnPosition(GameContext gameContext, int x, int y) {
+        TileMap tileMap = gameContext.getTileMap();
+        
+        // Check bounds
+        if (x < 0 || x >= tileMap.getWidth() || y < 0 || y >= tileMap.getHeight()) {
+            return false;
+        }
+        
+        // Check for obstacles
+        de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService collisionService = 
+            new de.pedramnazari.simpletbg.tilemap.service.navigation.CollisionDetectionService();
+        if (collisionService.isCollisionWithObstacle(tileMap, x, y)) {
+            return false;
+        }
+        
+        // Check if position is occupied by hero
+        IHero hero = gameContext.getHero();
+        if (hero.getX() == x && hero.getY() == y) {
+            return false;
+        }
+        
+        // Check if position is occupied by another enemy
+        for (IEnemy enemy : enemies) {
+            if (enemy.getX() == x && enemy.getY() == y) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

@@ -41,6 +41,16 @@ public class DefaultEnemyFactory extends AbstractTileMapElementFactory<IEnemy> i
             enemy.setMovementStrategy(new FollowMovableElementMovementStrategy(collisionDetectionService, characterProvider));
             enemy.setAttackingPower(30);
         }
+        else if (type == TileType.ENEMY_SUMMONER.getType()) {
+            enemy = new de.pedramnazari.simpletbg.character.enemy.model.SummonerEnemy(TileType.ENEMY_SUMMONER.getType(), x, y);
+            enemy.setMovementStrategy(new CircularMovementStrategy(collisionDetectionService));
+            enemy.setAttackingPower(15);
+        }
+        else if (type == TileType.ENEMY_RUSH_CREATURE.getType()) {
+            enemy = new de.pedramnazari.simpletbg.character.enemy.model.RushCreature(TileType.ENEMY_RUSH_CREATURE.getType(), x, y);
+            enemy.setMovementStrategy(new de.pedramnazari.simpletbg.tilemap.service.navigation.RushCreatureMovementStrategy(collisionDetectionService, characterProvider, System.currentTimeMillis()));
+            enemy.setAttackingPower(5);
+        }
         else {
             throw new IllegalArgumentException("Unknown enemy type: " + type);
         }
