@@ -35,7 +35,7 @@ public class GameWorldVisualizer extends Application {
     public static final int TILE_SIZE = 48;
     private static final Duration HERO_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final Duration ENEMY_MOVE_ANIMATION_DURATION = Duration.millis(1000);
-    private static final Duration RUSH_CREATURE_MOVE_ANIMATION_DURATION = Duration.millis(150);
+    private static final Duration RUSH_CREATURE_MOVE_ANIMATION_DURATION = Duration.millis(60);
     private static final Duration PROJECTILE_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;
@@ -422,6 +422,9 @@ public class GameWorldVisualizer extends Application {
 
         final Set<IEnemy> enemiesToRemove = new HashSet<>(enemyViews.keySet());
 
+        // Use a counter to stagger animations and avoid synchronous movement
+        int animationDelayCounter = 0;
+        
         for (IEnemy enemy : enemies) {
             EnemyView enemyView = enemyViews.get(enemy);
 
@@ -440,12 +443,44 @@ public class GameWorldVisualizer extends Application {
             }
             else {
                 enemiesToRemove.remove(enemy);
-                // Use faster animation for rush creatures
+                
+                // Add staggered delay to break synchronization
+                // Rush creatures get minimal delay for fluent movement
+                final int delayMs;
                 if (enemy.getType() == TileType.ENEMY_RUSH_CREATURE.getType()) {
-                    rushCreatureAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+                    // Rush creatures: very small stagger (0-30ms) for fluent, unsynchronized movement
+                    delayMs = (animationDelayCounter * 10) % 40;
                 } else {
-                    enemyAnimator.animateMovement(charactersGrid, enemyView, enemy.getX(), enemy.getY());
+                    // Regular enemies: longer stagger (0-100ms)
+                    delayMs = (animationDelayCounter * 25) % 120;
                 }
+                
+                final EnemyView finalEnemyView = enemyView;
+                final int finalX = enemy.getX();
+                final int finalY = enemy.getY();
+                final boolean isRushCreature = enemy.getType() == TileType.ENEMY_RUSH_CREATURE.getType();
+                
+                // Delay the animation to stagger enemy movements
+                if (delayMs > 0) {
+                    javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(delayMs));
+                    pause.setOnFinished(e -> {
+                        if (isRushCreature) {
+                            rushCreatureAnimator.animateMovement(charactersGrid, finalEnemyView, finalX, finalY);
+                        } else {
+                            enemyAnimator.animateMovement(charactersGrid, finalEnemyView, finalX, finalY);
+                        }
+                    });
+                    pause.play();
+                } else {
+                    // No delay for first enemy
+                    if (isRushCreature) {
+                        rushCreatureAnimator.animateMovement(charactersGrid, finalEnemyView, finalX, finalY);
+                    } else {
+                        enemyAnimator.animateMovement(charactersGrid, finalEnemyView, finalX, finalY);
+                    }
+                }
+                
+                animationDelayCounter++;
             }
             enemyView.updateHealthBar();
         }
