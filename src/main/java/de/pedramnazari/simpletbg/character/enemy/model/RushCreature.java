@@ -9,14 +9,7 @@ public class RushCreature extends Character implements de.pedramnazari.simpletbg
     public RushCreature(int type, int x, int y) {
         super(type, x, y);
         // Rush creatures are very fragile - low health
-        setHealth(10);
-    }
-
-    private void setHealth(int health) {
-        // Override health to be very low for fragile creatures
-        while (getHealth() > health) {
-            decreaseHealth(1);
-        }
+        decreaseHealth(90); // Reduce from 100 to 10
     }
 
     @Override
