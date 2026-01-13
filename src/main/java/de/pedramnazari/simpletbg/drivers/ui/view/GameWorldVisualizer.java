@@ -739,41 +739,133 @@ public class GameWorldVisualizer extends Application {
     }
 
     /**
-     * Show chain lightning arc from one enemy to another
+     * Show chain lightning arc from one enemy to another with animated traveling bolt
      */
     public void showChainLightningArc(int fromX, int fromY, int toX, int toY) {
-        // Create a line representing the lightning arc
-        javafx.scene.shape.Line lightningArc = new javafx.scene.shape.Line();
-        lightningArc.setStartX(fromX * TILE_SIZE + TILE_SIZE / 2.0);
-        lightningArc.setStartY(fromY * TILE_SIZE + TILE_SIZE / 2.0);
-        lightningArc.setEndX(toX * TILE_SIZE + TILE_SIZE / 2.0);
-        lightningArc.setEndY(toY * TILE_SIZE + TILE_SIZE / 2.0);
-        lightningArc.setStroke(javafx.scene.paint.Color.YELLOW);
-        lightningArc.setStrokeWidth(3);
-        lightningArc.setOpacity(0.9);
+        // Calculate pixel coordinates
+        double startPixelX = fromX * TILE_SIZE + TILE_SIZE / 2.0;
+        double startPixelY = fromY * TILE_SIZE + TILE_SIZE / 2.0;
+        double endPixelX = toX * TILE_SIZE + TILE_SIZE / 2.0;
+        double endPixelY = toY * TILE_SIZE + TILE_SIZE / 2.0;
         
-        // Add glow effect
+        // Create the main lightning bolt path with jagged segments for realistic look
+        javafx.scene.shape.Path lightningPath = createJaggedLightningPath(startPixelX, startPixelY, endPixelX, endPixelY);
+        lightningPath.setStroke(javafx.scene.paint.Color.rgb(255, 255, 150)); // Bright yellow-white
+        lightningPath.setStrokeWidth(3);
+        lightningPath.setOpacity(0.0); // Start invisible
+        lightningPath.setFill(null);
+        
+        // Add intense glow effect
         javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(1.0);
         javafx.scene.effect.DropShadow dropShadow = new javafx.scene.effect.DropShadow();
         dropShadow.setColor(javafx.scene.paint.Color.YELLOW);
-        dropShadow.setRadius(10);
+        dropShadow.setRadius(15);
+        dropShadow.setSpread(0.7);
         glow.setInput(dropShadow);
-        lightningArc.setEffect(glow);
+        lightningPath.setEffect(glow);
         
-        // Add to the projectiles grid (or could use a separate effects layer)
-        stackPane.getChildren().add(lightningArc);
+        // Add to the stack pane
+        stackPane.getChildren().add(lightningPath);
         
-        // Animate the arc - flicker and fade
-        javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), lightningArc);
-        fade.setFromValue(0.9);
-        fade.setToValue(0.0);
-        fade.setCycleCount(3);
-        fade.setAutoReverse(true);
+        // Create a traveling spark effect
+        javafx.scene.shape.Circle travelingSpark = new javafx.scene.shape.Circle(6, javafx.scene.paint.Color.WHITE);
+        travelingSpark.setOpacity(0.0);
+        javafx.scene.effect.Glow sparkGlow = new javafx.scene.effect.Glow(1.0);
+        travelingSpark.setEffect(sparkGlow);
+        stackPane.getChildren().add(travelingSpark);
+        
+        // Animate: First make the bolt appear quickly
+        javafx.animation.FadeTransition boltAppear = new javafx.animation.FadeTransition(javafx.util.Duration.millis(50), lightningPath);
+        boltAppear.setFromValue(0.0);
+        boltAppear.setToValue(0.95);
+        
+        // Animate the spark traveling along the bolt
+        javafx.animation.Timeline sparkTravel = new javafx.animation.Timeline();
+        int travelSteps = 15;
+        for (int i = 0; i <= travelSteps; i++) {
+            final double progress = (double) i / travelSteps;
+            final double sparkX = startPixelX + (endPixelX - startPixelX) * progress;
+            final double sparkY = startPixelY + (endPixelY - startPixelY) * progress;
+            final double opacity = i == 0 ? 0.0 : (i == travelSteps ? 0.0 : 0.9);
+            
+            javafx.animation.KeyFrame keyFrame = new javafx.animation.KeyFrame(
+                javafx.util.Duration.millis(i * 25),
+                e -> {
+                    travelingSpark.setCenterX(sparkX);
+                    travelingSpark.setCenterY(sparkY);
+                    travelingSpark.setOpacity(opacity);
+                }
+            );
+            sparkTravel.getKeyFrames().add(keyFrame);
+        }
+        
+        // Bolt flickers while spark travels
+        javafx.animation.FadeTransition boltFlicker = new javafx.animation.FadeTransition(javafx.util.Duration.millis(80), lightningPath);
+        boltFlicker.setFromValue(0.95);
+        boltFlicker.setToValue(0.6);
+        boltFlicker.setCycleCount(5);
+        boltFlicker.setAutoReverse(true);
+        
+        // Final fade out
+        javafx.animation.FadeTransition boltFadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), lightningPath);
+        boltFadeOut.setFromValue(0.6);
+        boltFadeOut.setToValue(0.0);
         
         // Clean up after animation
-        fade.setOnFinished(event -> stackPane.getChildren().remove(lightningArc));
+        boltFadeOut.setOnFinished(event -> {
+            stackPane.getChildren().remove(lightningPath);
+            stackPane.getChildren().remove(travelingSpark);
+        });
         
-        fade.play();
+        // Play animations in sequence
+        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition(
+            boltAppear,
+            new javafx.animation.ParallelTransition(sparkTravel, boltFlicker),
+            boltFadeOut
+        );
+        sequence.play();
+    }
+    
+    /**
+     * Create a jagged lightning path between two points for realistic lightning appearance
+     */
+    private javafx.scene.shape.Path createJaggedLightningPath(double startX, double startY, double endX, double endY) {
+        javafx.scene.shape.Path path = new javafx.scene.shape.Path();
+        
+        // Calculate direction and distance
+        double dx = endX - startX;
+        double dy = endY - startY;
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // If distance is very short, just draw a straight line
+        if (distance < TILE_SIZE) {
+            path.getElements().add(new javafx.scene.shape.MoveTo(startX, startY));
+            path.getElements().add(new javafx.scene.shape.LineTo(endX, endY));
+            return path;
+        }
+        
+        // Create jagged segments
+        int numSegments = Math.max(3, (int)(distance / (TILE_SIZE * 0.7)));
+        path.getElements().add(new javafx.scene.shape.MoveTo(startX, startY));
+        
+        for (int i = 1; i < numSegments; i++) {
+            double progress = (double) i / numSegments;
+            double baseX = startX + dx * progress;
+            double baseY = startY + dy * progress;
+            
+            // Add random perpendicular offset for jagged appearance
+            double perpX = -dy / distance;
+            double perpY = dx / distance;
+            double offset = (Math.random() - 0.5) * TILE_SIZE * 0.4;
+            
+            double jaggedX = baseX + perpX * offset;
+            double jaggedY = baseY + perpY * offset;
+            
+            path.getElements().add(new javafx.scene.shape.LineTo(jaggedX, jaggedY));
+        }
+        
+        path.getElements().add(new javafx.scene.shape.LineTo(endX, endY));
+        return path;
     }
 
     public void handleTileHit(IWeapon weapon, Tile tile) {

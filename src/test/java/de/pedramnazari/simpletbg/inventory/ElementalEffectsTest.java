@@ -71,7 +71,7 @@ public class ElementalEffectsTest {
         // When
         Collection<IEnemy> chainTargets = chainEffect.apply(hitEnemy, Arrays.asList(hitEnemy, rightEnemy, farEnemy));
         
-        // Then
+        // Then: Should chain to adjacent enemy but not far enemy
         assertEquals(1, chainTargets.size());
         assertTrue(chainTargets.contains(rightEnemy));
     }
@@ -92,38 +92,40 @@ public class ElementalEffectsTest {
 
     @Test
     public void testChainEffectSelectsTopLeftWithPriority() {
-        // Given: Multiple adjacent enemies
+        // Given: Multiple adjacent enemies within chain range
         IEnemy hitEnemy = new Enemy(TileType.ENEMY_LR.getType(), 5, 5);
-        IEnemy topEnemy = new Enemy(TileType.ENEMY_LR.getType(), 5, 4);     // Should be selected (lower Y)
-        IEnemy bottomEnemy = new Enemy(TileType.ENEMY_LR.getType(), 5, 6);
-        IEnemy leftEnemy = new Enemy(TileType.ENEMY_LR.getType(), 4, 5);
-        IEnemy rightEnemy = new Enemy(TileType.ENEMY_LR.getType(), 6, 5);
+        IEnemy topEnemy = new Enemy(TileType.ENEMY_LR.getType(), 5, 4);     // Distance 1, should be first
+        IEnemy bottomEnemy = new Enemy(TileType.ENEMY_LR.getType(), 5, 6);  // Distance 1, should be second
+        IEnemy leftEnemy = new Enemy(TileType.ENEMY_LR.getType(), 4, 5);    // Distance 1, should be third
+        IEnemy rightEnemy = new Enemy(TileType.ENEMY_LR.getType(), 6, 5);   // Distance 1, should be fourth
         ChainEffect chainEffect = new ChainEffect();
         
         // When
         Collection<IEnemy> chainTargets = chainEffect.apply(hitEnemy, 
             Arrays.asList(hitEnemy, topEnemy, bottomEnemy, leftEnemy, rightEnemy));
         
-        // Then: Should select the topmost enemy (lowest Y coordinate)
-        assertEquals(1, chainTargets.size());
-        assertTrue(chainTargets.contains(topEnemy));
+        // Then: Should select all adjacent enemies within range (distance 1), sorted with topmost first
+        assertEquals(4, chainTargets.size());
+        List<IEnemy> targetList = chainTargets.stream().toList();
+        assertEquals(topEnemy, targetList.get(0)); // Topmost (lowest Y) should be first
     }
 
     @Test
     public void testChainEffectSelectsLeftWhenSameRow() {
-        // Given: Multiple adjacent enemies at same Y
+        // Given: Multiple adjacent enemies at same Y within chain range
         IEnemy hitEnemy = new Enemy(TileType.ENEMY_LR.getType(), 5, 5);
-        IEnemy leftEnemy = new Enemy(TileType.ENEMY_LR.getType(), 4, 5);    // Should be selected (lower X)
-        IEnemy rightEnemy = new Enemy(TileType.ENEMY_LR.getType(), 6, 5);
+        IEnemy leftEnemy = new Enemy(TileType.ENEMY_LR.getType(), 4, 5);    // Distance 1, should be first (lower X)
+        IEnemy rightEnemy = new Enemy(TileType.ENEMY_LR.getType(), 6, 5);   // Distance 1, should be second
         ChainEffect chainEffect = new ChainEffect();
         
         // When
         Collection<IEnemy> chainTargets = chainEffect.apply(hitEnemy, 
             Arrays.asList(hitEnemy, leftEnemy, rightEnemy));
         
-        // Then: Should select the leftmost enemy (lowest X coordinate)
-        assertEquals(1, chainTargets.size());
-        assertTrue(chainTargets.contains(leftEnemy));
+        // Then: Should select all enemies in range, sorted with leftmost first when at same distance and Y
+        assertEquals(2, chainTargets.size());
+        List<IEnemy> targetList = chainTargets.stream().toList();
+        assertEquals(leftEnemy, targetList.get(0)); // Leftmost (lowest X) should be first
     }
 
     @Test
