@@ -38,11 +38,12 @@
 - Bombs: Only recreate if not already in the view list
 - Image caching: All images loaded once and cached in `imageCache` HashMap
 - Result: Reduced DOM churn, fewer image loads, smoother rendering
+- Diagnostic logging: Item and bomb updates log reuse statistics (reused/created/removed counts)
 
 ## Performance Improvements
 
 - **Before**: Items/bombs recreated on every update → layout thrashing
-- **After**: Incremental updates, reuse existing nodes
+- **After**: Incremental updates, reuse existing nodes (see logs for stats)
 - **Before**: Images loaded repeatedly from resources
 - **After**: Single load per unique image path, cached for reuse
 - **Before**: Camera updated only when hero reaches destination tile
@@ -55,3 +56,4 @@ Manual testing recommended:
 2. Change direction quickly - no visible snapping or animation cancellation
 3. Move around map - camera should smoothly track hero without jumpiness
 4. Verify items, bombs, enemies still render correctly
+5. Check logs for node reuse statistics: "Item update: reused=X, created=Y, removed=Z"

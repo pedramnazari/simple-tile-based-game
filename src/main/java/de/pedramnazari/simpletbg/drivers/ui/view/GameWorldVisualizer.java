@@ -356,6 +356,8 @@ public class GameWorldVisualizer extends Application {
     public void updateItems(final Collection<IItem> items) {
         // Incremental update: reuse existing views, only create new ones as needed
         Set<Point> currentPositions = new HashSet<>();
+        int reusedCount = 0;
+        int createdCount = 0;
         
         for (IItem item : items) {
             Point point = new Point(item.getX(), item.getY());
@@ -388,6 +390,9 @@ public class GameWorldVisualizer extends Application {
 
                 itemViews.put(point, itemView);
                 itemsGrid.add(itemView.getDisplayNode(), item.getX(), item.getY());
+                createdCount++;
+            } else {
+                reusedCount++;
             }
         }
         
@@ -400,7 +405,14 @@ public class GameWorldVisualizer extends Application {
                 toRemove.add(point);
             }
         }
+        int removedCount = toRemove.size();
         toRemove.forEach(itemViews::remove);
+        
+        // Log stats for verification (only when changes occur)
+        if (createdCount > 0 || removedCount > 0) {
+            logger.log(Level.FINE, "Item update: reused={0}, created={1}, removed={2}", 
+                new Object[]{reusedCount, createdCount, removedCount});
+        }
     }
 
     public void updateEnemies(Collection<IEnemy> enemies) {
@@ -624,18 +636,21 @@ public class GameWorldVisualizer extends Application {
     }
 
     public synchronized void updateBombs(Collection<IBomb> bombs) {
-        logger.info("Update bombs");
-
         // Incremental update: only remove non-explosion bomb views that aren't in the current bomb list
         Set<IBomb> currentBombs = new HashSet<>(bombs);
         Collection<BombView> toRemove = new ArrayList<>();
+        int reusedCount = 0;
+        int createdCount = 0;
         
         for (BombView bombView : bombsViews) {
             if (!bombView.isExplosion() && !currentBombs.contains(bombView.getTileMapElement())) {
                 bombsGrid.getChildren().remove(bombView.getDisplayNode());
                 toRemove.add(bombView);
+            } else if (!bombView.isExplosion()) {
+                reusedCount++;
             }
         }
+        int removedCount = toRemove.size();
         bombsViews.removeAll(toRemove);
 
         // Add new bombs (skip those that already have views or are exploding)
@@ -664,7 +679,14 @@ public class GameWorldVisualizer extends Application {
 
                 bombsViews.add(bombView);
                 bombsGrid.add(bombView.getDisplayNode(), bomb.getX(), bomb.getY());
+                createdCount++;
             }
+        }
+        
+        // Log stats for verification (only when changes occur)
+        if (createdCount > 0 || removedCount > 0) {
+            logger.log(Level.INFO, "Bomb update: reused={0}, created={1}, removed={2}", 
+                new Object[]{reusedCount, createdCount, removedCount});
         }
     }
 
