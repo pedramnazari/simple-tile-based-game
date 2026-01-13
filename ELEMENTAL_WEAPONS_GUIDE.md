@@ -50,24 +50,33 @@ A special map called **"Elemental Arena"** has been created to showcase these ne
 
 **How Chain Lightning Works:**
 - The primary target takes full damage (10 HP)
-- Lightning **automatically chains** to **one adjacent enemy**
-- Adjacent means enemies in the 4-neighborhood: up, down, left, or right (NOT diagonal)
-- If multiple enemies are adjacent, the chain target is selected **deterministically**:
-  - **Priority 1:** Topmost enemy (lowest Y coordinate)
-  - **Priority 2:** If same row, leftmost enemy (lowest X coordinate)
-- The chained enemy also takes full damage (10 HP)
-- If no adjacent enemies exist, no chain occurs
+- Lightning **automatically branches** to **all enemies within range 3** (Manhattan distance)
+- The branching creates a spectacular visual effect where lightning bolts split and travel to multiple targets
+- Each branching bolt:
+  - Follows a **jagged path** for realistic lightning appearance
+  - Features a **traveling spark** that moves along the bolt
+  - Flickers and pulses with energy
+  - Fades out smoothly after impact
+- All chained enemies take full damage (10 HP)
+- Enemies are targeted in order of distance (closest first) for optimal visual sequencing
+- If no enemies are within range, no chain occurs
 
 **Tactical Use:**
-- Most effective against **clustered enemies** (see row 9 in Elemental Arena)
-- Position yourself so enemies align in cardinal directions
-- Double the damage output compared to single-target weapons
-- Break through enemy groups efficiently
+- Extremely effective against **groups of enemies** within 3 tiles of the primary target
+- Can hit 5-8 enemies with a single shot in densely packed formations
+- Massive area damage when enemies cluster together
+- Position yourself to maximize the number of enemies in branching range
+- The 3-tile range means you can affect enemies across a significant area
 
 **Visual Effects:**
 - Projectile: Yellow flickering electric effect with pulsing sparks
-- Impact: Quick yellow spark flash
-- Chain: Animated yellow lightning arc connecting the two targets (flickers 3 times)
+- Impact: Quick yellow spark flash at primary target
+- **Branching Bolts:** Modern animated lightning that:
+  - Splits from the impact point to each enemy
+  - Travels with a visible spark along jagged lightning paths
+  - Creates an impressive "web of lightning" effect
+  - Each bolt flickers independently before fading
+- The effect clearly shows which enemies are being damaged by the chain
 
 ### Fire Staff 🔥 (For Comparison)
 
@@ -100,10 +109,12 @@ The map includes strategic enemy placements to help you test each weapon:
 4. Remember: freeze only lasts one turn, so plan accordingly
 
 ### Using Lightning Rod Effectively:
-1. Look for enemies standing adjacent to each other
-2. Target the one that will chain to the most dangerous enemy
-3. Watch the lightning arc to see which enemy gets chained
-4. Use against enemy clusters for maximum efficiency (2x damage output)
+1. Target the enemy closest to the largest group
+2. Watch as lightning branches out to hit all nearby enemies within 3 tiles
+3. The branching effect deals massive damage to clusters (up to 8+ enemies)
+4. Best used when enemies are grouped within 3 tiles of each other
+5. The visual effect makes it easy to see which enemies will be hit
+6. Combine with tactical positioning to maximize the branching coverage
 
 ### General Strategy:
 - Collect **health potions** (marked HP on the map) when health is low
@@ -130,15 +141,21 @@ The map includes strategic enemy placements to help you test each weapon:
 
 ### To Test Chain Lightning:
 1. Equip the Lightning Rod
-2. Position yourself so at least two enemies are adjacent (horizontally or vertically aligned)
-3. Shoot at one enemy
-4. Watch for the yellow lightning arc connecting to the adjacent enemy
-5. Both enemies should take damage
+2. Position yourself near a group of enemies (ideally 3+ enemies within 3 tiles of each other)
+3. Shoot at the center enemy or the one closest to the group
+4. Watch for the spectacular branching effect:
+   - Multiple yellow lightning bolts split from the impact point
+   - Each bolt travels along a jagged path to its target
+   - Traveling sparks animate along each bolt
+   - Bolts flicker independently
+5. All enemies within range will take damage simultaneously
+6. The effect creates a "web of lightning" connecting all affected enemies
 
 ### To Compare All Three:
 Use the Elemental Arena map which provides all three weapons. Try each against the same enemy types and compare:
 - Fire Staff: Highest single-target damage (15)
 - Ice Wand: Medium damage (12) but provides crowd control
+- Lightning Rod: Lower per-hit damage (10) but can hit many enemies at once for massive total damage
 - Lightning Rod: Lower damage (10) but hits two enemies for 20 total damage
 
 ## Advanced Techniques
