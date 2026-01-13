@@ -35,7 +35,7 @@ public class GameWorldVisualizer extends Application {
     public static final int TILE_SIZE = 48;
     private static final Duration HERO_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final Duration ENEMY_MOVE_ANIMATION_DURATION = Duration.millis(1000);
-    private static final Duration RUSH_CREATURE_MOVE_ANIMATION_DURATION = Duration.millis(60);
+    private static final Duration RUSH_CREATURE_MOVE_ANIMATION_DURATION = Duration.millis(80);
     private static final Duration PROJECTILE_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;

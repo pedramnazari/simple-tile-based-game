@@ -18,7 +18,7 @@ public class GameWorldService {
     private static final Logger logger = Logger.getLogger(GameWorldService.class.getName());
     private static final long ENEMY_MOVE_INITIAL_DELAY_MS = 3000L;
     private static final long ENEMY_MOVE_INTERVAL_MS = 1000L;
-    private static final long RUSH_CREATURE_MOVE_INTERVAL_MS = 250L; // Rush creatures move 4x faster
+    private static final long RUSH_CREATURE_MOVE_INTERVAL_MS = 333L; // Rush creatures move ~3x faster (75% of previous 4x speed)
 
     private final ITileMapService tileMapService;
     private final IItemService itemService;
