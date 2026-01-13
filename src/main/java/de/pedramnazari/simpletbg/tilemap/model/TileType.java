@@ -47,6 +47,8 @@ public enum TileType {
     ENEMY_TD(510), // top-down
     ENEMY_2D(520), // two-dimensional
     ENEMY_FH(530), // follow hero,
+    ENEMY_SUMMONER(540), // summoner that spawns rush creatures
+    ENEMY_RUSH_CREATURE(541), // fast, fragile rush creature
 
     PORTAL(900),
     EXIT(999),

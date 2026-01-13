@@ -462,6 +462,12 @@ public class GameWorldVisualizer extends Application {
         else if ( enemyType == TileType.ENEMY_FH.getType()) {
             imagePath = "/tiles/enemies/enemy4.png";
         }
+        else if ( enemyType == TileType.ENEMY_SUMMONER.getType()) {
+            imagePath = "/tiles/enemies/enemy_summoner.png";
+        }
+        else if ( enemyType == TileType.ENEMY_RUSH_CREATURE.getType()) {
+            imagePath = "/tiles/enemies/enemy_rush.png";
+        }
         else {
             throw new IllegalArgumentException("Unknown enemy type: " +  enemyType);
         }
