@@ -448,10 +448,10 @@ public class GameWorldVisualizer extends Application {
                 // Rush creatures get minimal delay for fluent movement
                 final int delayMs;
                 if (enemy.getType() == TileType.ENEMY_RUSH_CREATURE.getType()) {
-                    // Rush creatures: very small stagger (0-30ms) for fluent, unsynchronized movement
+                    // Rush creatures: very small stagger (0-40ms) for fluent, unsynchronized movement
                     delayMs = (animationDelayCounter * 10) % 40;
                 } else {
-                    // Regular enemies: longer stagger (0-100ms)
+                    // Regular enemies: longer stagger (0-120ms)
                     delayMs = (animationDelayCounter * 25) % 120;
                 }
                 
