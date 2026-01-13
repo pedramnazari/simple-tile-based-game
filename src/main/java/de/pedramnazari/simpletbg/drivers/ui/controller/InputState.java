@@ -45,15 +45,19 @@ public class InputState {
     /**
      * Calculate normalized movement direction from input state.
      * Returns {dx, dy} where magnitude is at most 1.0 for consistent speed.
+     * Opposing directions cancel out.
      */
     public double[] getMovementVector() {
         int dx = 0;
         int dy = 0;
 
-        if (right) dx += 1;
-        if (left) dx -= 1;
-        if (down) dy += 1;
-        if (up) dy -= 1;
+        // Handle horizontal - opposing directions cancel
+        if (right && !left) dx = 1;
+        else if (left && !right) dx = -1;
+
+        // Handle vertical - opposing directions cancel
+        if (down && !up) dy = 1;
+        else if (up && !down) dy = -1;
 
         // Normalize diagonal movement to maintain consistent speed
         if (dx != 0 && dy != 0) {
@@ -74,16 +78,19 @@ public class InputState {
     /**
      * Get the primary movement direction as discrete tile coordinates.
      * For diagonal movement, returns both dx and dy.
+     * Opposing directions cancel out.
      */
     public int[] getDiscreteMovement() {
         int dx = 0;
         int dy = 0;
 
-        if (right) dx = 1;
-        else if (left) dx = -1;
+        // Handle horizontal - opposing directions cancel
+        if (right && !left) dx = 1;
+        else if (left && !right) dx = -1;
 
-        if (down) dy = 1;
-        else if (up) dy = -1;
+        // Handle vertical - opposing directions cancel
+        if (down && !up) dy = 1;
+        else if (up && !down) dy = -1;
 
         return new int[] { dx, dy };
     }
