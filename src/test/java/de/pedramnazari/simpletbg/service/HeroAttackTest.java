@@ -45,7 +45,7 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
@@ -107,7 +107,7 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
@@ -170,7 +170,7 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
@@ -241,7 +241,7 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
         heroService.init(2, 2);
         final IHero hero = heroService.getHero(); // place hero in the middle of the map
@@ -302,7 +302,7 @@ public class HeroAttackTest {
                 new HeroAttackService()
         );
 
-        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, new ItemServiceMock(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
 
 

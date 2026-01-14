@@ -9,6 +9,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
+import de.pedramnazari.simpletbg.service.CompanionServiceMock;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.ConsumableItem;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
@@ -67,7 +68,8 @@ public class HeroHitIntegrationTest {
                 tileMapService,
                 itemService,
                 heroService,
-                enemyService);
+                enemyService,
+                new CompanionServiceMock());
 
         controller = new GameWorldController(gameWorldService);
         visualizer = new TestGameWorldVisualizer();
@@ -91,7 +93,7 @@ public class HeroHitIntegrationTest {
         enemy.setMovementStrategy(new StayPutStrategy());
         enemyService.init(List.of(enemy));
         tileMapService.initTileMap(tiles);
-        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, "0");
+        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, new CompanionServiceMock(), "0");
 
         final MovementResult moveResult = heroService.moveHero(MoveDirection.RIGHT, GameContext.getInstance());
         final IHero hero = heroService.getHero();
@@ -120,7 +122,7 @@ public class HeroHitIntegrationTest {
         enemyService.init(List.of(enemy));
 
         tileMapService.initTileMap(tiles);
-        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, "0");
+        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, new CompanionServiceMock(), "0");
 
         final IHero hero = heroService.getHero();
         assertEquals(100, hero.getHealth());
@@ -149,7 +151,7 @@ public class HeroHitIntegrationTest {
         enemyService.init(List.of(enemy));
 
         tileMapService.initTileMap(tiles);
-        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, "0");
+        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, new CompanionServiceMock(), "0");
 
         final IHero hero = heroService.getHero();
         final MovementResult moveResult = heroService.moveHero(MoveDirection.RIGHT, GameContext.getInstance());
@@ -178,7 +180,7 @@ public class HeroHitIntegrationTest {
         enemyService.init(List.of(enemy));
 
         tileMapService.initTileMap(tiles);
-        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, "0");
+        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, new CompanionServiceMock(), "0");
 
         final IHero hero = heroService.getHero();
 
@@ -214,7 +216,7 @@ public class HeroHitIntegrationTest {
         heroService.init(0, 0);
         enemyService.init(List.of());
         tileMapService.initTileMap(tiles);
-        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, "0");
+        GameContext.initialize(tileMapService.getTileMap(), itemService, heroService, enemyService, new CompanionServiceMock(), "0");
 
         final ConsumableItem poison = new ConsumableItem(new HealthModifierMagicEffect(-25), 1, 0, TileType.POISON_POTION.getType());
         itemService.addItem(poison);

@@ -58,7 +58,8 @@ public class GameWorldServiceTest {
                 new TileMapService(tileFactory),
                 itemService,
                 heroService,
-                new EnemyService(enemyMovementService));
+                new EnemyService(enemyMovementService),
+                new CompanionServiceMock());
 
         hero = gameWorldService.getHero();
     }
@@ -110,7 +111,7 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
-        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "map");
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), new CompanionServiceMock(), "map");
 
         final IHero hero = gameWorldService.getHero();
         assertEquals(1, hero.getX());
@@ -176,7 +177,7 @@ public class GameWorldServiceTest {
         final TileMap tileMap = gameWorldService.createAndInitMap(new TileConfigParser().parse(mapConfig, tileFactory), 1, 0);
         assertNotNull(tileMap);
 
-        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "map");
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), new CompanionServiceMock(), "map");
 
         final IHero hero = gameWorldService.getHero();
 
@@ -238,7 +239,7 @@ public class GameWorldServiceTest {
                 1, 0);
         assertNotNull(tileMap);
 
-        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), "map");
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), gameWorldService.getHeroService(), gameWorldService.getEnemyService(), new CompanionServiceMock(), "map");
 
         Collection<IItem> items = gameWorldService.getItemService().getItems();
         assertNotNull(items);

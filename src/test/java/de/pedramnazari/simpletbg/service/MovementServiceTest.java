@@ -59,7 +59,8 @@ public class MovementServiceTest {
                 tileMapService,
                 new ItemService(),
                 heroService,
-                new EnemyService(enemyMovementService));
+                new EnemyService(enemyMovementService),
+                new CompanionServiceMock());
 
         heroService.addHeroMovedListener(tileMapService);
         tileMapService.addCharacterMovedToSpecialTileListener(heroService);
@@ -123,7 +124,7 @@ public class MovementServiceTest {
         hero = gameWorldService.getHero();
         assertNotNull(hero);
 
-        GameContext.initialize(tileMap, gameWorldService.getItemService(), new HeroServiceMock(hero), new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), new HeroServiceMock(hero), new EnemyServiceMock(), new CompanionServiceMock(), "map");
         final GameContext gameContext = GameContext.getInstance();
 
         MovementResult result = heroMovementService.moveElementToPositionWithinMap(gameContext, hero, 1, 2);
@@ -160,7 +161,7 @@ public class MovementServiceTest {
         hero = gameWorldService.getHero();
         assertNotNull(hero);
 
-        GameContext.initialize(tileMap, gameWorldService.getItemService(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
         MovementResult result = heroService.moveHero(MoveDirection.LEFT, GameContext.getInstance());
         assertTrue(result.hasElementMoved());
@@ -206,7 +207,7 @@ public class MovementServiceTest {
         hero = gameWorldService.getHero();
         assertNotNull(hero);
 
-        GameContext.initialize(tileMap, gameWorldService.getItemService(), heroService, new EnemyServiceMock(), "map");
+        GameContext.initialize(tileMap, gameWorldService.getItemService(), heroService, new EnemyServiceMock(), new CompanionServiceMock(), "map");
 
         final Tile wallHidingPortal = tileMap.getTile(0, 0);
         assertFalse(wallHidingPortal.isDestroyed());

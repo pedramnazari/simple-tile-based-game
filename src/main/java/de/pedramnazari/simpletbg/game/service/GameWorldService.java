@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.game.service;
 
+import de.pedramnazari.simpletbg.character.companion.model.Husky;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.*;
@@ -24,6 +25,7 @@ public class GameWorldService {
     private final IItemService itemService;
     private final IHeroService heroService;
     private final IEnemyService enemyService;
+    private final ICompanionService companionService;
 
     private String currentMapIndex;
     private boolean initialized = false;
@@ -31,11 +33,12 @@ public class GameWorldService {
     private Quest quest;
 
 
-    public GameWorldService(ITileMapService tileMapService, IItemService itemService, IHeroService heroService, IEnemyService enemyService) {
+    public GameWorldService(ITileMapService tileMapService, IItemService itemService, IHeroService heroService, IEnemyService enemyService, ICompanionService companionService) {
         this.tileMapService = tileMapService;
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
+        this.companionService = companionService;
     }
 
     public TileMap createAndInitMap(final Tile[][] tiles, final Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
@@ -49,6 +52,10 @@ public class GameWorldService {
         final TileMap tileMap = this.createAndInitMap(tiles, heroX, heroY);
 
         enemyService.init(enemiesConfig);
+        
+        // Initialize companion (husky) near the hero
+        Husky husky = new Husky(heroX + 1, heroY);
+        companionService.init(husky);
 
         initialized = true;
 
@@ -149,7 +156,14 @@ public class GameWorldService {
     public Collection<IEnemy> getEnemies() {
         return enemyService.getEnemies();
     }
-
+    
+    public Collection<ICompanion> getCompanions() {
+        return companionService.getCompanions();
+    }
+    
+    public ICompanionService getCompanionService() {
+        return companionService;
+    }
 
 
     public IHeroService getHeroService() {

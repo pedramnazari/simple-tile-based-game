@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.tilemap.service;
 
+import de.pedramnazari.simpletbg.tilemap.model.ICompanion;
 import de.pedramnazari.simpletbg.tilemap.model.IEnemy;
 import de.pedramnazari.simpletbg.tilemap.model.IHero;
 import de.pedramnazari.simpletbg.tilemap.model.TileMap;
@@ -15,13 +16,15 @@ public class GameContext {
     private final IItemService itemService;
     private final IHeroService heroService;
     private final IEnemyService enemyService;
+    private final ICompanionService companionService;
     private final String currentMapIndex;
 
-    private GameContext(TileMap tileMap, IItemService itemService, IHeroService heroService, IEnemyService enemyService, String currentMapIndex) {
+    private GameContext(TileMap tileMap, IItemService itemService, IHeroService heroService, IEnemyService enemyService, ICompanionService companionService, String currentMapIndex) {
         this.tileMap = tileMap;
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
+        this.companionService = companionService;
         this.currentMapIndex = currentMapIndex;
     }
 
@@ -32,9 +35,9 @@ public class GameContext {
         return instance;
     }
 
-    public static synchronized void initialize(TileMap tileMap, IItemService itemService, IHeroService heroService, IEnemyService enemyService, String currentMapIndex) {
+    public static synchronized void initialize(TileMap tileMap, IItemService itemService, IHeroService heroService, IEnemyService enemyService, ICompanionService companionService, String currentMapIndex) {
         if (instance == null) {
-            instance = new GameContext(tileMap, itemService, heroService, enemyService, currentMapIndex);
+            instance = new GameContext(tileMap, itemService, heroService, enemyService, companionService, currentMapIndex);
         } else {
             throw new IllegalStateException("GameContext is already initialized.");
         }
@@ -67,6 +70,14 @@ public class GameContext {
 
     public Collection<IEnemy> getEnemies() {
         return enemyService.getEnemies();
+    }
+
+    public ICompanionService getCompanionService() {
+        return companionService;
+    }
+
+    public Collection<ICompanion> getCompanions() {
+        return companionService.getCompanions();
     }
 
     public String getCurrentMapIndex() {

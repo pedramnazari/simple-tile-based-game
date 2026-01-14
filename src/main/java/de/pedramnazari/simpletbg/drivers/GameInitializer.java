@@ -4,6 +4,8 @@ import de.pedramnazari.simpletbg.character.enemy.adapters.EnemyConfigParser;
 import de.pedramnazari.simpletbg.character.enemy.service.DefaultEnemyFactory;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyMovementService;
 import de.pedramnazari.simpletbg.character.enemy.service.EnemyService;
+import de.pedramnazari.simpletbg.character.companion.model.Husky;
+import de.pedramnazari.simpletbg.character.companion.service.CompanionService;
 import de.pedramnazari.simpletbg.character.hero.service.DefaultHeroFactory;
 import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
@@ -281,15 +283,21 @@ public class GameInitializer {
                 new HeroMovementService(collisionDetectionService),
                 heroAttackService);
 
+        ProjectileService projectileService = new ProjectileService(collisionDetectionService, tileMapService, enemyService);
+        
+        final CompanionService companionService = new CompanionService(collisionDetectionService, projectileService);
+
         final GameWorldService gameWorldService = new GameWorldService(
                 tileMapService,
                 itemService,
                 heroService,
-                enemyService);
+                enemyService,
+                companionService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
 
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
         enemyService.registerObserver(controller);
+        companionService.registerObserver(controller);
         enemyService.addItemEventListener(itemService);
         heroService.addItemEventListener(itemService);
         heroService.addHeroAttackListener(enemyService);
@@ -315,7 +323,6 @@ public class GameInitializer {
         bombService.addBombEventListener(tileMapService);
         bombService.addWeaponDealsDamageListener(enemyService);
 
-        ProjectileService projectileService = new ProjectileService(collisionDetectionService, tileMapService, enemyService);
         itemFactory.setProjectileFactory(new FireProjectileFactory());
         itemFactory.setIceProjectileFactory(new IceProjectileFactory());
         itemFactory.setLightningProjectileFactory(new LightningProjectileFactory());
