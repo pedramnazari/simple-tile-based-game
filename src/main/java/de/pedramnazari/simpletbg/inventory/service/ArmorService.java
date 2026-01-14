@@ -29,6 +29,9 @@ public class ArmorService {
     /**
      * Perform auto-attacks for the hero's armor if equipped.
      * This should be called periodically from the game loop.
+     * 
+     * @param hero The hero whose armor will attack
+     * @param gameContext The game context (currently unused, reserved for future use)
      */
     public void performAutoAttacks(IHero hero, GameContext gameContext) {
         if (hero.getArmor().isEmpty()) {

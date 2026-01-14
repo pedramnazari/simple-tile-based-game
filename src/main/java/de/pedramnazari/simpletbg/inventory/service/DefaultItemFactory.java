@@ -23,6 +23,11 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
 
     public static final String ITEM_MAGIC_YELLOW_KEY2_NAME = "Magic Yellow Key";
     public static final String ITEM_MAGIC_YELLOW_KEY2_DESC = "A yellow key that opens the door to the next level.";
+    
+    // Armor constants
+    public static final int DEFAULT_ARMOR_DAMAGE = 15;
+    public static final int DEFAULT_ARMOR_RANGE = 3;
+    public static final long DEFAULT_ARMOR_COOLDOWN_MS = 1500L;
 
     private IBombService bombService;
     private IBombFactory bombFactory;
@@ -117,9 +122,9 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             itemName = "Auto-Attack Armor";
             itemDescription = "Magical armor that automatically attacks nearby enemies within 3 tiles.";
             final Armor armor = new Armor(x, y, itemName, itemDescription, type);
-            armor.setAttackingDamage(15);
-            armor.setAttackRange(3);
-            armor.setAttackCooldownMs(1500);
+            armor.setAttackingDamage(DEFAULT_ARMOR_DAMAGE);
+            armor.setAttackRange(DEFAULT_ARMOR_RANGE);
+            armor.setAttackCooldownMs(DEFAULT_ARMOR_COOLDOWN_MS);
 
             item = armor;
         }
