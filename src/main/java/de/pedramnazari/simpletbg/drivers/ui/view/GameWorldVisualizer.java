@@ -388,6 +388,7 @@ public class GameWorldVisualizer extends Application {
                     case 241 -> "/tiles/items/weapons/ice_wand.png";
                     case 242 -> "/tiles/items/weapons/lightning_rod.png";
                     case 300 -> "/tiles/items/rings/magic_ring1.png";
+                    case 350 -> "/tiles/items/armor/auto_attack_armor.png";
                     case 160 -> "/tiles/items/consumable/health_potion.png";
                     case 170 -> "/tiles/items/consumable/poison_potion.png";
                     default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
@@ -1111,6 +1112,190 @@ public class GameWorldVisualizer extends Application {
             tilesGrid.add(tileView.getDisplayNode(), tile.getX(), tile.getY());
             tilesView.put(point, tileView);
         }
+    }
+
+    /**
+     * Show armor auto-attack visual effects
+     */
+    public void showArmorAttackEffect(IHero hero, IEnemy target, IArmor armor) {
+        int heroX = hero.getX();
+        int heroY = hero.getY();
+        int targetX = target.getX();
+        int targetY = target.getY();
+        
+        double heroPixelX = heroX * TILE_SIZE + TILE_SIZE / 2.0;
+        double heroPixelY = heroY * TILE_SIZE + TILE_SIZE / 2.0;
+        double targetPixelX = targetX * TILE_SIZE + TILE_SIZE / 2.0;
+        double targetPixelY = targetY * TILE_SIZE + TILE_SIZE / 2.0;
+        
+        // 1. Brief glow on hero (armor effect)
+        showArmorGlow(heroPixelX, heroPixelY);
+        
+        // 2. Projectile arc from hero to enemy
+        showArmorProjectile(heroPixelX, heroPixelY, targetPixelX, targetPixelY);
+        
+        // 3. Impact flash on enemy (delayed to sync with projectile)
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.millis(200));
+        pause.setOnFinished(e -> {
+            showImpactFlash(targetPixelX, targetPixelY);
+            showParticleBurst(targetPixelX, targetPixelY);
+            showScreenShake();
+        });
+        pause.play();
+    }
+    
+    /**
+     * Show a brief glow around the hero (armor glow)
+     */
+    private void showArmorGlow(double centerX, double centerY) {
+        javafx.scene.shape.Circle glowCircle = new javafx.scene.shape.Circle(TILE_SIZE * 0.6, javafx.scene.paint.Color.CYAN);
+        glowCircle.setOpacity(0.0);
+        glowCircle.setFill(null);
+        glowCircle.setStroke(javafx.scene.paint.Color.CYAN);
+        glowCircle.setStrokeWidth(3);
+        glowCircle.setCenterX(centerX);
+        glowCircle.setCenterY(centerY);
+        
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(1.0);
+        javafx.scene.effect.DropShadow dropShadow = new javafx.scene.effect.DropShadow();
+        dropShadow.setColor(javafx.scene.paint.Color.CYAN);
+        dropShadow.setRadius(20);
+        dropShadow.setSpread(0.8);
+        glow.setInput(dropShadow);
+        glowCircle.setEffect(glow);
+        
+        effectsLayer.getChildren().add(glowCircle);
+        
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(80), glowCircle);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(0.9);
+        
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), glowCircle);
+        fadeOut.setFromValue(0.9);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(event -> effectsLayer.getChildren().remove(glowCircle));
+        
+        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition(fadeIn, fadeOut);
+        sequence.play();
+    }
+    
+    /**
+     * Show a projectile arc from hero to target
+     */
+    private void showArmorProjectile(double startX, double startY, double endX, double endY) {
+        javafx.scene.shape.Circle projectile = new javafx.scene.shape.Circle(6, javafx.scene.paint.Color.LIGHTBLUE);
+        projectile.setCenterX(startX);
+        projectile.setCenterY(startY);
+        projectile.setOpacity(0.0);
+        
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(0.9);
+        projectile.setEffect(glow);
+        
+        effectsLayer.getChildren().add(projectile);
+        
+        // Animate projectile moving to target
+        javafx.animation.TranslateTransition move = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(200), projectile);
+        move.setFromX(0);
+        move.setFromY(0);
+        move.setToX(endX - startX);
+        move.setToY(endY - startY);
+        
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(50), projectile);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(50), projectile);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setDelay(javafx.util.Duration.millis(150));
+        fadeOut.setOnFinished(event -> effectsLayer.getChildren().remove(projectile));
+        
+        javafx.animation.ParallelTransition parallel = new javafx.animation.ParallelTransition(move, fadeIn, fadeOut);
+        parallel.play();
+    }
+    
+    /**
+     * Show an impact flash on the target
+     */
+    private void showImpactFlash(double centerX, double centerY) {
+        javafx.scene.shape.Circle flash = new javafx.scene.shape.Circle(TILE_SIZE * 0.4, javafx.scene.paint.Color.WHITE);
+        flash.setCenterX(centerX);
+        flash.setCenterY(centerY);
+        flash.setOpacity(0.0);
+        
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(1.0);
+        flash.setEffect(glow);
+        
+        effectsLayer.getChildren().add(flash);
+        
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(50), flash);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(100), flash);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(event -> effectsLayer.getChildren().remove(flash));
+        
+        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition(fadeIn, fadeOut);
+        sequence.play();
+    }
+    
+    /**
+     * Show a particle burst effect
+     */
+    private void showParticleBurst(double centerX, double centerY) {
+        int particleCount = 8;
+        for (int i = 0; i < particleCount; i++) {
+            double angle = (2 * Math.PI * i) / particleCount;
+            double endX = centerX + Math.cos(angle) * TILE_SIZE * 0.5;
+            double endY = centerY + Math.sin(angle) * TILE_SIZE * 0.5;
+            
+            javafx.scene.shape.Circle particle = new javafx.scene.shape.Circle(3, javafx.scene.paint.Color.ORANGE);
+            particle.setCenterX(centerX);
+            particle.setCenterY(centerY);
+            particle.setOpacity(1.0);
+            
+            effectsLayer.getChildren().add(particle);
+            
+            javafx.animation.TranslateTransition move = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(250), particle);
+            move.setToX(endX - centerX);
+            move.setToY(endY - centerY);
+            
+            javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(250), particle);
+            fade.setFromValue(1.0);
+            fade.setToValue(0.0);
+            fade.setOnFinished(event -> effectsLayer.getChildren().remove(particle));
+            
+            javafx.animation.ParallelTransition parallel = new javafx.animation.ParallelTransition(move, fade);
+            parallel.play();
+        }
+    }
+    
+    /**
+     * Show a subtle screen shake effect
+     */
+    private void showScreenShake() {
+        double shakeAmount = 3.0;
+        javafx.animation.Timeline shake = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(javafx.util.Duration.millis(0), e -> {
+                stackPane.setTranslateX(shakeAmount);
+                stackPane.setTranslateY(shakeAmount);
+            }),
+            new javafx.animation.KeyFrame(javafx.util.Duration.millis(30), e -> {
+                stackPane.setTranslateX(-shakeAmount);
+                stackPane.setTranslateY(-shakeAmount);
+            }),
+            new javafx.animation.KeyFrame(javafx.util.Duration.millis(60), e -> {
+                stackPane.setTranslateX(shakeAmount * 0.5);
+                stackPane.setTranslateY(shakeAmount * 0.5);
+            }),
+            new javafx.animation.KeyFrame(javafx.util.Duration.millis(90), e -> {
+                stackPane.setTranslateX(0);
+                stackPane.setTranslateY(0);
+            })
+        );
+        shake.play();
     }
 
 

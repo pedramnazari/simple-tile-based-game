@@ -1,6 +1,7 @@
 package de.pedramnazari.simpletbg.game.service;
 
 import de.pedramnazari.simpletbg.character.companion.model.Husky;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.*;
@@ -20,12 +21,14 @@ public class GameWorldService {
     private static final long ENEMY_MOVE_INITIAL_DELAY_MS = 3000L;
     private static final long ENEMY_MOVE_INTERVAL_MS = 1000L;
     private static final long RUSH_CREATURE_MOVE_INTERVAL_MS = 333L; // Rush creatures move ~3x faster than regular enemies
+    private static final long ARMOR_AUTO_ATTACK_INTERVAL_MS = 500L; // Check for armor auto-attacks every 500ms
 
     private final ITileMapService tileMapService;
     private final IItemService itemService;
     private final IHeroService heroService;
     private final IEnemyService enemyService;
     private final ICompanionService companionService;
+    private final ArmorService armorService;
 
     private String currentMapIndex;
     private boolean initialized = false;
@@ -33,12 +36,13 @@ public class GameWorldService {
     private Quest quest;
 
 
-    public GameWorldService(ITileMapService tileMapService, IItemService itemService, IHeroService heroService, IEnemyService enemyService, ICompanionService companionService) {
+    public GameWorldService(ITileMapService tileMapService, IItemService itemService, IHeroService heroService, IEnemyService enemyService, ICompanionService companionService, ArmorService armorService) {
         this.tileMapService = tileMapService;
         this.itemService = itemService;
         this.heroService = heroService;
         this.enemyService = enemyService;
         this.companionService = companionService;
+        this.armorService = armorService;
     }
 
     public TileMap createAndInitMap(final Tile[][] tiles, final Collection<IItem> items, Collection<IEnemy> enemiesConfig, int heroX, int heroY) {
@@ -95,7 +99,7 @@ public class GameWorldService {
         };
 
         // Wait 3 seconds before starting the first move to ensure that game is fully initialized
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2); // Pool size 2: one for regular enemies, one for rush creatures
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3); // Pool size 3: enemies, rush creatures, and armor
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ENEMY_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
         
         // Separate faster scheduler for rush creatures to keep them constantly moving
@@ -110,6 +114,19 @@ public class GameWorldService {
             }
         };
         scheduler.scheduleAtFixedRate(moveRushCreaturesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, RUSH_CREATURE_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
+        
+        // Armor auto-attack scheduler
+        Runnable armorAutoAttackRunner = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    armorService.performAutoAttacks(heroService.getHero(), GameContext.getInstance());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        scheduler.scheduleAtFixedRate(armorAutoAttackRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ARMOR_AUTO_ATTACK_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
     // TODO: Move all moveHero* methods to HeroService

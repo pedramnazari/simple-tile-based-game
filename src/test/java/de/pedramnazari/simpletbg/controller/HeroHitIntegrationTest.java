@@ -12,6 +12,7 @@ import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.service.CompanionServiceMock;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.ConsumableItem;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.inventory.service.magiceffect.HealthModifierMagicEffect;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
@@ -69,7 +70,8 @@ public class HeroHitIntegrationTest {
                 itemService,
                 heroService,
                 enemyService,
-                new CompanionServiceMock());
+                new CompanionServiceMock(),
+                new ArmorService(enemyService));
 
         controller = new GameWorldController(gameWorldService);
         visualizer = new TestGameWorldVisualizer();

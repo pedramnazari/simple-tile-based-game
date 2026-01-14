@@ -44,6 +44,8 @@ public enum TileType {
 
     RING_MAGIC1(300),
 
+    ARMOR_AUTO_ATTACK(350),
+
     ENEMY_LR(500), // left-right,
     ENEMY_TD(510), // top-down
     ENEMY_2D(520), // two-dimensional

@@ -1,5 +1,6 @@
 package de.pedramnazari.simpletbg.inventory.service;
 
+import de.pedramnazari.simpletbg.inventory.model.Armor;
 import de.pedramnazari.simpletbg.inventory.model.ConsumableItem;
 import de.pedramnazari.simpletbg.inventory.model.FireStaff;
 import de.pedramnazari.simpletbg.inventory.model.IceWand;
@@ -111,6 +112,16 @@ public class DefaultItemFactory extends AbstractTileMapElementFactory<IItem> imp
             ring.setAttackingPower(20);
 
             item = ring;
+        }
+        else if (type == TileType.ARMOR_AUTO_ATTACK.getType()) {
+            itemName = "Auto-Attack Armor";
+            itemDescription = "Magical armor that automatically attacks nearby enemies within 3 tiles.";
+            final Armor armor = new Armor(x, y, itemName, itemDescription, type);
+            armor.setAttackingDamage(15);
+            armor.setAttackRange(3);
+            armor.setAttackCooldownMs(1500);
+
+            item = armor;
         }
         else if (type == TileType.WEAPON_BOMB_PLACER.getType()) {
             itemName = "Bomb Placer";
