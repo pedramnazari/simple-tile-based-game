@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.service.CompanionServiceMock;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
@@ -36,13 +37,16 @@ public class GameWorldControllerIntegrationTest {
         tileFactory = new DefaultTileFactory();
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
+        
+        final EnemyService enemyService = new EnemyService(enemyMovementService);
 
         GameWorldService gameWorldService = new GameWorldService(
                 new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), new HeroMovementService(collisionDetectionService), new HeroAttackService()),
-                new EnemyService(enemyMovementService),
-                new CompanionServiceMock());
+                enemyService,
+                new CompanionServiceMock(),
+                new ArmorService(enemyService));
 
 
         controller = new GameWorldController(gameWorldService);

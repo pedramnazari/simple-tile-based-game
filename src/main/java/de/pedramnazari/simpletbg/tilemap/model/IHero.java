@@ -16,4 +16,8 @@ public interface IHero extends ICharacter, IItemCollector {
     void setRing(IRing ring);
 
     Optional<IRing> getRing();
+
+    void setArmor(IArmor armor);
+
+    Optional<IArmor> getArmor();
 }

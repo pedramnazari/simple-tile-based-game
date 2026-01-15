@@ -7,6 +7,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroAttackService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -42,13 +43,16 @@ public class CircularMovementStrategyTest {
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         movementStrategy = new CircularMovementStrategy(collisionDetectionService);
         enemyMovementService.addMovementStrategy(movementStrategy);
+        
+        final EnemyService enemyService = new EnemyService(enemyMovementService);
 
         gameWorldService = new GameWorldService(
                 new TileMapService(tileFactory),
                 new ItemService(),
                 new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService()),
-                new EnemyService(enemyMovementService),
-                new CompanionServiceMock());
+                enemyService,
+                new CompanionServiceMock(),
+                new ArmorService(enemyService));
     }
 
     @Test

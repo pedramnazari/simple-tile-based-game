@@ -8,6 +8,7 @@ import de.pedramnazari.simpletbg.character.hero.service.HeroMovementService;
 import de.pedramnazari.simpletbg.character.hero.service.HeroService;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.Bomb;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.tilemap.adapters.TileConfigParser;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -52,6 +53,8 @@ public class MovementServiceTest {
 
         final EnemyMovementService enemyMovementService = new EnemyMovementService(collisionDetectionService);
         enemyMovementService.addMovementStrategy(new RandomMovementStrategy(collisionDetectionService));
+        
+        final EnemyService enemyService = new EnemyService(enemyMovementService);
 
         heroService = new HeroService(new DefaultHeroFactory(), heroMovementService, new HeroAttackService());
         tileMapService = new TileMapService(tileFactory);
@@ -59,8 +62,9 @@ public class MovementServiceTest {
                 tileMapService,
                 new ItemService(),
                 heroService,
-                new EnemyService(enemyMovementService),
-                new CompanionServiceMock());
+                enemyService,
+                new CompanionServiceMock(),
+                new ArmorService(enemyService));
 
         heroService.addHeroMovedListener(tileMapService);
         tileMapService.addCharacterMovedToSpecialTileListener(heroService);

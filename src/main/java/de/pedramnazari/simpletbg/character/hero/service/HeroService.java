@@ -55,6 +55,9 @@ public class HeroService implements IHeroService, IHeroProvider, IHeroAttackNoti
             else if (item instanceof IRing ring) {
                 handleRingCollected(ring);
             }
+            else if (item instanceof IArmor armor) {
+                handleArmorCollected(armor);
+            }
             else if (item instanceof IConsumableItem magicPotion) {
                 handleConsumableItemCollected(magicPotion);
             }
@@ -87,6 +90,15 @@ public class HeroService implements IHeroService, IHeroProvider, IHeroAttackNoti
         }
         else {
             addItemToInventory(ring);
+        }
+    }
+
+    private void handleArmorCollected(IArmor armor) {
+        if (hero.getArmor().isEmpty()) {
+            hero.setArmor(armor);
+        }
+        else {
+            addItemToInventory(armor);
         }
     }
 

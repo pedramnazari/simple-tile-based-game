@@ -17,6 +17,7 @@ import de.pedramnazari.simpletbg.inventory.model.BombFactory;
 import de.pedramnazari.simpletbg.inventory.model.projectile.FireProjectileFactory;
 import de.pedramnazari.simpletbg.inventory.model.projectile.IceProjectileFactory;
 import de.pedramnazari.simpletbg.inventory.model.projectile.LightningProjectileFactory;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.inventory.service.DefaultItemFactory;
 import de.pedramnazari.simpletbg.inventory.service.ItemService;
 import de.pedramnazari.simpletbg.inventory.service.bomb.BombService;
@@ -286,13 +287,16 @@ public class GameInitializer {
         ProjectileService projectileService = new ProjectileService(collisionDetectionService, tileMapService, enemyService);
         
         final CompanionService companionService = new CompanionService(collisionDetectionService, projectileService);
+        
+        final ArmorService armorService = new ArmorService(enemyService);
 
         final GameWorldService gameWorldService = new GameWorldService(
                 tileMapService,
                 itemService,
                 heroService,
                 enemyService,
-                companionService);
+                companionService,
+                armorService);
         final GameWorldController controller = new GameWorldController(gameWorldService);
 
         enemyMovementService.addMovementStrategy(new LeftToRightMovementStrategy(collisionDetectionService));
@@ -330,6 +334,8 @@ public class GameInitializer {
         projectileService.addProjectileEventListener(controller);
         projectileService.addChainEffectListener(controller);
         projectileService.addWeaponDealsDamageListener(enemyService);
+        
+        armorService.addArmorAttackListener(controller);
 
 
         /**

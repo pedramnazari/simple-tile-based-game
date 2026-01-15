@@ -7,6 +7,7 @@ import de.pedramnazari.simpletbg.character.companion.service.ICompanionObserver;
 import de.pedramnazari.simpletbg.drivers.ui.view.GameWorldVisualizer;
 import de.pedramnazari.simpletbg.game.service.GameWorldService;
 import de.pedramnazari.simpletbg.inventory.model.bomb.IBombEventListener;
+import de.pedramnazari.simpletbg.inventory.service.ArmorService;
 import de.pedramnazari.simpletbg.inventory.service.projectile.IChainEffectListener;
 import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, ICompanionObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener {
+public class GameWorldController implements IEnemyObserver, ICompanionObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener, ArmorService.ArmorAttackListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -241,5 +242,12 @@ public class GameWorldController implements IEnemyObserver, ICompanionObserver, 
     @Override
     public void onItemUsed(ItemConsumedEvent event) {
 
+    }
+
+    @Override
+    public void onArmorAttack(IHero hero, IEnemy target, IArmor armor) {
+        if (gameWorldVisualizer != null) {
+            Platform.runLater(() -> gameWorldVisualizer.showArmorAttackEffect(hero, target, armor));
+        }
     }
 }
