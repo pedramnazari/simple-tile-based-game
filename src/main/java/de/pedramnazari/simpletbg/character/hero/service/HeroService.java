@@ -190,21 +190,31 @@ public class HeroService implements IHeroService, IHeroProvider, IHeroAttackNoti
     private void useRing(IRing newRing) {
         final IRing oldRing = hero.getRing().orElse(null);
 
+        // Remove the new ring from inventory before equipping
+        hero.getInventory().removeItem(newRing);
+
         if (oldRing != null) {
             addItemToInventory(oldRing);
+            notifyItemAddedToInventory(new ItemAddedToInventoryEvent());
         }
 
         hero.setRing(newRing);
+        notifyItemEquipped(new ItemEquippedEvent());
     }
 
     private void useWeapon(IWeapon newWeapon) {
         final IWeapon oldWeapon = hero.getWeapon().orElse(null);
 
+        // Remove the new weapon from inventory before equipping
+        hero.getInventory().removeItem(newWeapon);
+
         if (oldWeapon != null) {
             addItemToInventory(oldWeapon);
+            notifyItemAddedToInventory(new ItemAddedToInventoryEvent());
         }
 
         hero.setWeapon(newWeapon);
+        notifyItemEquipped(new ItemEquippedEvent());
     }
 
     private void consumeItem(IConsumableItem consumableItem) {

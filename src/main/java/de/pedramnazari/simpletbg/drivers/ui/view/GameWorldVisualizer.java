@@ -3,6 +3,8 @@ package de.pedramnazari.simpletbg.drivers.ui.view;
 import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.drivers.ui.controller.InputState;
+import de.pedramnazari.simpletbg.inventory.service.event.ItemAddedToInventoryEvent;
+import de.pedramnazari.simpletbg.inventory.service.event.ItemEquippedEvent;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -39,6 +41,12 @@ public class GameWorldVisualizer extends Application {
     private static final Duration PROJECTILE_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;
+    
+    // Equipment panel styling constants
+    private static final javafx.scene.paint.Color EQUIPMENT_SLOT_BG_COLOR = 
+        javafx.scene.paint.Color.rgb(60, 60, 60);
+    private static final javafx.scene.paint.Color EQUIPMENT_SLOT_BORDER_COLOR = 
+        javafx.scene.paint.Color.rgb(100, 100, 100);
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
@@ -56,6 +64,20 @@ public class GameWorldVisualizer extends Application {
     private TilePane inventory;
     private GameWorldController controller;
     private IHero hero;
+    
+    // Equipment slot UI elements
+    private ImageView helmetSlotView;
+    private ImageView chestArmorSlotView;
+    private ImageView weaponSlotView;
+    private ImageView bootsSlotView;
+    private ImageView ringSlotView;
+    
+    // Equipment stat labels
+    private Label helmetStatLabel;
+    private Label chestArmorStatLabel;
+    private Label weaponStatLabel;
+    private Label bootsStatLabel;
+    private Label ringStatLabel;
     private StackPane stackPane;
     private Pane cameraViewport;
     private double viewportWidth;
@@ -141,10 +163,17 @@ public class GameWorldVisualizer extends Application {
         stackPane.getChildren().addAll(tilesGrid, itemsGrid, bombsGrid, projectilesGrid, charactersGrid, effectsLayer);
 
         BorderPane borderPane = new BorderPane();
+        
+        // Create equipment panel on the left
+        VBox equipmentPanel = createEquipmentPanel();
+        borderPane.setLeft(equipmentPanel);
+        
+        // Create viewport container for the map (right side)
         StackPane viewportContainer = new StackPane(cameraViewport);
         viewportContainer.setAlignment(Pos.CENTER);
         borderPane.setCenter(viewportContainer);
 
+        // Keep the bottom inventory for collected items
         inventory = new TilePane();
         inventory.setPrefTileWidth(TILE_SIZE);
         inventory.setPrefTileHeight(TILE_SIZE);
@@ -154,7 +183,8 @@ public class GameWorldVisualizer extends Application {
         VBox infoView = createInfoView();
         borderPane.setRight(infoView);
 
-        scene = new Scene(borderPane, 1100, 575);
+        // Increased width to accommodate equipment panel (200px) on the left
+        scene = new Scene(borderPane, 1300, 575);
         scene.setOnKeyPressed(this::handleKeyPressed);
         scene.setOnKeyReleased(this::handleKeyReleased);
 
@@ -187,6 +217,170 @@ public class GameWorldVisualizer extends Application {
         infoBox.getChildren().add(enemyCountLabel);
 
         return infoBox;
+    }
+    
+    private VBox createEquipmentPanel() {
+        VBox equipmentPanel = new VBox();
+        equipmentPanel.setSpacing(10);
+        equipmentPanel.setPrefWidth(200);
+        equipmentPanel.setStyle("-fx-background-color: #2b2b2b; -fx-padding: 10;");
+        
+        // Title label
+        Label titleLabel = new Label("EQUIPMENT");
+        titleLabel.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 16px; -fx-font-weight: bold; -fx-font-family: 'Courier New', monospace;");
+        
+        // Create equipment slots with labels and placeholder images
+        helmetSlotView = createEquipmentSlot("Helmet");
+        chestArmorSlotView = createEquipmentSlot("Body Armor");
+        ringSlotView = createEquipmentSlot("Ring");
+        weaponSlotView = createEquipmentSlot("Weapon");
+        bootsSlotView = createEquipmentSlot("Boots");
+        
+        // Create stat labels
+        helmetStatLabel = createStatLabel();
+        chestArmorStatLabel = createStatLabel();
+        ringStatLabel = createStatLabel();
+        weaponStatLabel = createStatLabel();
+        bootsStatLabel = createStatLabel();
+        
+        // Add title and slots to panel
+        equipmentPanel.getChildren().addAll(
+            titleLabel,
+            createSlotRow("HEAD", helmetSlotView, helmetStatLabel),
+            createSlotRow("BODY", chestArmorSlotView, chestArmorStatLabel),
+            createSlotRow("RING", ringSlotView, ringStatLabel),
+            createSlotRow("WEAPON", weaponSlotView, weaponStatLabel),
+            createSlotRow("BOOTS", bootsSlotView, bootsStatLabel)
+        );
+        
+        // Update equipment display initially
+        updateEquipmentDisplay();
+        
+        return equipmentPanel;
+    }
+    
+    private ImageView createEquipmentSlot(String slotName) {
+        ImageView slotView = new ImageView();
+        slotView.setFitWidth(TILE_SIZE);
+        slotView.setFitHeight(TILE_SIZE);
+        slotView.setPreserveRatio(true);
+        slotView.setId(slotName); // Set ID for debugging and potential future interactions
+        
+        return slotView;
+    }
+    
+    private Label createStatLabel() {
+        Label statLabel = new Label("");
+        statLabel.setStyle("-fx-text-fill: #90EE90; -fx-font-size: 10px; -fx-font-family: 'Courier New', monospace;");
+        statLabel.setMinWidth(80);
+        return statLabel;
+    }
+    
+    private HBox createSlotRow(String label, ImageView slotView, Label statLabel) {
+        HBox row = new HBox();
+        row.setSpacing(10);
+        row.setAlignment(Pos.CENTER_LEFT);
+        
+        Label slotLabel = new Label(label);
+        slotLabel.setMinWidth(70);
+        slotLabel.setStyle("-fx-text-fill: #CCCCCC; -fx-font-size: 12px; -fx-font-family: 'Courier New', monospace;");
+        
+        // Create slot background
+        StackPane slotContainer = new StackPane();
+        Rectangle slotBg = new Rectangle(TILE_SIZE, TILE_SIZE);
+        slotBg.setFill(EQUIPMENT_SLOT_BG_COLOR);
+        slotBg.setStroke(EQUIPMENT_SLOT_BORDER_COLOR);
+        slotBg.setStrokeWidth(2);
+        
+        slotContainer.getChildren().addAll(slotBg, slotView);
+        
+        // Add stat label in a vertical box to position it nicely
+        VBox statBox = new VBox();
+        statBox.setAlignment(Pos.CENTER_LEFT);
+        statBox.getChildren().add(statLabel);
+        
+        row.getChildren().addAll(slotLabel, slotContainer, statBox);
+        
+        return row;
+    }
+    
+    private void updateEquipmentDisplay() {
+        if (hero == null) {
+            return;
+        }
+        
+        // Update helmet slot (head armor) - not yet implemented in Hero, so leave empty
+        helmetSlotView.setImage(null);
+        helmetStatLabel.setText("");
+        
+        // Update chest armor slot
+        updateSlotWithItem(chestArmorSlotView, chestArmorStatLabel, hero.getArmor());
+        
+        // Update ring slot
+        updateSlotWithItem(ringSlotView, ringStatLabel, hero.getRing());
+        
+        // Update weapon slot
+        updateSlotWithItem(weaponSlotView, weaponStatLabel, hero.getWeapon());
+        
+        // Update boots slot - not yet implemented in Hero, so leave empty
+        bootsSlotView.setImage(null);
+        bootsStatLabel.setText("");
+    }
+    
+    /**
+     * Helper method to update an equipment slot with an item image and stats.
+     * Shows the item image if present, otherwise clears the slot.
+     * Uses wildcard to support Optional of any IItem subtype (IArmor, IWeapon, IRing, etc.)
+     */
+    private void updateSlotWithItem(ImageView slotView, Label statLabel, Optional<? extends IItem> itemOptional) {
+        itemOptional.ifPresentOrElse(
+            item -> {
+                String imagePath = getImagePathForItem(item);
+                slotView.setImage(getCachedImage(imagePath));
+                statLabel.setText(getItemStats(item));
+            },
+            () -> {
+                slotView.setImage(null);
+                statLabel.setText("");
+            }
+        );
+    }
+    
+    /**
+     * Get the stat display string for an item.
+     */
+    private String getItemStats(IItem item) {
+        if (item instanceof IWeapon weapon) {
+            return "+" + weapon.getAttackingDamage() + " ATK";
+        } else if (item instanceof IArmor armor) {
+            return "+" + armor.getAttackingDamage() + " ATK";
+        } else if (item instanceof IRing ring) {
+            return "+" + ring.getAttackingPower() + " ATK";
+        }
+        return "";
+    }
+    
+    private String getImagePathForItem(IItem item) {
+        return switch (item.getType()) {
+            case 100 -> "/tiles/items/yellow_key.png";
+            case 101 -> "/tiles/items/yellow_key_stone.png";
+            case 200 -> "/tiles/items/weapons/sword.png";
+            case 201 -> "/tiles/items/weapons/sword2.png";
+            case 220 -> "/tiles/items/weapons/lance.png";
+            case 221 -> "/tiles/items/weapons/double_ended_lance.png";
+            case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
+            case 230 -> "/tiles/items/weapons/bomb_placer.png";
+            case 240 -> "/tiles/items/weapons/fire_staff.png";
+            case 241 -> "/tiles/items/weapons/ice_wand.png";
+            case 242 -> "/tiles/items/weapons/lightning_rod.png";
+            case 300 -> "/tiles/items/rings/magic_ring1.png";
+            case 350 -> "/tiles/items/armor/auto_attack_armor.png";
+            case 160 -> "/tiles/items/consumable/health_potion.png";
+            case 170 -> "/tiles/items/consumable/poison_potion.png";
+            default -> throw new IllegalArgumentException(
+                "Unsupported item type: " + item.getType() + 
+                ". Please add mapping for this item type in getImagePathForItem()");
+        };
     }
 
     private void updateHeroHealthView() {
@@ -375,24 +569,7 @@ public class GameWorldVisualizer extends Application {
             
             // Only create new view if one doesn't exist at this position
             if (existingView == null) {
-                String imagePath = switch (item.getType()) {
-                    case 100 -> "/tiles/items/yellow_key.png";
-                    case 101 -> "/tiles/items/yellow_key_stone.png";
-                    case 200 -> "/tiles/items/weapons/sword.png";
-                    case 201 -> "/tiles/items/weapons/sword2.png";
-                    case 220 -> "/tiles/items/weapons/lance.png";
-                    case 221 -> "/tiles/items/weapons/double_ended_lance.png";
-                    case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
-                    case 230 -> "/tiles/items/weapons/bomb_placer.png";
-                    case 240 -> "/tiles/items/weapons/fire_staff.png";
-                    case 241 -> "/tiles/items/weapons/ice_wand.png";
-                    case 242 -> "/tiles/items/weapons/lightning_rod.png";
-                    case 300 -> "/tiles/items/rings/magic_ring1.png";
-                    case 350 -> "/tiles/items/armor/auto_attack_armor.png";
-                    case 160 -> "/tiles/items/consumable/health_potion.png";
-                    case 170 -> "/tiles/items/consumable/poison_potion.png";
-                    default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
-                };
+                String imagePath = getImagePathForItem(item);
 
                 final Image itemImage = getCachedImage(imagePath);
                 final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
@@ -642,9 +819,59 @@ public class GameWorldVisualizer extends Application {
 
                 inventory.getChildren().add(itemImageView);
             }
+            
+            // Update equipment display when hero picks up items
+            updateEquipmentDisplay();
         }
 
     }
+    
+    public void handleItemEquipped(ItemEquippedEvent event) {
+        // Update equipment display when item is equipped
+        updateEquipmentDisplay();
+        // Rebuild the entire inventory UI to reflect current state
+        rebuildInventoryUI();
+    }
+    
+    public void handleItemAddedToInventory(ItemAddedToInventoryEvent event) {
+        // Update equipment display when item is added to inventory (e.g., weapon swap)
+        updateEquipmentDisplay();
+        // Rebuild the entire inventory UI to reflect current state
+        rebuildInventoryUI();
+    }
+    
+    /**
+     * Rebuilds the entire inventory UI from scratch based on hero's current inventory.
+     * This ensures the UI always reflects the actual inventory state, especially after
+     * equipment swaps where items are moved between inventory and equipment slots.
+     */
+    private void rebuildInventoryUI() {
+        if (hero == null) {
+            logger.warning("rebuildInventoryUI() called with null hero");
+            return;
+        }
+        
+        // Clear the current inventory UI
+        inventory.getChildren().clear();
+        
+        // Add all items from hero's inventory to the UI
+        for (IItem item : hero.getInventory().getItems()) {
+            String imagePath = getImagePathForItem(item);
+            Image itemImage = getCachedImage(imagePath);
+            ImageView itemImageView = new ImageView(itemImage);
+            itemImageView.setFitWidth(TILE_SIZE);
+            itemImageView.setFitHeight(TILE_SIZE);
+            itemImageView.setPreserveRatio(true);
+            
+            itemImageView.setOnMouseClicked(event -> {
+                logger.info("Item in inventory clicked: " + item);
+                controller.onInventarItemClicked(item);
+            });
+            
+            inventory.getChildren().add(itemImageView);
+        }
+    }
+
 
     private ItemView removeItem(IItem item) {
         Point point = new Point(item.getX(), item.getY());
