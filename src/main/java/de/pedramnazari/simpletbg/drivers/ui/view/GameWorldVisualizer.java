@@ -828,16 +828,47 @@ public class GameWorldVisualizer extends Application {
     
     public void handleItemEquipped(ItemEquippedEvent event) {
         // Update equipment display when item is equipped
-        // Note: ItemEquippedEvent is currently empty and doesn't provide item details,
-        // so we simply refresh the entire equipment display
         updateEquipmentDisplay();
+        // Rebuild the entire inventory UI to reflect current state
+        rebuildInventoryUI();
     }
     
     public void handleItemAddedToInventory(ItemAddedToInventoryEvent event) {
         // Update equipment display when item is added to inventory (e.g., weapon swap)
-        // Note: ItemAddedToInventoryEvent is currently empty and doesn't provide item details,
-        // so we simply refresh the entire equipment display
         updateEquipmentDisplay();
+        // Rebuild the entire inventory UI to reflect current state
+        rebuildInventoryUI();
+    }
+    
+    /**
+     * Rebuilds the entire inventory UI from scratch based on hero's current inventory.
+     * This ensures the UI always reflects the actual inventory state, especially after
+     * equipment swaps where items are moved between inventory and equipment slots.
+     */
+    private void rebuildInventoryUI() {
+        if (hero == null) {
+            return;
+        }
+        
+        // Clear the current inventory UI
+        inventory.getChildren().clear();
+        
+        // Add all items from hero's inventory to the UI
+        for (IItem item : hero.getInventory().getItems()) {
+            String imagePath = getImagePathForItem(item);
+            Image itemImage = getCachedImage(imagePath);
+            ImageView itemImageView = new ImageView(itemImage);
+            itemImageView.setFitWidth(TILE_SIZE);
+            itemImageView.setFitHeight(TILE_SIZE);
+            itemImageView.setPreserveRatio(true);
+            
+            itemImageView.setOnMouseClicked(event -> {
+                logger.info("Item in inventory clicked: " + item);
+                controller.onInventarItemClicked(item);
+            });
+            
+            inventory.getChildren().add(itemImageView);
+        }
     }
 
 
