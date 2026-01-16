@@ -6,6 +6,7 @@ import de.pedramnazari.simpletbg.quest.model.IQuestEvent;
 import de.pedramnazari.simpletbg.quest.model.IQuestEventListener;
 import de.pedramnazari.simpletbg.quest.model.Quest;
 import de.pedramnazari.simpletbg.quest.service.event.AllEnemiesDefeatedQuestEvent;
+import de.pedramnazari.simpletbg.quest.service.event.IQuestCompletedListener;
 import de.pedramnazari.simpletbg.quest.service.event.ItemPickUpQuestEvent;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.ICharacterMovedToSpecialTileListener;
@@ -20,7 +21,9 @@ public class QuestService implements IEnemyHitListener, ICharacterMovedToSpecial
     private static final Logger logger = Logger.getLogger(QuestService.class.getName());
 
     private final Map<Class<? extends IQuestEvent>, List<IQuestEventListener<? extends IQuestEvent>>> listeners = new HashMap<>();
+    private final List<IQuestCompletedListener> questCompletedListeners = new ArrayList<>();
     private final Quest quest;
+    private boolean questCompletedNotified = false;
 
     public QuestService(Quest quest) {
         this.quest = quest;
@@ -28,6 +31,10 @@ public class QuestService implements IEnemyHitListener, ICharacterMovedToSpecial
 
     public <T extends IQuestEvent> void registerListener(Class<T> eventType, IQuestEventListener<T> listener) {
         this.listeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
+    }
+
+    public void addQuestCompletedListener(IQuestCompletedListener listener) {
+        this.questCompletedListeners.add(listener);
     }
 
     public <T extends IQuestEvent> void dispatch(T event) {
@@ -81,9 +88,16 @@ public class QuestService implements IEnemyHitListener, ICharacterMovedToSpecial
     }
 
     private void checkIfQuestIsCompleted() {
-        if (quest.isCompleted()) {
-            logger.info("Dispatch: Quest completed and hero reached exit --> Stop game");
-            //dispatch(new QuestCompletedEvent());
+        if (quest.isCompleted() && !questCompletedNotified) {
+            logger.info("Dispatch: Quest completed --> Notifying listeners");
+            questCompletedNotified = true;
+            notifyQuestCompleted();
+        }
+    }
+
+    private void notifyQuestCompleted() {
+        for (IQuestCompletedListener listener : questCompletedListeners) {
+            listener.onQuestCompleted();
         }
     }
 

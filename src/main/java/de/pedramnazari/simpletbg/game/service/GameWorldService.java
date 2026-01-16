@@ -32,6 +32,9 @@ public class GameWorldService {
 
     private String currentMapIndex;
     private boolean initialized = false;
+    private boolean running = false;
+    private boolean gameEnded = false;
+    private ScheduledExecutorService scheduler;
 
     private Quest quest;
 
@@ -83,13 +86,21 @@ public class GameWorldService {
             throw new IllegalStateException("TileMapService not initialized");
         }
 
+        if (running) {
+            logger.log(Level.WARNING, "Game is already running");
+            return;
+        }
+
         logger.log(Level.INFO, "Starting the game loop");
         logger.log(Level.INFO, "The quest is '" + quest.getName() + "': " + quest.getDescription());
 
+        running = true;
+        gameEnded = false;
 
         Runnable moveEnemiesRunner = new Runnable() {
             @Override
             public void run() {
+                if (!running || gameEnded) return;
                 try {
                     enemyService.moveEnemies(GameContext.getInstance());
                 } catch (Exception e) {
@@ -99,13 +110,14 @@ public class GameWorldService {
         };
 
         // Wait 3 seconds before starting the first move to ensure that game is fully initialized
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3); // Pool size 3: enemies, rush creatures, and armor
+        scheduler = Executors.newScheduledThreadPool(3); // Pool size 3: enemies, rush creatures, and armor
         scheduler.scheduleAtFixedRate(moveEnemiesRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ENEMY_MOVE_INTERVAL_MS, TimeUnit.MILLISECONDS);
         
         // Separate faster scheduler for rush creatures to keep them constantly moving
         Runnable moveRushCreaturesRunner = new Runnable() {
             @Override
             public void run() {
+                if (!running || gameEnded) return;
                 try {
                     enemyService.moveRushCreatures(GameContext.getInstance());
                 } catch (Exception e) {
@@ -119,6 +131,7 @@ public class GameWorldService {
         Runnable armorAutoAttackRunner = new Runnable() {
             @Override
             public void run() {
+                if (!running || gameEnded) return;
                 try {
                     armorService.performAutoAttacks(heroService.getHero(), GameContext.getInstance());
                 } catch (Exception e) {
@@ -127,6 +140,45 @@ public class GameWorldService {
             }
         };
         scheduler.scheduleAtFixedRate(armorAutoAttackRunner, ENEMY_MOVE_INITIAL_DELAY_MS, ARMOR_AUTO_ATTACK_INTERVAL_MS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Stops all game loops and background threads.
+     */
+    public void stop() {
+        logger.log(Level.INFO, "Stopping the game");
+        running = false;
+        
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+            try {
+                if (!scheduler.awaitTermination(1, TimeUnit.SECONDS)) {
+                    logger.log(Level.WARNING, "Scheduler did not terminate in time");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            scheduler = null;
+        }
+    }
+
+    /**
+     * Marks the game as ended (hero died or quest completed).
+     * This stops all game activity without shutting down entirely.
+     */
+    public void setGameEnded(boolean ended) {
+        this.gameEnded = ended;
+        if (ended) {
+            logger.log(Level.INFO, "Game has ended");
+        }
+    }
+
+    public boolean isGameEnded() {
+        return gameEnded;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     // TODO: Move all moveHero* methods to HeroService
@@ -202,6 +254,10 @@ public class GameWorldService {
 
     public void setQuest(Quest quest) {
         this.quest = quest;
+    }
+
+    public Quest getQuest() {
+        return quest;
     }
 
     public void onInventarItemSelected(IItem item) {
