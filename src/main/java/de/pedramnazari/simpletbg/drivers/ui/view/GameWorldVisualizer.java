@@ -847,6 +847,7 @@ public class GameWorldVisualizer extends Application {
      */
     private void rebuildInventoryUI() {
         if (hero == null) {
+            logger.warning("rebuildInventoryUI() called with null hero");
             return;
         }
         
