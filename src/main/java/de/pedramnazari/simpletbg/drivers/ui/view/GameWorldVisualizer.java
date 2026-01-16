@@ -41,12 +41,10 @@ public class GameWorldVisualizer extends Application {
     private static final int VISIBLE_ROWS = 11;
     
     // Equipment panel styling constants
-    private static final int EQUIPMENT_SLOT_BG_COLOR_R = 60;
-    private static final int EQUIPMENT_SLOT_BG_COLOR_G = 60;
-    private static final int EQUIPMENT_SLOT_BG_COLOR_B = 60;
-    private static final int EQUIPMENT_SLOT_BORDER_COLOR_R = 100;
-    private static final int EQUIPMENT_SLOT_BORDER_COLOR_G = 100;
-    private static final int EQUIPMENT_SLOT_BORDER_COLOR_B = 100;
+    private static final javafx.scene.paint.Color EQUIPMENT_SLOT_BG_COLOR = 
+        javafx.scene.paint.Color.rgb(60, 60, 60);
+    private static final javafx.scene.paint.Color EQUIPMENT_SLOT_BORDER_COLOR = 
+        javafx.scene.paint.Color.rgb(100, 100, 100);
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
@@ -270,14 +268,8 @@ public class GameWorldVisualizer extends Application {
         // Create slot background
         StackPane slotContainer = new StackPane();
         Rectangle slotBg = new Rectangle(TILE_SIZE, TILE_SIZE);
-        slotBg.setFill(javafx.scene.paint.Color.rgb(
-            EQUIPMENT_SLOT_BG_COLOR_R, 
-            EQUIPMENT_SLOT_BG_COLOR_G, 
-            EQUIPMENT_SLOT_BG_COLOR_B));
-        slotBg.setStroke(javafx.scene.paint.Color.rgb(
-            EQUIPMENT_SLOT_BORDER_COLOR_R, 
-            EQUIPMENT_SLOT_BORDER_COLOR_G, 
-            EQUIPMENT_SLOT_BORDER_COLOR_B));
+        slotBg.setFill(EQUIPMENT_SLOT_BG_COLOR);
+        slotBg.setStroke(EQUIPMENT_SLOT_BORDER_COLOR);
         slotBg.setStrokeWidth(2);
         
         slotContainer.getChildren().addAll(slotBg, slotView);
@@ -314,6 +306,7 @@ public class GameWorldVisualizer extends Application {
     /**
      * Helper method to update an equipment slot with an item image.
      * Shows the item image if present, otherwise clears the slot.
+     * Uses wildcard to support Optional of any IItem subtype (IArmor, IWeapon, IRing, etc.)
      */
     private void updateSlotWithItem(ImageView slotView, Optional<? extends IItem> itemOptional) {
         itemOptional.ifPresentOrElse(
@@ -342,7 +335,9 @@ public class GameWorldVisualizer extends Application {
             case 350 -> "/tiles/items/armor/auto_attack_armor.png";
             case 160 -> "/tiles/items/consumable/health_potion.png";
             case 170 -> "/tiles/items/consumable/poison_potion.png";
-            default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
+            default -> throw new IllegalArgumentException(
+                "Unsupported item type: " + item.getType() + 
+                ". Please add mapping for this item type in getImagePathForItem()");
         };
     }
 
