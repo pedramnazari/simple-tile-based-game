@@ -39,6 +39,14 @@ public class GameWorldVisualizer extends Application {
     private static final Duration PROJECTILE_MOVE_ANIMATION_DURATION = Duration.millis(90);
     private static final int VISIBLE_COLUMNS = 15;
     private static final int VISIBLE_ROWS = 11;
+    
+    // Equipment panel styling constants
+    private static final int EQUIPMENT_SLOT_BG_COLOR_R = 60;
+    private static final int EQUIPMENT_SLOT_BG_COLOR_G = 60;
+    private static final int EQUIPMENT_SLOT_BG_COLOR_B = 60;
+    private static final int EQUIPMENT_SLOT_BORDER_COLOR_R = 100;
+    private static final int EQUIPMENT_SLOT_BORDER_COLOR_G = 100;
+    private static final int EQUIPMENT_SLOT_BORDER_COLOR_B = 100;
 
     private final Map<Point, ItemView> itemViews = new HashMap<>();
     private final Map<IEnemy, EnemyView> enemyViews = new HashMap<>();
@@ -262,8 +270,14 @@ public class GameWorldVisualizer extends Application {
         // Create slot background
         StackPane slotContainer = new StackPane();
         Rectangle slotBg = new Rectangle(TILE_SIZE, TILE_SIZE);
-        slotBg.setFill(javafx.scene.paint.Color.rgb(60, 60, 60));
-        slotBg.setStroke(javafx.scene.paint.Color.rgb(100, 100, 100));
+        slotBg.setFill(javafx.scene.paint.Color.rgb(
+            EQUIPMENT_SLOT_BG_COLOR_R, 
+            EQUIPMENT_SLOT_BG_COLOR_G, 
+            EQUIPMENT_SLOT_BG_COLOR_B));
+        slotBg.setStroke(javafx.scene.paint.Color.rgb(
+            EQUIPMENT_SLOT_BORDER_COLOR_R, 
+            EQUIPMENT_SLOT_BORDER_COLOR_G, 
+            EQUIPMENT_SLOT_BORDER_COLOR_B));
         slotBg.setStrokeWidth(2);
         
         slotContainer.getChildren().addAll(slotBg, slotView);
@@ -285,19 +299,10 @@ public class GameWorldVisualizer extends Application {
         updateSlotWithItem(chestArmorSlotView, hero.getArmor());
         
         // Update ring slots
-        hero.getRing().ifPresentOrElse(
-            ring -> {
-                String imagePath = getImagePathForItem(ring);
-                leftRingSlotView.setImage(getCachedImage(imagePath));
-                // TODO: Hero currently supports only one ring, right slot remains empty.
-                // Add leftRing and rightRing fields to Hero interface for dual ring support.
-                rightRingSlotView.setImage(null);
-            },
-            () -> {
-                leftRingSlotView.setImage(null);
-                rightRingSlotView.setImage(null);
-            }
-        );
+        updateSlotWithItem(leftRingSlotView, hero.getRing());
+        // TODO: Hero currently supports only one ring, right slot remains empty.
+        // Add leftRing and rightRing fields to Hero interface for dual ring support.
+        rightRingSlotView.setImage(null);
         
         // Update weapon slot
         updateSlotWithItem(weaponSlotView, hero.getWeapon());
