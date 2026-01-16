@@ -208,6 +208,9 @@ public class GameWorldVisualizer extends Application {
             stopAllAndExit();
         });
 
+        // Request focus on the scene's root node to ensure keyboard events are captured
+        borderPane.requestFocus();
+
         // Initialize camera controller for smooth tracking
         cameraController = new CameraController(stackPane, viewportWidth, viewportHeight, mapPixelWidth, mapPixelHeight);
         cameraController.initializeCameraPosition(heroView.getDisplayNode(), hero.getX(), hero.getY(), TILE_SIZE);
@@ -244,6 +247,7 @@ public class GameWorldVisualizer extends Application {
             "-fx-padding: 8px 16px; " +
             "-fx-cursor: hand;"
         );
+        backToHomeButton.setFocusTraversable(false);  // Prevent button from stealing keyboard focus
         backToHomeButton.setOnAction(event -> navigateToHome());
 
         infoBox.getChildren().addAll(enemyCountLabel, backToHomeButton);

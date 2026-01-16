@@ -78,6 +78,7 @@ public class StartView extends Application {
         mapListView.setItems(FXCollections.observableArrayList(GameMaps.availableMaps()));
         mapListView.setMaxWidth(300);
         mapListView.setPrefHeight(150);
+        mapListView.setFocusTraversable(false);  // Prevent stealing focus
         if (!mapListView.getItems().isEmpty()) {
             mapListView.getSelectionModel().selectFirst();
         }
