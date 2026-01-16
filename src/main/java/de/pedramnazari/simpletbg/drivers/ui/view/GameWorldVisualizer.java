@@ -960,8 +960,10 @@ public class GameWorldVisualizer extends Application {
      * Shows an animated end-game message overlay with pixel-style appearance.
      */
     private void showEndGameMessage(String message, javafx.scene.paint.Color textColor) {
-        // Create semi-transparent dark overlay
-        javafx.scene.shape.Rectangle overlay = new javafx.scene.shape.Rectangle(1300, 575);
+        // Create semi-transparent dark overlay using scene dimensions
+        double sceneWidth = scene.getWidth();
+        double sceneHeight = scene.getHeight();
+        javafx.scene.shape.Rectangle overlay = new javafx.scene.shape.Rectangle(sceneWidth, sceneHeight);
         overlay.setFill(javafx.scene.paint.Color.rgb(0, 0, 0, 0.7));
 
         // Create the main message label with pixel-style font
@@ -1041,7 +1043,7 @@ public class GameWorldVisualizer extends Application {
      */
     private void navigateToHome() {
         // Mark current game session as ended if hero is alive (not ended normally)
-        boolean isResumable = !controller.isGameEnded() && hero.getHealth() > 0;
+        boolean isResumable = !controller.isGameEnded() && hero != null && hero.getHealth() > 0;
         
         // Store current session state for potential resume
         GameSessionManager.getInstance().saveSession(mapDefinition, isResumable);
