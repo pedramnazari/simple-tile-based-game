@@ -282,21 +282,15 @@ public class GameWorldVisualizer extends Application {
         helmetSlotView.setImage(null);
         
         // Update chest armor slot
-        hero.getArmor().ifPresentOrElse(
-            armor -> {
-                String imagePath = getImagePathForItem(armor);
-                chestArmorSlotView.setImage(getCachedImage(imagePath));
-            },
-            () -> chestArmorSlotView.setImage(null)
-        );
+        updateSlotWithItem(chestArmorSlotView, hero.getArmor());
         
         // Update ring slots
         hero.getRing().ifPresentOrElse(
             ring -> {
                 String imagePath = getImagePathForItem(ring);
                 leftRingSlotView.setImage(getCachedImage(imagePath));
-                // For now, show the same ring in both slots if equipped
-                // In future, Hero could have leftRing and rightRing fields
+                // TODO: Hero currently supports only one ring, right slot remains empty.
+                // Add leftRing and rightRing fields to Hero interface for dual ring support.
                 rightRingSlotView.setImage(null);
             },
             () -> {
@@ -306,16 +300,24 @@ public class GameWorldVisualizer extends Application {
         );
         
         // Update weapon slot
-        hero.getWeapon().ifPresentOrElse(
-            weapon -> {
-                String imagePath = getImagePathForItem(weapon);
-                weaponSlotView.setImage(getCachedImage(imagePath));
-            },
-            () -> weaponSlotView.setImage(null)
-        );
+        updateSlotWithItem(weaponSlotView, hero.getWeapon());
         
         // Update boots slot - not yet implemented in Hero, so leave empty
         bootsSlotView.setImage(null);
+    }
+    
+    /**
+     * Helper method to update an equipment slot with an item image.
+     * Shows the item image if present, otherwise clears the slot.
+     */
+    private void updateSlotWithItem(ImageView slotView, Optional<? extends IItem> itemOptional) {
+        itemOptional.ifPresentOrElse(
+            item -> {
+                String imagePath = getImagePathForItem(item);
+                slotView.setImage(getCachedImage(imagePath));
+            },
+            () -> slotView.setImage(null)
+        );
     }
     
     private String getImagePathForItem(IItem item) {
