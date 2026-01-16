@@ -231,12 +231,16 @@ public class GameWorldController implements IEnemyObserver, ICompanionObserver, 
 
     @Override
     public void onItemEquipped(ItemEquippedEvent event) {
-
+        if (gameWorldVisualizer != null) {
+            Platform.runLater(() -> gameWorldVisualizer.handleItemEquipped(event));
+        }
     }
 
     @Override
     public void onItemAddedToInventory(ItemAddedToInventoryEvent event) {
-
+        if (gameWorldVisualizer != null) {
+            Platform.runLater(() -> gameWorldVisualizer.handleItemAddedToInventory(event));
+        }
     }
 
     @Override

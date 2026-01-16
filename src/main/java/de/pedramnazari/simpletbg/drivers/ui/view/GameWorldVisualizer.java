@@ -3,6 +3,8 @@ package de.pedramnazari.simpletbg.drivers.ui.view;
 import de.pedramnazari.simpletbg.drivers.GameInitializer;
 import de.pedramnazari.simpletbg.drivers.ui.controller.GameWorldController;
 import de.pedramnazari.simpletbg.drivers.ui.controller.InputState;
+import de.pedramnazari.simpletbg.inventory.service.event.ItemAddedToInventoryEvent;
+import de.pedramnazari.simpletbg.inventory.service.event.ItemEquippedEvent;
 import de.pedramnazari.simpletbg.tilemap.config.GameMapDefinition;
 import de.pedramnazari.simpletbg.tilemap.config.GameMaps;
 import de.pedramnazari.simpletbg.tilemap.model.*;
@@ -68,8 +70,14 @@ public class GameWorldVisualizer extends Application {
     private ImageView chestArmorSlotView;
     private ImageView weaponSlotView;
     private ImageView bootsSlotView;
-    private ImageView leftRingSlotView;
-    private ImageView rightRingSlotView;
+    private ImageView ringSlotView;
+    
+    // Equipment stat labels
+    private Label helmetStatLabel;
+    private Label chestArmorStatLabel;
+    private Label weaponStatLabel;
+    private Label bootsStatLabel;
+    private Label ringStatLabel;
     private StackPane stackPane;
     private Pane cameraViewport;
     private double viewportWidth;
@@ -224,20 +232,25 @@ public class GameWorldVisualizer extends Application {
         // Create equipment slots with labels and placeholder images
         helmetSlotView = createEquipmentSlot("Helmet");
         chestArmorSlotView = createEquipmentSlot("Body Armor");
-        leftRingSlotView = createEquipmentSlot("Ring - Left");
-        rightRingSlotView = createEquipmentSlot("Ring - Right");
-        weaponSlotView = createEquipmentSlot("Weapon - Left");
+        ringSlotView = createEquipmentSlot("Ring");
+        weaponSlotView = createEquipmentSlot("Weapon");
         bootsSlotView = createEquipmentSlot("Boots");
+        
+        // Create stat labels
+        helmetStatLabel = createStatLabel();
+        chestArmorStatLabel = createStatLabel();
+        ringStatLabel = createStatLabel();
+        weaponStatLabel = createStatLabel();
+        bootsStatLabel = createStatLabel();
         
         // Add title and slots to panel
         equipmentPanel.getChildren().addAll(
             titleLabel,
-            createSlotRow("HEAD", helmetSlotView),
-            createSlotRow("BODY", chestArmorSlotView),
-            createSlotRow("RING L", leftRingSlotView),
-            createSlotRow("RING R", rightRingSlotView),
-            createSlotRow("WEAPON", weaponSlotView),
-            createSlotRow("BOOTS", bootsSlotView)
+            createSlotRow("HEAD", helmetSlotView, helmetStatLabel),
+            createSlotRow("BODY", chestArmorSlotView, chestArmorStatLabel),
+            createSlotRow("RING", ringSlotView, ringStatLabel),
+            createSlotRow("WEAPON", weaponSlotView, weaponStatLabel),
+            createSlotRow("BOOTS", bootsSlotView, bootsStatLabel)
         );
         
         // Update equipment display initially
@@ -256,7 +269,14 @@ public class GameWorldVisualizer extends Application {
         return slotView;
     }
     
-    private HBox createSlotRow(String label, ImageView slotView) {
+    private Label createStatLabel() {
+        Label statLabel = new Label("");
+        statLabel.setStyle("-fx-text-fill: #90EE90; -fx-font-size: 10px; -fx-font-family: 'Courier New', monospace;");
+        statLabel.setMinWidth(80);
+        return statLabel;
+    }
+    
+    private HBox createSlotRow(String label, ImageView slotView, Label statLabel) {
         HBox row = new HBox();
         row.setSpacing(10);
         row.setAlignment(Pos.CENTER_LEFT);
@@ -274,7 +294,12 @@ public class GameWorldVisualizer extends Application {
         
         slotContainer.getChildren().addAll(slotBg, slotView);
         
-        row.getChildren().addAll(slotLabel, slotContainer);
+        // Add stat label in a vertical box to position it nicely
+        VBox statBox = new VBox();
+        statBox.setAlignment(Pos.CENTER_LEFT);
+        statBox.getChildren().add(statLabel);
+        
+        row.getChildren().addAll(slotLabel, slotContainer, statBox);
         
         return row;
     }
@@ -286,36 +311,53 @@ public class GameWorldVisualizer extends Application {
         
         // Update helmet slot (head armor) - not yet implemented in Hero, so leave empty
         helmetSlotView.setImage(null);
+        helmetStatLabel.setText("");
         
         // Update chest armor slot
-        updateSlotWithItem(chestArmorSlotView, hero.getArmor());
+        updateSlotWithItem(chestArmorSlotView, chestArmorStatLabel, hero.getArmor());
         
-        // Update ring slots
-        updateSlotWithItem(leftRingSlotView, hero.getRing());
-        // TODO: Hero currently supports only one ring, right slot remains empty.
-        // Add leftRing and rightRing fields to Hero interface for dual ring support.
-        rightRingSlotView.setImage(null);
+        // Update ring slot
+        updateSlotWithItem(ringSlotView, ringStatLabel, hero.getRing());
         
         // Update weapon slot
-        updateSlotWithItem(weaponSlotView, hero.getWeapon());
+        updateSlotWithItem(weaponSlotView, weaponStatLabel, hero.getWeapon());
         
         // Update boots slot - not yet implemented in Hero, so leave empty
         bootsSlotView.setImage(null);
+        bootsStatLabel.setText("");
     }
     
     /**
-     * Helper method to update an equipment slot with an item image.
+     * Helper method to update an equipment slot with an item image and stats.
      * Shows the item image if present, otherwise clears the slot.
      * Uses wildcard to support Optional of any IItem subtype (IArmor, IWeapon, IRing, etc.)
      */
-    private void updateSlotWithItem(ImageView slotView, Optional<? extends IItem> itemOptional) {
+    private void updateSlotWithItem(ImageView slotView, Label statLabel, Optional<? extends IItem> itemOptional) {
         itemOptional.ifPresentOrElse(
             item -> {
                 String imagePath = getImagePathForItem(item);
                 slotView.setImage(getCachedImage(imagePath));
+                statLabel.setText(getItemStats(item));
             },
-            () -> slotView.setImage(null)
+            () -> {
+                slotView.setImage(null);
+                statLabel.setText("");
+            }
         );
+    }
+    
+    /**
+     * Get the stat display string for an item.
+     */
+    private String getItemStats(IItem item) {
+        if (item instanceof IWeapon weapon) {
+            return "+" + weapon.getAttackingDamage() + " ATK";
+        } else if (item instanceof IArmor armor) {
+            return "+" + armor.getAttackingDamage() + " ATK";
+        } else if (item instanceof IRing ring) {
+            return "+" + ring.getAttackingPower() + " ATK";
+        }
+        return "";
     }
     
     private String getImagePathForItem(IItem item) {
@@ -770,6 +812,7 @@ public class GameWorldVisualizer extends Application {
         if (element instanceof IHero h) {
             if (h.getInventory().containsItem(item)) {
                 final ImageView itemImageView = itemView.getImageView();
+                itemImageView.setUserData(item); // Store reference for later removal
                 itemImageView.setOnMouseClicked(event -> {
                     logger.info("Item in inventory clicked: " + item);
                     controller.onInventarItemClicked(item);
@@ -783,6 +826,21 @@ public class GameWorldVisualizer extends Application {
         }
 
     }
+    
+    public void handleItemEquipped(ItemEquippedEvent event) {
+        // Update equipment display when item is equipped
+        updateEquipmentDisplay();
+        // Note: We don't remove from inventory UI because the event doesn't contain the item
+        // The inventory will be updated naturally when hero picks up the replaced item
+    }
+    
+    public void handleItemAddedToInventory(ItemAddedToInventoryEvent event) {
+        // Update equipment display when item is added to inventory (e.g., weapon swap)
+        updateEquipmentDisplay();
+        // Note: We don't add to inventory UI because the event doesn't contain the item
+        // The inventory will be updated naturally when the item is collected
+    }
+
 
     private ItemView removeItem(IItem item) {
         Point point = new Point(item.getX(), item.getY());
