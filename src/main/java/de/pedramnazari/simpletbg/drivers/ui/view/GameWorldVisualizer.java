@@ -812,7 +812,6 @@ public class GameWorldVisualizer extends Application {
         if (element instanceof IHero h) {
             if (h.getInventory().containsItem(item)) {
                 final ImageView itemImageView = itemView.getImageView();
-                itemImageView.setUserData(item); // Store reference for later removal
                 itemImageView.setOnMouseClicked(event -> {
                     logger.info("Item in inventory clicked: " + item);
                     controller.onInventarItemClicked(item);
@@ -829,16 +828,16 @@ public class GameWorldVisualizer extends Application {
     
     public void handleItemEquipped(ItemEquippedEvent event) {
         // Update equipment display when item is equipped
+        // Note: ItemEquippedEvent is currently empty and doesn't provide item details,
+        // so we simply refresh the entire equipment display
         updateEquipmentDisplay();
-        // Note: We don't remove from inventory UI because the event doesn't contain the item
-        // The inventory will be updated naturally when hero picks up the replaced item
     }
     
     public void handleItemAddedToInventory(ItemAddedToInventoryEvent event) {
         // Update equipment display when item is added to inventory (e.g., weapon swap)
+        // Note: ItemAddedToInventoryEvent is currently empty and doesn't provide item details,
+        // so we simply refresh the entire equipment display
         updateEquipmentDisplay();
-        // Note: We don't add to inventory UI because the event doesn't contain the item
-        // The inventory will be updated naturally when the item is collected
     }
 
 
