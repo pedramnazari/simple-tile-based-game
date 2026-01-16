@@ -245,12 +245,7 @@ public class GameWorldVisualizer extends Application {
         slotView.setFitWidth(TILE_SIZE);
         slotView.setFitHeight(TILE_SIZE);
         slotView.setPreserveRatio(true);
-        
-        // Create empty slot placeholder
-        Rectangle emptySlot = new Rectangle(TILE_SIZE, TILE_SIZE);
-        emptySlot.setFill(javafx.scene.paint.Color.rgb(60, 60, 60));
-        emptySlot.setStroke(javafx.scene.paint.Color.rgb(100, 100, 100));
-        emptySlot.setStrokeWidth(2);
+        slotView.setId(slotName); // Set ID for debugging and potential future interactions
         
         return slotView;
     }
@@ -530,24 +525,7 @@ public class GameWorldVisualizer extends Application {
             
             // Only create new view if one doesn't exist at this position
             if (existingView == null) {
-                String imagePath = switch (item.getType()) {
-                    case 100 -> "/tiles/items/yellow_key.png";
-                    case 101 -> "/tiles/items/yellow_key_stone.png";
-                    case 200 -> "/tiles/items/weapons/sword.png";
-                    case 201 -> "/tiles/items/weapons/sword2.png";
-                    case 220 -> "/tiles/items/weapons/lance.png";
-                    case 221 -> "/tiles/items/weapons/double_ended_lance.png";
-                    case 222 -> "/tiles/items/weapons/multi_spike_lance.png";
-                    case 230 -> "/tiles/items/weapons/bomb_placer.png";
-                    case 240 -> "/tiles/items/weapons/fire_staff.png";
-                    case 241 -> "/tiles/items/weapons/ice_wand.png";
-                    case 242 -> "/tiles/items/weapons/lightning_rod.png";
-                    case 300 -> "/tiles/items/rings/magic_ring1.png";
-                    case 350 -> "/tiles/items/armor/auto_attack_armor.png";
-                    case 160 -> "/tiles/items/consumable/health_potion.png";
-                    case 170 -> "/tiles/items/consumable/poison_potion.png";
-                    default -> throw new IllegalArgumentException("Unknown item type: " + item.getType());
-                };
+                String imagePath = getImagePathForItem(item);
 
                 final Image itemImage = getCachedImage(imagePath);
                 final ItemView itemView = new ItemView(item, itemImage, TILE_SIZE);
