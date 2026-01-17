@@ -347,6 +347,7 @@ public class GameInitializer {
         enemyService.addEnemyHitListener(questService);
         heroService.addItemEventListener(questService);
         tileMapService.addCharacterMovedToSpecialTileListener(questService);
+        questService.addQuestCompletedListener(controller);
 
         gameWorldService.setQuest(questConfig.getQuest());
 

@@ -99,8 +99,19 @@ public class GameWorldVisualizer extends Application {
     // Image cache to avoid reloading resources
     private final Map<String, Image> imageCache = new HashMap<>();
 
+    // Timelines that need to be stopped on window close
+    private Timeline cameraTimeline;
+    private Timeline heroMovementTimeline;
+
+    // Stage reference for navigation
+    private Stage primaryStage;
+
+    // Game end state overlay
+    private StackPane gameEndOverlay;
+
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         GameMapDefinition selectedMap = mapDefinition != null ? mapDefinition : GameMaps.defaultMap();
         this.mapDefinition = selectedMap;
 
@@ -192,29 +203,54 @@ public class GameWorldVisualizer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        // Handle window close to properly terminate application
+        primaryStage.setOnCloseRequest(event -> {
+            stopAllAndExit();
+        });
+
+        // Request focus on the scene's root node to ensure keyboard events are captured
+        borderPane.requestFocus();
+
         // Initialize camera controller for smooth tracking
         cameraController = new CameraController(stackPane, viewportWidth, viewportHeight, mapPixelWidth, mapPixelHeight);
         cameraController.initializeCameraPosition(heroView.getDisplayNode(), hero.getX(), hero.getY(), TILE_SIZE);
 
         // Setup continuous camera update for smooth scrolling during animations
-        Timeline cameraTimeline = new Timeline(new KeyFrame(Duration.millis(16), e -> updateCamera())); // ~60fps
+        cameraTimeline = new Timeline(new KeyFrame(Duration.millis(16), e -> updateCamera())); // ~60fps
         cameraTimeline.setCycleCount(Timeline.INDEFINITE);
         cameraTimeline.play();
 
-        Timeline timeline = new Timeline(new KeyFrame(HERO_MOVE_ANIMATION_DURATION, e -> moveHero()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        heroMovementTimeline = new Timeline(new KeyFrame(HERO_MOVE_ANIMATION_DURATION, e -> moveHero()));
+        heroMovementTimeline.setCycleCount(Timeline.INDEFINITE);
+        heroMovementTimeline.play();
     }
 
     private VBox createInfoView() {
         VBox infoBox = new VBox();
         infoBox.setAlignment(Pos.TOP_RIGHT);
         infoBox.setSpacing(10);
+        infoBox.setStyle("-fx-padding: 10;");
 
         enemyCountLabel = new Label();
         updateEnemyCountView(currentEnemyCount);
 
-        infoBox.getChildren().add(enemyCountLabel);
+        // Create "Back to Home" button with pixel-style appearance
+        javafx.scene.control.Button backToHomeButton = new javafx.scene.control.Button("BACK TO HOME");
+        backToHomeButton.setStyle(
+            "-fx-font-family: 'Courier New', monospace; " +
+            "-fx-font-size: 12px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: #4a4a4a; " +
+            "-fx-text-fill: #FFD700; " +
+            "-fx-border-color: #8a8a8a; " +
+            "-fx-border-width: 2px; " +
+            "-fx-padding: 8px 16px; " +
+            "-fx-cursor: hand;"
+        );
+        backToHomeButton.setFocusTraversable(false);  // Prevent button from stealing keyboard focus
+        backToHomeButton.setOnAction(event -> navigateToHome());
+
+        infoBox.getChildren().addAll(enemyCountLabel, backToHomeButton);
 
         return infoBox;
     }
@@ -896,6 +932,167 @@ public class GameWorldVisualizer extends Application {
     public void handleHeroDefeated() {
         logger.log(Level.INFO, "Hero defeated! -> Stop Game");
         scene.setOnKeyPressed(null);
+        controller.setGameEnded(true);
+        showGameOverMessage();
+    }
+
+    /**
+     * Called when the quest is completed.
+     */
+    public void handleQuestCompleted() {
+        logger.log(Level.INFO, "Quest completed! -> Stop Game");
+        scene.setOnKeyPressed(null);
+        controller.setGameEnded(true);
+        showQuestCompletedMessage();
+    }
+
+    /**
+     * Shows an animated "Game Over" message in pixel style.
+     */
+    private void showGameOverMessage() {
+        showEndGameMessage("GAME OVER", javafx.scene.paint.Color.RED);
+    }
+
+    /**
+     * Shows an animated "Quest Completed" message in pixel style.
+     */
+    private void showQuestCompletedMessage() {
+        showEndGameMessage("CONGRATULATIONS!\nQUEST COMPLETED!", javafx.scene.paint.Color.GOLD);
+    }
+
+    /**
+     * Shows an animated end-game message overlay with pixel-style appearance.
+     */
+    private void showEndGameMessage(String message, javafx.scene.paint.Color textColor) {
+        // Create semi-transparent dark overlay using scene dimensions
+        double sceneWidth = scene.getWidth();
+        double sceneHeight = scene.getHeight();
+        javafx.scene.shape.Rectangle overlay = new javafx.scene.shape.Rectangle(sceneWidth, sceneHeight);
+        overlay.setFill(javafx.scene.paint.Color.rgb(0, 0, 0, 0.7));
+
+        // Create the main message label with pixel-style font
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle(
+            "-fx-font-family: 'Courier New', monospace; " +
+            "-fx-font-size: 48px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: " + toHexString(textColor) + "; " +
+            "-fx-effect: dropshadow(gaussian, black, 10, 0.5, 2, 2);"
+        );
+        messageLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        messageLabel.setAlignment(Pos.CENTER);
+        messageLabel.setWrapText(true);
+
+        // Create "Back to Home" button
+        javafx.scene.control.Button homeButton = new javafx.scene.control.Button("BACK TO HOME");
+        homeButton.setStyle(
+            "-fx-font-family: 'Courier New', monospace; " +
+            "-fx-font-size: 18px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: #4a4a4a; " +
+            "-fx-text-fill: #FFD700; " +
+            "-fx-border-color: #8a8a8a; " +
+            "-fx-border-width: 3px; " +
+            "-fx-padding: 12px 24px; " +
+            "-fx-cursor: hand;"
+        );
+        homeButton.setOnAction(event -> navigateToHome());
+
+        // Layout container
+        VBox contentBox = new VBox(30);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.getChildren().addAll(messageLabel, homeButton);
+
+        // Create overlay stack
+        gameEndOverlay = new StackPane();
+        gameEndOverlay.getChildren().addAll(overlay, contentBox);
+        gameEndOverlay.setOpacity(0);
+
+        // Add to scene root
+        BorderPane borderPane = (BorderPane) scene.getRoot();
+        StackPane wrapperPane = new StackPane();
+        wrapperPane.getChildren().addAll(borderPane.getCenter(), gameEndOverlay);
+        borderPane.setCenter(wrapperPane);
+
+        // Animate fade-in and pulsing effect
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.millis(500), gameEndOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        // Pulsing animation for the message text
+        javafx.animation.ScaleTransition pulse = new javafx.animation.ScaleTransition(Duration.millis(800), messageLabel);
+        pulse.setFromX(0.9);
+        pulse.setFromY(0.9);
+        pulse.setToX(1.05);
+        pulse.setToY(1.05);
+        pulse.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        pulse.setAutoReverse(true);
+
+        fadeIn.setOnFinished(e -> pulse.play());
+        fadeIn.play();
+    }
+
+    /**
+     * Converts a Color to a hex string for CSS.
+     */
+    private String toHexString(javafx.scene.paint.Color color) {
+        return String.format("#%02X%02X%02X",
+            (int) (color.getRed() * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue() * 255));
+    }
+
+    /**
+     * Navigates back to the home/start screen.
+     */
+    private void navigateToHome() {
+        // Mark current game session as ended if hero is alive (not ended normally)
+        boolean isResumable = !controller.isGameEnded() && hero != null && hero.getHealth() > 0;
+        
+        // Store current session state for potential resume
+        GameSessionManager.getInstance().saveSession(mapDefinition, isResumable);
+        
+        // Stop all game activity
+        stopAllTimelines();
+        controller.stopGame();
+        
+        // Navigate to start view
+        StartView startView = new StartView();
+        try {
+            startView.start(primaryStage);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error navigating to home", e);
+        }
+    }
+
+    /**
+     * Stops all timelines and animations.
+     */
+    private void stopAllTimelines() {
+        if (cameraTimeline != null) {
+            cameraTimeline.stop();
+        }
+        if (heroMovementTimeline != null) {
+            heroMovementTimeline.stop();
+        }
+        // Stop all animators
+        heroAnimator.stopAll();
+        enemyAnimator.stopAll();
+        rushCreatureAnimator.stopAll();
+        projectileAnimator.stopAll();
+    }
+
+    /**
+     * Stops all game activity and exits the application.
+     */
+    private void stopAllAndExit() {
+        logger.log(Level.INFO, "Stopping all game activity and exiting");
+        stopAllTimelines();
+        if (controller != null) {
+            controller.stopGame();
+        }
+        javafx.application.Platform.exit();
+        System.exit(0);
     }
 
     public void handleHeroHit() {

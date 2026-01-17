@@ -72,4 +72,16 @@ class TileMapElementAnimator {
             GridPane.setRowIndex(node, elementView.getTileY());
         }
     }
+
+    /**
+     * Stops all active animations.
+     */
+    void stopAll() {
+        for (TranslateTransition transition : activeTransitions.values()) {
+            if (transition != null) {
+                transition.stop();
+            }
+        }
+        activeTransitions.clear();
+    }
 }

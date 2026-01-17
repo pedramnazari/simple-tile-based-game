@@ -12,6 +12,7 @@ import de.pedramnazari.simpletbg.inventory.service.projectile.IChainEffectListen
 import de.pedramnazari.simpletbg.inventory.service.projectile.IProjectileEventListener;
 import de.pedramnazari.simpletbg.inventory.service.IItemPickUpListener;
 import de.pedramnazari.simpletbg.inventory.service.event.*;
+import de.pedramnazari.simpletbg.quest.service.event.IQuestCompletedListener;
 import de.pedramnazari.simpletbg.tilemap.model.*;
 import de.pedramnazari.simpletbg.tilemap.service.GameContext;
 import de.pedramnazari.simpletbg.tilemap.service.IHeroHitListener;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameWorldController implements IEnemyObserver, ICompanionObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener, ArmorService.ArmorAttackListener {
+public class GameWorldController implements IEnemyObserver, ICompanionObserver, IItemPickUpListener, IEnemyHitListener, IHeroHitListener, IBombEventListener, ITileHitListener, IHeroMovedListener, IItemEventListener, IProjectileEventListener, IChainEffectListener, ArmorService.ArmorAttackListener, IQuestCompletedListener {
 
     private static final Logger logger = Logger.getLogger(GameWorldController.class.getName());
 
@@ -146,7 +147,13 @@ public class GameWorldController implements IEnemyObserver, ICompanionObserver, 
             gameWorldVisualizer.handleHeroHit();
         }
         else {
-            gameWorldVisualizer.handleHeroDefeated();
+            // GUI operations must be executed on the JavaFX application thread
+            try {
+                Platform.runLater(() -> gameWorldVisualizer.handleHeroDefeated());
+            } catch (IllegalStateException e) {
+                // Toolkit not initialized (e.g., in unit tests) - call directly
+                gameWorldVisualizer.handleHeroDefeated();
+            }
         }
     }
 
@@ -252,6 +259,42 @@ public class GameWorldController implements IEnemyObserver, ICompanionObserver, 
     public void onArmorAttack(IHero hero, IEnemy target, IArmor armor) {
         if (gameWorldVisualizer != null) {
             Platform.runLater(() -> gameWorldVisualizer.showArmorAttackEffect(hero, target, armor));
+        }
+    }
+
+    /**
+     * Stops the game and all background services.
+     */
+    public void stopGame() {
+        gameWorldService.stop();
+    }
+
+    /**
+     * Sets the game as ended (hero died or quest completed).
+     */
+    public void setGameEnded(boolean ended) {
+        gameWorldService.setGameEnded(ended);
+    }
+
+    /**
+     * Returns whether the game has ended.
+     */
+    public boolean isGameEnded() {
+        return gameWorldService.isGameEnded();
+    }
+
+    /**
+     * Gets the GameWorldService for direct access if needed.
+     */
+    public GameWorldService getGameWorldService() {
+        return gameWorldService;
+    }
+
+    @Override
+    public void onQuestCompleted() {
+        logger.log(Level.INFO, "Quest completed notification received");
+        if (gameWorldVisualizer != null) {
+            Platform.runLater(() -> gameWorldVisualizer.handleQuestCompleted());
         }
     }
 }
