@@ -147,7 +147,13 @@ public class GameWorldController implements IEnemyObserver, ICompanionObserver, 
             gameWorldVisualizer.handleHeroHit();
         }
         else {
-            gameWorldVisualizer.handleHeroDefeated();
+            // GUI operations must be executed on the JavaFX application thread
+            try {
+                Platform.runLater(() -> gameWorldVisualizer.handleHeroDefeated());
+            } catch (IllegalStateException e) {
+                // Toolkit not initialized (e.g., in unit tests) - call directly
+                gameWorldVisualizer.handleHeroDefeated();
+            }
         }
     }
 
